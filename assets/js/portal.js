@@ -35,11 +35,84 @@ export async function getContext(){
   if(error || !data){ console.error(error); location.replace(rootUrl('access-required.html?reason=context')); return null; }
   if(!data.has_access){ location.replace(rootUrl('access-required.html')); return null; }
   const expected=portalFor(data), actual=currentPortal();
-  if(actual && expected!==actual){ location.replace(rootUrl(expected+'/dashboard.html')); return null; }
+  const isPlatformAdmin=data?.membership?.role_code==='platform_admin';
+  if(actual && expected!==actual && !isPlatformAdmin){
+    location.replace(rootUrl(expected+'/dashboard.html'));
+    return null;
+  }
   return data;
 }
 
+
+const portalViews = [
+  { key:'admin', label:'Admin Portal', path:'admin/dashboard.html' },
+  { key:'employer', label:'Employer Portal', path:'employer/dashboard.html' },
+  { key:'ctpa', label:'C/TPA Portal', path:'ctpa/dashboard.html' },
+  { key:'owner-operator', label:'Owner-Operator Portal', path:'owner-operator/dashboard.html' }
+];
+
+function portalLabel(key){
+  return portalViews.find(v=>v.key===key)?.label || 'Portal';
+}
+
+function addPlatformPortalSwitcher(ctx){
+  if(ctx?.membership?.role_code!=='platform_admin') return;
+  const actions=document.querySelector('.topbar-actions');
+  if(!actions || actions.querySelector('[data-portal-viewer]')) return;
+
+  const actual=currentPortal() || 'admin';
+  const wrap=document.createElement('div');
+  wrap.className='portal-viewer';
+  wrap.dataset.portalViewer='';
+
+  const button=document.createElement('button');
+  button.type='button';
+  button.className='portal-view-button';
+  button.setAttribute('aria-haspopup','menu');
+  button.setAttribute('aria-expanded','false');
+  button.innerHTML=`<span class="portal-view-label">View:</span><span class="portal-view-current">${portalLabel(actual)}</span><span aria-hidden="true">▾</span>`;
+
+  const menu=document.createElement('div');
+  menu.className='portal-view-menu';
+  menu.setAttribute('role','menu');
+
+  portalViews.forEach(view=>{
+    const option=document.createElement('button');
+    option.type='button';
+    option.className='portal-view-option'+(view.key===actual?' active':'');
+    option.textContent=view.label;
+    option.addEventListener('click',()=>{
+      sessionStorage.setItem('s4u_platform_portal_view',view.key);
+      location.href=rootUrl(view.path);
+    });
+    menu.appendChild(option);
+  });
+
+  const note=document.createElement('div');
+  note.className='portal-view-note';
+  note.textContent='Platform Administrator view. Customer permissions are not changed.';
+  menu.appendChild(note);
+
+  button.addEventListener('click',(event)=>{
+    event.stopPropagation();
+    const open=wrap.classList.toggle('open');
+    button.setAttribute('aria-expanded',String(open));
+  });
+
+  document.addEventListener('click',()=>{
+    wrap.classList.remove('open');
+    button.setAttribute('aria-expanded','false');
+  });
+
+  wrap.appendChild(button);
+  wrap.appendChild(menu);
+
+  const userChip=actions.querySelector('.user-chip');
+  actions.insertBefore(wrap,userChip || actions.firstChild);
+}
+
 function render(ctx){
+  addPlatformPortalSwitcher(ctx);
   const name=[ctx?.profile?.first_name,ctx?.profile?.last_name].filter(Boolean).join(' ') || ctx?.user?.email || 'Account User';
   const org=ctx?.membership?.organization_name || 'Workforce Compliance';
   const role=ctx?.membership?.role_name || 'Account User';

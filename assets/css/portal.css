@@ -148,3 +148,83 @@ body.portal-body{min-height:100vh}
 .auth-card form{display:grid;gap:15px}.auth-card label{font-size:10px;font-weight:800;color:var(--blue);display:grid;gap:7px}.auth-card input{width:100%;box-sizing:border-box;border:1px solid var(--line-strong);border-radius:9px;padding:12px 13px;font:inherit;outline:none}.auth-card input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(36,70,127,.10)}
 .auth-submit{width:100%;margin-top:4px}.auth-link{display:block;text-align:center;margin-top:18px;font-size:10px;font-weight:800;color:var(--blue)}.auth-message{min-height:14px;font-size:10px;color:var(--danger);line-height:1.4}
 @media(max-width:520px){.auth-card{padding:26px 20px;border-radius:14px}}
+
+
+/* v2.3 — clean sidebar + platform admin portal switcher */
+.sidebar-nav{
+  scrollbar-width:none;
+  -ms-overflow-style:none;
+}
+.sidebar-nav::-webkit-scrollbar{
+  width:0;
+  height:0;
+  display:none;
+}
+.portal-viewer{
+  position:relative;
+}
+.portal-view-button{
+  min-height:40px;
+  padding:0 12px;
+  border:1px solid var(--line);
+  border-radius:9px;
+  background:#fff;
+  color:var(--blue);
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  font-size:10px;
+  font-weight:850;
+  cursor:pointer;
+  white-space:nowrap;
+}
+.portal-view-button .portal-view-label{
+  color:var(--muted);
+  font-weight:700;
+}
+.portal-view-button .portal-view-current{
+  color:var(--blue);
+}
+.portal-view-menu{
+  position:absolute;
+  right:0;
+  top:48px;
+  width:230px;
+  padding:8px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:#fff;
+  box-shadow:var(--shadow);
+  display:none;
+  z-index:100;
+}
+.portal-viewer.open .portal-view-menu{display:grid;gap:4px}
+.portal-view-option{
+  width:100%;
+  border:0;
+  background:#fff;
+  text-align:left;
+  padding:10px 11px;
+  border-radius:8px;
+  color:var(--ink);
+  cursor:pointer;
+  font-size:10px;
+  font-weight:750;
+}
+.portal-view-option:hover{background:var(--surface)}
+.portal-view-option.active{
+  background:#edf4ff;
+  color:var(--blue);
+}
+.portal-view-note{
+  margin:6px 3px 3px;
+  padding-top:8px;
+  border-top:1px solid var(--line);
+  color:var(--muted);
+  font-size:8px;
+  line-height:1.45;
+}
+@media(max-width:760px){
+  .portal-view-button .portal-view-label{display:none}
+  .portal-view-button{padding:0 10px}
+}
