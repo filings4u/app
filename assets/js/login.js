@@ -1,0 +1,5 @@
+import {supabase} from './supabase.js';
+const form=document.querySelector('#loginForm'),msg=document.querySelector('#message');
+async function route(){const {data,error}=await supabase.functions.invoke('workforce-session-context');if(error||!data){msg.textContent='We could not load your account. Please try again.';return}if(!data.has_access){location.replace('access-required.html');return}const r=data.membership?.role_code,a=data.subscription?.plan?.audience,t=data.membership?.organization_type;const p=r==='platform_admin'?'admin':a==='owner_operator'?'owner-operator':(a==='ctpa'||t==='ctpa')?'ctpa':'employer';location.replace(`${p}/dashboard.html`)}
+const {data:{session}}=await supabase.auth.getSession();if(session)await route();
+form.addEventListener('submit',async e=>{e.preventDefault();msg.textContent='';const b=form.querySelector('button');b.disabled=true;b.textContent='Signing In…';const {error}=await supabase.auth.signInWithPassword({email:email.value.trim(),password:password.value});if(error){msg.textContent=error.message;b.disabled=false;b.textContent='Sign In';return}await route();});
