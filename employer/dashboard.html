@@ -41,52 +41,23 @@
   </div>
 </header>
 <div class="content">
-<div class="welcome">
-  <div><h1>Good afternoon, ABC Trucking</h1><p>Here is your workforce compliance snapshot for today.</p></div>
-  <a class="btn btn-orange" href="testing-orders.html">+ Order / Record Test</a>
-</div>
+<div id="dashboardError" class="saas-notice error" hidden></div>
+<div class="welcome"><div><h1 data-dashboard-title>Employer Dashboard</h1><p data-dashboard-subtitle>Loading your Workforce Compliance account…</p></div><a class="btn btn-orange" data-feature="testing_orders" href="testing-orders.html">+ Order / Record Test</a></div>
 <section class="metrics">
-  <article class="metric-card"><div class="metric-top"><span class="metric-label">Active Employees</span><span class="metric-icon">👥</span></div><div class="metric-value">48</div><div class="metric-note good">37 DOT-covered drivers</div></article>
-  <article class="metric-card"><div class="metric-top"><span class="metric-label">Open Tests</span><span class="metric-icon">T</span></div><div class="metric-value">3</div><div class="metric-note">2 scheduled • 1 pending</div></article>
-  <article class="metric-card"><div class="metric-top"><span class="metric-label">Compliance Alerts</span><span class="metric-icon">!</span></div><div class="metric-value">1</div><div class="metric-note">Action recommended</div></article>
-  <article class="metric-card"><div class="metric-top"><span class="metric-label">Documents</span><span class="metric-icon">D</span></div><div class="metric-value">126</div><div class="metric-note good">12 added this month</div></article>
+<article class="metric-card"><div class="metric-top"><span class="metric-label">Active Employees</span><span class="metric-icon">E</span></div><div class="metric-value" id="metricEmployees">—</div><div class="metric-note" id="metricDot">Loading…</div></article>
+<article class="metric-card"><div class="metric-top"><span class="metric-label">Open Tests</span><span class="metric-icon">T</span></div><div class="metric-value" id="metricTests">—</div><div class="metric-note">Current testing orders</div></article>
+<article class="metric-card"><div class="metric-top"><span class="metric-label">Open Compliance</span><span class="metric-icon">!</span></div><div class="metric-value" id="metricCases">—</div><div class="metric-note">Cases requiring attention</div></article>
+<article class="metric-card"><div class="metric-top"><span class="metric-label">Documents</span><span class="metric-icon">D</span></div><div class="metric-value" id="metricDocs">—</div><div class="metric-note">Current account records</div></article>
 </section>
-
 <div class="grid grid-2">
-  <section class="card">
-    <div class="card-head"><div><h2>Compliance Status</h2><span>Current workforce and testing activity</span></div><a class="btn btn-outline" href="compliance.html">View Compliance</a></div>
-    <div class="card-body status-list">
-      <div class="status-row"><div><strong>Random testing pool</strong><small>37 eligible DOT drivers</small></div><span class="badge success">Active</span></div>
-      <div class="status-row"><div><strong>Pending random selections</strong><small>2 employees require testing</small></div><span class="badge warning">Action</span></div>
-      <div class="status-row"><div><strong>Policy documents</strong><small>Current policy on file</small></div><span class="badge success">Current</span></div>
-      <div class="status-row"><div><strong>Post-accident test</strong><small>Driver: James R. • Due today</small></div><span class="badge danger">Due</span></div>
-    </div>
-  </section>
-  <section class="card">
-    <div class="card-head"><div><h2>Program Progress</h2><span>Annual testing activity</span></div></div>
-    <div class="card-body progress-block">
-      <div class="progress-line"><div class="progress-meta"><strong>Drug testing</strong><span>14 / 18 complete</span></div><div class="progress-track"><div class="progress-fill" style="width:78%"></div></div></div>
-      <div class="progress-line"><div class="progress-meta"><strong>Alcohol testing</strong><span>4 / 6 complete</span></div><div class="progress-track"><div class="progress-fill" style="width:67%"></div></div></div>
-      <div class="progress-line"><div class="progress-meta"><strong>Documents current</strong><span>92%</span></div><div class="progress-track"><div class="progress-fill" style="width:92%"></div></div></div>
-    </div>
-  </section>
+<section class="card"><div class="card-head"><div><h2>Programs</h2><span>Your DOT and Non-DOT programs</span></div><a class="btn btn-outline" href="programs.html">Manage Programs</a></div><div class="card-body status-list" id="programRows"><div class="saas-empty">Loading…</div></div></section>
+<section class="card"><div class="card-head"><div><h2>Recent Testing</h2><span>Latest testing activity</span></div><a class="btn btn-outline" href="testing-orders.html">View Testing</a></div><div class="card-body status-list" id="testRows"><div class="saas-empty">Loading…</div></div></section>
 </div>
-
 <div class="grid grid-2" style="margin-top:18px">
-  <section class="card"><div class="card-head"><div><h2>Recent Activity</h2><span>Latest activity in your account</span></div></div><div class="card-body activity">
-    <div class="activity-row"><span class="activity-icon">T</span><div><strong>Random test completed</strong><span>Michael Carter • DOT Drug Test</span></div><time>2h ago</time></div>
-    <div class="activity-row"><span class="activity-icon">D</span><div><strong>Document uploaded</strong><span>2026 Consortium Certificate</span></div><time>Yesterday</time></div>
-    <div class="activity-row"><span class="activity-icon">👥</span><div><strong>Employee added</strong><span>Samantha Lewis • CDL Driver</span></div><time>2 days</time></div>
-  </div></section>
-  <section class="card"><div class="card-head"><div><h2>Quick Actions</h2><span>Common account tasks</span></div></div><div class="card-body quick-grid">
-    <a class="quick" href="employees.html"><b>Add Employee</b><span>Create a new workforce record</span></a>
-    <a class="quick" href="testing-orders.html"><b>Order / Record Test</b><span>Create a testing workflow</span></a>
-    <a class="quick" href="documents.html"><b>Upload Document</b><span>Add compliance evidence</span></a>
-    <a class="quick" href="reports.html"><b>Run Report</b><span>Review program activity</span></a>
-  </div></section>
-</div>
-</div>
-</main>
+<section class="card"><div class="card-head"><div><h2>Random Pools</h2><span>Active consortium and employer pools</span></div><a class="btn btn-outline" href="random-pools.html">Manage Pools</a></div><div class="card-body status-list" id="poolRows"><div class="saas-empty">Loading…</div></div></section>
+<section class="card"><div class="card-head"><div><h2>Quick Actions</h2><span>Common Employer workflows</span></div></div><div class="card-body"><div class="quick-actions"><a class="quick-action" href="employees.html"><strong>Employees / Drivers</strong><span>Manage your workforce roster</span></a><a class="quick-action" href="random-selections.html"><strong>Random Selections</strong><span>Review selection activity</span></a><a class="quick-action" href="results.html"><strong>Results</strong><span>Review available test results</span></a><a class="quick-action" href="documents.html"><strong>Documents</strong><span>Manage compliance records</span></a></div></div></section>
+</div></div></main>
 </div>
 <script type="module" src="../assets/js/portal.js"></script>
-<script type="module" src="../assets/js/employer-entitlements.js"></script></body></html>
+<script type="module" src="../assets/js/employer-entitlements.js"></script>
+<script type="module" src="../assets/js/employer-dashboard-live.js"></script></body></html>
