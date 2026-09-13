@@ -682,3 +682,17 @@ small,.helper-text,.muted,.eyebrow,.metric-label,.metric-note,.card-head span,.m
 @media(max-width:700px){.report-grid{grid-template-columns:1fr}}
 
 .saas-wide{grid-column:1/-1}.saas-wide textarea{width:100%;box-sizing:border-box}
+
+/* v3.33 Employer Admin spacing/hardening */
+.management-page{padding-left:30px!important;padding-right:30px!important}
+.management-section-body{padding-left:22px!important;padding-right:22px!important}
+.management-table-wrap,.admin-inline-editor,.saas-notice{max-width:100%;box-sizing:border-box}
+.saas-check{padding-top:0!important;align-self:end;min-height:42px;justify-content:flex-start}
+.saas-check input,.decision-check input{width:18px!important;height:18px!important;min-height:18px!important;flex:0 0 18px}
+.decision-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 18px;margin-top:16px}
+.decision-check{display:flex!important;flex-direction:row!important;align-items:center!important;gap:9px!important;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:#fbfcff}
+.decision-result{margin-top:16px;padding:14px 16px;border:1px solid var(--line);border-radius:9px;background:#f7f9fc;line-height:1.55}
+.btn-compact{min-height:36px!important;padding:8px 14px!important;font-size:12px!important}
+.file-upload-box{padding:18px;border:1px dashed var(--line-strong);border-radius:10px;background:#fbfcff}
+.password-field{position:relative}.password-field input{padding-right:62px!important}.password-eye{position:absolute;right:7px;top:50%;transform:translateY(-50%);border:0;background:transparent;color:var(--blue);font-weight:800;cursor:pointer;padding:6px}
+@media(max-width:900px){.management-page{padding-left:16px!important;padding-right:16px!important}.decision-grid{grid-template-columns:1fr}}
