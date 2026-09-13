@@ -730,3 +730,21 @@ small,.helper-text,.muted,.eyebrow,.metric-label,.metric-note,.card-head span,.m
 .config-choice input{width:auto!important;min-height:0!important}
 .inline-add-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
 @media(max-width:900px){.management-section-body{padding:18px!important}.config-choice-grid,.inline-add-grid{grid-template-columns:1fr}}
+
+/* v3.36 compact Employer management spacing */
+.management-page{padding-left:34px!important;padding-right:34px!important}
+.management-section{margin-left:0!important;margin-right:0!important}
+.management-section-body{padding:20px 24px!important}
+.management-section-body>#managementContent{padding:0 4px!important;gap:18px!important}
+.management-section-body>#managementContent>.admin-inline-editor,
+.management-section-body>#managementContent>.management-table-wrap,
+.management-section-body>#managementContent>.saas-notice,
+.management-section-body>#managementContent>.report-grid{width:calc(100% - 12px)!important;margin-left:6px!important;margin-right:6px!important}
+.admin-inline-editor{padding:18px!important}
+.admin-inline-editor .saas-form-grid{gap:12px!important}
+.admin-inline-editor input,.admin-inline-editor select{min-height:38px!important}
+.management-table th,.management-table td{padding-top:11px!important;padding-bottom:11px!important}
+#reportBuilder{margin-left:6px!important;margin-right:6px!important;width:calc(100% - 12px)!important}
+#reportBuilder .saas-actions{margin-top:12px!important}
+#reportPreview .saas-notice{margin-top:0!important}
+@media(max-width:900px){.management-page{padding-left:18px!important;padding-right:18px!important}.management-section-body{padding:16px!important}}
