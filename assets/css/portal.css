@@ -790,3 +790,15 @@ small,.helper-text,.muted,.eyebrow,.metric-label,.metric-note,.card-head span,.m
 .admin-inline-editor h3{margin:0 0 14px!important}.admin-inline-editor h3+p{margin:0 0 14px!important}
 .management-table-wrap{overflow-x:auto!important}
 @media(max-width:700px){.admin-inline-editor{padding:16px!important}.admin-inline-editor .saas-form-grid{margin-bottom:14px!important}}
+
+/* v3.39 C/TPA management spacing */
+.management-page .management-context-bar{margin-left:6px!important;margin-right:6px!important;width:calc(100% - 12px)!important}
+.management-page .management-section{margin-left:6px!important;margin-right:6px!important;width:calc(100% - 12px)!important}
+.management-section-body>#content{display:flex;flex-direction:column;gap:18px;padding:0 8px;min-width:0}
+.management-section-body>#content>.admin-inline-editor,.management-section-body>#content>.management-table-wrap,.management-section-body>#content>.saas-notice{width:calc(100% - 16px)!important;margin-left:8px!important;margin-right:8px!important;box-sizing:border-box}
+.management-section-body>#content>.admin-inline-editor{padding:18px 20px!important}
+.management-section-body>#content .btn{min-height:34px!important;padding:7px 12px!important}
+.management-section-body>#content input[type="checkbox"],.management-section-body>#content input[type="radio"]{width:15px!important;height:15px!important;min-height:15px!important;max-height:15px!important}
+.management-section-body>#content input:not([type="checkbox"]):not([type="radio"]):not([type="color"]),.management-section-body>#content select{min-height:36px!important;height:36px!important}
+.management-section-body>#content input[type="color"]{height:36px!important;min-height:36px!important;padding:3px!important}
+@media(max-width:700px){.management-page .management-context-bar,.management-page .management-section{margin-left:0!important;margin-right:0!important;width:100%!important}.management-section-body>#content{padding:0}}
