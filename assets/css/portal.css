@@ -696,3 +696,37 @@ small,.helper-text,.muted,.eyebrow,.metric-label,.metric-note,.card-head span,.m
 .file-upload-box{padding:18px;border:1px dashed var(--line-strong);border-radius:10px;background:#fbfcff}
 .password-field{position:relative}.password-field input{padding-right:62px!important}.password-eye{position:absolute;right:7px;top:50%;transform:translateY(-50%);border:0;background:transparent;color:var(--blue);font-weight:800;cursor:pointer;padding:6px}
 @media(max-width:900px){.management-page{padding-left:16px!important;padding-right:16px!important}.decision-grid{grid-template-columns:1fr}}
+
+/* v3.34 Employer Admin edge separation */
+.management-section-body>#managementContent{display:flex!important;flex-direction:column!important;gap:20px!important;min-width:0}
+.management-section-body>#managementContent>.saas-notice,
+.management-section-body>#managementContent>.management-table-wrap,
+.management-section-body>#managementContent>.admin-inline-editor,
+.management-section-body>#managementContent>.management-summary-grid,
+.management-section-body>#managementContent>.management-actions,
+.management-section-body>#managementContent>.report-grid{margin-top:0!important;margin-bottom:0!important}
+.management-section-body>#managementContent>h3{margin:6px 0 -6px!important}
+.management-context-bar{margin-bottom:2px!important}
+.management-table-wrap{border-radius:11px!important}
+.management-table th:first-child,.management-table td:first-child{padding-left:18px!important}
+.management-table th:last-child,.management-table td:last-child{padding-right:18px!important}
+.saas-notice{padding:14px 16px!important;border-radius:10px!important}
+.admin-inline-editor{border-radius:11px!important}
+.decision-question{display:grid;grid-template-columns:minmax(240px,1fr) minmax(220px,360px);gap:18px;align-items:center;padding:12px 14px;border:1px solid var(--line);border-radius:9px;background:#fbfcff}
+.decision-question strong{display:block;color:#17335f}.decision-question small{display:block;margin-top:4px;color:var(--muted);line-height:1.45}.decision-question select{width:100%;min-height:38px}
+.decision-stack{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+.report-preview-table{margin-top:16px}
+@media(max-width:760px){.decision-question{grid-template-columns:1fr}}
+/* v3.35 Employer Admin spacing and management controls */
+.management-section-body{padding:24px 26px!important}
+.management-section-body>#managementContent{padding:2px!important;gap:22px!important}
+.management-section-body>#managementContent>.management-table-wrap,
+.management-section-body>#managementContent>.admin-inline-editor,
+.management-section-body>#managementContent>.saas-notice{width:calc(100% - 4px)!important;margin-left:2px!important;margin-right:2px!important}
+.management-table-wrap{border:1px solid #d5e0ef!important;background:#fff!important}
+.admin-inline-editor{padding:22px!important}
+.config-choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}
+.config-choice{display:flex!important;flex-direction:row!important;align-items:center!important;justify-content:space-between;gap:16px;padding:13px 14px;border:1px solid #d5e0ef;border-radius:9px;background:#fbfcff}
+.config-choice input{width:auto!important;min-height:0!important}
+.inline-add-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media(max-width:900px){.management-section-body{padding:18px!important}.config-choice-grid,.inline-add-grid{grid-template-columns:1fr}}
