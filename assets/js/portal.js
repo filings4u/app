@@ -1,3 +1,4 @@
+import { buildAdminNavigation } from './navigation.js';
 import { supabase } from './supabase.js';
 
 const ROOT = new URL('../../', import.meta.url);
@@ -131,10 +132,120 @@ function render(ctx){
   document.querySelectorAll('[data-plan]').forEach(el=>el.textContent=ctx?.subscription?.plan?.name||'Platform Administration');
 }
 
+
+function sidebarStateKey(){
+  return `s4u_sidebar_collapsed_${currentPortal()||'portal'}`;
+}
+function sidebarScrollKey(){
+  return `s4u_sidebar_scroll_${currentPortal()||'portal'}`;
+}
+function setSidebarCollapsed(collapsed){
+  document.body.classList.toggle('sidebar-collapsed',collapsed);
+  localStorage.setItem(sidebarStateKey(),collapsed?'1':'0');
+  const b=document.querySelector('[data-sidebar-toggle]');
+  if(b){
+    b.setAttribute('aria-expanded',String(!collapsed));
+    b.setAttribute('aria-label',collapsed?'Show sidebar':'Hide sidebar');
+    b.title=collapsed?'Show sidebar':'Hide sidebar';
+    b.innerHTML=collapsed?'<span aria-hidden="true">☰</span>':'<span aria-hidden="true">‹</span>';
+  }
+}
+function saveSidebarScroll(){
+  const nav=document.querySelector('.sidebar-nav');
+  if(nav) sessionStorage.setItem(sidebarScrollKey(),String(nav.scrollTop||0));
+}
+function markActiveNavigation(){
+  const file=location.pathname.split('/').filter(Boolean).pop()||'';
+  let active=null;
+  document.querySelectorAll('.sidebar-nav a[href]').forEach(a=>{
+    const href=(a.getAttribute('href')||'').split('?')[0].split('#')[0];
+    const target=href.split('/').pop();
+    const isActive=target===file;
+    a.classList.toggle('active',isActive);
+    if(isActive) active=a;
+  });
+  if(active){
+    const submenu=active.closest('.sidebar-submenu');
+    if(submenu){
+      submenu.classList.add('open');
+      const previous=submenu.previousElementSibling;
+      if(previous?.classList.contains('sidebar-group-toggle')) previous.classList.add('open');
+    }
+  }
+  return active;
+}
+function restoreSidebarScroll(){
+  const nav=document.querySelector('.sidebar-nav');
+  if(!nav)return;
+  const active=markActiveNavigation();
+  const saved=Number(sessionStorage.getItem(sidebarScrollKey()));
+  if(Number.isFinite(saved) && saved>0) nav.scrollTop=saved;
+  requestAnimationFrame(()=>{
+    if(!active)return;
+    const nr=nav.getBoundingClientRect(), ar=active.getBoundingClientRect();
+    if(ar.top<nr.top+8) nav.scrollTop-=((nr.top+8)-ar.top);
+    else if(ar.bottom>nr.bottom-8) nav.scrollTop+=(ar.bottom-(nr.bottom-8));
+    saveSidebarScroll();
+  });
+}
+function addDesktopSidebarToggle(){
+  const left=document.querySelector('.topbar-left');
+  if(!left || left.querySelector('[data-sidebar-toggle]'))return;
+  const b=document.createElement('button');
+  b.type='button';
+  b.className='sidebar-toggle';
+  b.dataset.sidebarToggle='';
+  b.addEventListener('click',()=>setSidebarCollapsed(!document.body.classList.contains('sidebar-collapsed')));
+  left.insertBefore(b,left.firstChild);
+  setSidebarCollapsed(localStorage.getItem(sidebarStateKey())==='1');
+}
+function wireSidebarPersistence(){
+  const nav=document.querySelector('.sidebar-nav');
+  if(!nav)return;
+  nav.addEventListener('scroll',saveSidebarScroll,{passive:true});
+  nav.addEventListener('click',e=>{
+    const link=e.target.closest('a[href]');
+    if(link) saveSidebarScroll();
+  });
+  document.querySelectorAll('.sidebar-group-toggle').forEach(btn=>{
+    btn.addEventListener('click',()=>requestAnimationFrame(saveSidebarScroll));
+  });
+  window.addEventListener('pagehide',saveSidebarScroll);
+  restoreSidebarScroll();
+}
+
+const FONT_SCALE_KEY='s4u_portal_font_scale';
+const FONT_SCALES=[0.9,1,1.1,1.2,1.3];
+function applyFontScale(value){
+  let v=Number(value);if(!FONT_SCALES.includes(v))v=1;
+  document.documentElement.style.setProperty('--portal-font-scale',String(v));
+  localStorage.setItem(FONT_SCALE_KEY,String(v));
+  document.querySelectorAll('[data-font-scale-value]').forEach(x=>x.textContent=`${Math.round(v*100)}%`);
+}
+function addFontSizer(){
+  applyFontScale(localStorage.getItem(FONT_SCALE_KEY)||1);
+  const actions=document.querySelector('.topbar-actions');
+  if(!actions||actions.querySelector('[data-font-sizer]'))return;
+  const wrap=document.createElement('div');wrap.className='font-sizer';wrap.dataset.fontSizer='';
+  const down=document.createElement('button');down.type='button';down.textContent='A−';down.setAttribute('aria-label','Decrease portal text size');
+  const value=document.createElement('span');value.className='font-sizer-value';value.dataset.fontScaleValue='';
+  const up=document.createElement('button');up.type='button';up.textContent='A+';up.setAttribute('aria-label','Increase portal text size');
+  const change=step=>{let cur=Number(localStorage.getItem(FONT_SCALE_KEY)||1),i=FONT_SCALES.indexOf(cur);if(i<0)i=1;i=Math.max(0,Math.min(FONT_SCALES.length-1,i+step));applyFontScale(FONT_SCALES[i])};
+  down.addEventListener('click',()=>change(-1));up.addEventListener('click',()=>change(1));
+  wrap.append(down,value,up);
+  const bell=[...actions.querySelectorAll('button')].find(x=>/notification/i.test(x.getAttribute('aria-label')||''));
+  if(bell)bell.insertAdjacentElement('afterend',wrap);else actions.insertBefore(wrap,actions.firstChild);
+  applyFontScale(localStorage.getItem(FONT_SCALE_KEY)||1);
+}
+
 function wireUi(){
+  buildAdminNavigation();
+  addFontSizer();
   const sidebar=document.querySelector('.sidebar');
   const toggle=document.querySelector('[data-mobile-menu]');
   if(toggle&&sidebar) toggle.addEventListener('click',()=>sidebar.classList.toggle('open'));
+  addDesktopSidebarToggle();
+  wireSidebarPersistence();
   const actions=document.querySelector('.topbar-actions');
   if(actions && !actions.querySelector('[data-logout]')){
     const b=document.createElement('button'); b.className='btn btn-outline'; b.dataset.logout=''; b.textContent='Sign Out';
@@ -143,4 +254,14 @@ function wireUi(){
   }
 }
 
-document.addEventListener('DOMContentLoaded',async()=>{ wireUi(); const ctx=await getContext(); if(ctx) render(ctx); });
+document.addEventListener('DOMContentLoaded',async()=>{
+  wireUi();
+  const ctx=await getContext();
+  if(ctx){
+    render(ctx);
+    buildAdminNavigation();
+    wireSidebarPersistence();
+    markActiveNavigation();
+    restoreSidebarScroll();
+  }
+});

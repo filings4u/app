@@ -16,12 +16,27 @@
   <div class="sidebar-brand">
     <img src="../images/logo2.png" alt="screenings4u">
     <div class="product-name">Workforce Compliance</div>
-    <div class="workspace">Owner-Operator Workspace</div>
+    <div class="workspace">Employer Workspace</div>
   </div>
   <nav class="sidebar-nav">
-    <div class="nav-section">Workspace</div>
-    <a class="nav-link" data-nav href="dashboard.html"><span class="nav-icon">▦</span><span>Dashboard</span></a><a class="nav-link" data-nav href="driver-profile.html"><span class="nav-icon">👤</span><span>Driver Profile</span></a><a class="nav-link" data-nav href="programs.html"><span class="nav-icon">P</span><span>Program</span></a><a class="nav-link" data-nav href="random-pools.html"><span class="nav-icon">R</span><span>Random Pool</span></a><a class="nav-link" data-nav href="testing-orders.html"><span class="nav-icon">T</span><span>Testing</span></a><a class="nav-link" data-nav href="results.html"><span class="nav-icon">✓</span><span>Results</span></a><a class="nav-link" data-nav href="compliance.html"><span class="nav-icon">!</span><span>Compliance</span></a><a class="nav-link" data-nav href="documents.html"><span class="nav-icon">D</span><span>Documents</span></a><a class="nav-link" data-nav href="reports.html"><span class="nav-icon">↗</span><span>Reports</span></a><a class="nav-link" data-nav href="billing.html"><span class="nav-icon">$</span><span>Plan & Billing</span></a>
-  </nav>
+<a class="nav-link" data-nav href="dashboard.html"><span class="nav-icon">D</span><span>Dashboard</span></a>
+<div class="nav-label">Owner-Operator</div>
+<a class="nav-link" data-nav href="profile.html"><span class="nav-icon">P</span><span>Profile / USDOT</span></a>
+<a class="nav-link" data-nav data-feature="employee_management" href="driver.html"><span class="nav-icon">V</span><span>Driver Profile</span></a>
+<a class="nav-link" data-nav data-feature="programs" href="programs.html"><span class="nav-icon">G</span><span>DOT Programs</span></a>
+<a class="nav-link" data-nav data-feature="random_pool" href="consortium.html"><span class="nav-icon">C</span><span>Consortium / Pool</span></a>
+<div class="nav-label">Testing & Compliance</div>
+<a class="nav-link" data-nav data-feature="testing_orders" href="testing.html"><span class="nav-icon">T</span><span>Testing</span></a>
+<a class="nav-link" data-nav data-feature="results_summary" href="results.html"><span class="nav-icon">R</span><span>Results</span></a>
+<a class="nav-link" data-nav data-feature="compliance" href="compliance.html"><span class="nav-icon">C</span><span>Compliance</span></a>
+<a class="nav-link" data-nav data-feature="rtd_follow_up" href="rtd-follow-up.html"><span class="nav-icon">F</span><span>RTD / Follow-Up</span></a>
+<a class="nav-link" data-nav data-feature="documents" href="documents.html"><span class="nav-icon">D</span><span>Documents & Certificates</span></a>
+<a class="nav-link" data-nav data-feature="standard_reports" href="reports.html"><span class="nav-icon">M</span><span>Reports</span></a>
+<div class="nav-label">Account</div>
+<a class="nav-link" data-nav href="billing.html"><span class="nav-icon">B</span><span>Billing</span></a>
+<a class="nav-link" data-nav data-feature="notifications" href="notifications.html"><span class="nav-icon">N</span><span>Notifications</span></a>
+<a class="nav-link" data-nav data-feature="audit_history" href="audit.html"><span class="nav-icon">A</span><span>Audit History</span></a>
+</nav>
   <div class="sidebar-bottom">
     <div class="sidebar-help"><strong>Need help?</strong><span>Contact screenings4u support from your account.</span></div>
   </div>
@@ -31,21 +46,15 @@
 <header class="topbar">
   <div class="topbar-left">
     <button class="mobile-menu" data-mobile-menu aria-label="Open menu">☰</button>
-    <div class="page-title"><strong>Billing</strong><span>Andre Erving</span></div>
+    <div class="page-title"><strong>Employees</strong><span>ABC Trucking</span></div>
   </div>
   <div class="topbar-actions">
     <button class="top-action" aria-label="Notifications">🔔<span class="notification-dot"></span></button>
     <button class="top-action" aria-label="Help">?</button>
-    <div class="user-chip"><span class="avatar">AE</span><span class="user-meta"><strong>Andre Erving</strong><span>Owner-Operator</span></span></div>
+    <div class="user-chip"><span class="avatar">AE</span><span class="user-meta"><strong>Andre Erving</strong><span>Employer Administrator</span></span></div>
   </div>
 </header>
-<div class="content">
-<div class="welcome"><div><h1>Billing</h1><p>This is the branded Owner-Operator shell for the billing module.</p></div><a class="btn btn-orange" href="#">+ New</a></div>
-<section class="card"><div class="card-head"><div><h2>Billing</h2><span>Module shell ready for live Supabase data</span></div></div>
-<div class="card-body">
-  <div class="placeholder">The visual shell and navigation are in place. We will connect this module to the Workforce Supabase project and replace this placeholder with the live workflow.</div>
-</div></section></div>
-</main>
+<div class="content"><div class="welcome"><div><h1>Billing</h1><p>Review your subscription plan and billing records.</p></div></div><section class="card"><div class="card-head"><div><h2>Subscription & Billing</h2><span>Review the plan purchased for your owner-operator account and its invoices.</span></div></div><div class="card-body"><div id="plan" class="saas-notice"></div></div><div class="card-body" style="padding:0"><div class="saas-table-wrap"><table class="saas-table"><thead><tr><th>Invoice</th><th>Issued</th><th>Total</th><th>Due</th><th>Status</th></tr></thead><tbody id="rows"></tbody></table></div></div></section></div></main>
 </div>
 <script type="module" src="../assets/js/portal.js"></script>
-</body></html>
+<script type="module" src="../assets/js/owner-entitlements.js"></script><script type="module" src="../assets/js/owner-billing.js"></script></body></html>

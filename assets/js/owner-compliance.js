@@ -1,0 +1,1 @@
+import{api,$,esc}from'./owner-saas.js';api({action:'compliance'}).then(d=>{$('#rows').innerHTML=d.cases.map(x=>`<tr><td><strong>${esc(x.case_number)}</strong></td><td>${esc(x.event_type)}</td><td>${esc(x.priority)}</td><td>${esc(x.opened_at||'—')}</td><td>${esc(x.status)}</td></tr>`).join('')||'<tr><td colspan="5">No compliance cases.</td></tr>'})

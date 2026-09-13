@@ -1,0 +1,1 @@
+import{api,$,esc}from'./owner-saas.js';api({action:'testing'}).then(d=>{$('#rows').innerHTML=d.testing.map(x=>`<tr><td><strong>${esc(x.order_number)}</strong></td><td>${esc(x.reason)}</td><td>${esc(x.test_type)}</td><td>${esc(x.program_type)}</td><td>${esc(x.status)}</td></tr>`).join('')||'<tr><td colspan="5">No testing records.</td></tr>'})

@@ -18,10 +18,7 @@
     <div class="product-name">Workforce Compliance</div>
     <div class="workspace">Screenings4u Admin</div>
   </div>
-  <nav class="sidebar-nav">
-    <div class="nav-section">Workspace</div>
-    <a class="nav-link" data-nav href="dashboard.html"><span class="nav-icon">▦</span><span>Dashboard</span></a><a class="nav-link" data-nav href="organizations.html"><span class="nav-icon">O</span><span>Organizations</span></a><a class="nav-link" data-nav href="employers.html"><span class="nav-icon">B</span><span>Employers</span></a><a class="nav-link" data-nav href="owner-operators.html"><span class="nav-icon">👤</span><span>Owner-Operators</span></a><a class="nav-link" data-nav href="ctpas.html"><span class="nav-icon">C</span><span>C/TPAs</span></a><a class="nav-link" data-nav href="employees.html"><span class="nav-icon">👥</span><span>Employees & Drivers</span></a><a class="nav-link" data-nav href="testing-orders.html"><span class="nav-icon">T</span><span>Testing</span></a><a class="nav-link" data-nav href="results.html"><span class="nav-icon">✓</span><span>Results</span></a><a class="nav-link" data-nav href="compliance.html"><span class="nav-icon">!</span><span>Compliance</span></a><a class="nav-link" data-nav href="billing.html"><span class="nav-icon">$</span><span>Subscriptions</span></a><a class="nav-link" data-nav href="integrations.html"><span class="nav-icon">↔</span><span>Integrations</span></a><a class="nav-link" data-nav href="audit.html"><span class="nav-icon">A</span><span>Audit</span></a>
-  </nav>
+  <nav class="sidebar-nav" aria-label="Admin navigation"></nav>
   <div class="sidebar-bottom">
     <div class="sidebar-help"><strong>Need help?</strong><span>Contact screenings4u support from your account.</span></div>
   </div>
@@ -39,13 +36,13 @@
     <div class="user-chip"><span class="avatar">S4</span><span class="user-meta"><strong>Andre Erving</strong><span>Platform Administrator</span></span></div>
   </div>
 </header>
-<div class="content">
-<div class="welcome"><div><h1>Employers</h1><p>This is the branded Platform Administrator shell for the employers module.</p></div><a class="btn btn-orange" href="#">+ New</a></div>
-<section class="card"><div class="card-head"><div><h2>Employers</h2><span>Module shell ready for live Supabase data</span></div></div>
-<div class="card-body">
-  <div class="placeholder">The visual shell and navigation are in place. We will connect this module to the Workforce Supabase project and replace this placeholder with the live workflow.</div>
-</div></section></div>
-</main>
+<div class="content management-page">
+<div class="welcome"><div><h1>All Employers</h1><p>Manage every Employer account in Workforce Compliance. Select Manage to open the account's detailed Admin workspace.</p></div><button class="btn btn-orange" id="addCustomerBtn" type="button">+ New Employer</button></div>
+<section class="management-section"><div class="management-section-head"><div><h2>Employers</h2><p>This directory is filtered directly from the platform organization records for this customer type.</p></div><div class="org-filters"><input id="employerSearch" class="org-input" type="search" placeholder="Search employers"><select id="directoryStatus" class="org-select"><option value="">All statuses</option><option value="active">Active</option><option value="inactive">Inactive</option></select></div></div><div class="management-table-wrap"><table class="management-table"><thead><tr><th>Employer</th><th>USDOT / MC</th><th>Plan</th><th>Contact</th><th>Status</th><th>Created</th><th></th></tr></thead><tbody id="employerBody"><tr><td colspan="7"><div class="management-empty">Loading…</div></td></tr></tbody></table></div><div id="directoryStatusMessage" class="inline-status"></div></section>
+<section class="management-section" id="createCustomerSection" style="display:none"><div class="management-section-head"><div><h2>Create Employer</h2><p>Create the account and assign its initial SaaS plan. This records a subscription but does not fabricate a payment.</p></div></div><div class="management-section-body"><form id="createCustomerForm" class="saas-form"><input type="hidden" name="organization_type" value="employer"><div class="saas-form-grid"><label><span>Legal Name *</span><input name="legal_name" required></label><label><span>DBA</span><input name="dba_name"></label><label><span>Email</span><input name="email" type="email"></label><label><span>Phone</span><input name="phone"></label><label><span>USDOT Number</span><input name="dot_number"></label><label><span>MC Number</span><input name="mc_number"></label><label><span>State</span><input name="state"></label><label><span>Timezone</span><input name="timezone" value="America/Chicago"></label><label><span>Plan *</span><select name="plan_id" id="customerPlan" required><option value="">Loading plans…</option></select></label><label><span>Subscription Status</span><select name="subscription_status"><option value="active">Active</option><option value="trial">Trial</option><option value="paused">Paused</option></select></label><label class="saas-wide"><span>Admin Notes</span><textarea name="order_notes" rows="3"></textarea></label></div><div class="saas-actions"><button type="button" class="btn btn-outline" id="cancelCustomerCreate">Cancel</button><button class="btn btn-orange">Create Employer</button></div><div id="createCustomerStatus" class="inline-status"></div></form></div></section>
+</div></main>
 </div>
-<script type="module" src="../assets/js/portal.js"></script>
-</body></html>
+<script type="module" src="../assets/js/navigation.js"></script>
+  <script type="module" src="../assets/js/portal.js"></script>
+
+<script type="module" src="../assets/js/employer-directory-page.js"></script></body></html>

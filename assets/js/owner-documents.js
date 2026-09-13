@@ -1,0 +1,1 @@
+import{api,$,esc}from'./owner-saas.js';api({action:'documents'}).then(d=>{$('#rows').innerHTML=d.documents.map(x=>`<tr><td><strong>${esc(x.file_name)}</strong></td><td>${esc(x.document_type)}</td><td>${esc(x.uploaded_at||'—')}</td><td>${esc(x.expires_at||'—')}</td><td>${esc(x.access_level||'—')}</td></tr>`).join('')||'<tr><td colspan="5">No documents.</td></tr>'})
