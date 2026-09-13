@@ -669,3 +669,16 @@ small,.helper-text,.muted,.eyebrow,.metric-label,.metric-note,.card-head span,.m
  .certificate-tracking{font-size:9px!important;margin-top:.10in!important;padding:.05in .12in!important}.certificate-bottom{margin-top:.22in!important;gap:.5in!important;max-width:7.9in!important}
  .certificate-signature{width:2.35in!important}.certificate-signature-name{font-size:25px!important}.certificate-seal{font-size:11px!important}.certificate-address{font-size:8px!important}
 }
+
+/* v3.30 Employer Admin management */
+.report-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-bottom:22px}
+.report-card{border:1px solid #d5e0ef;border-radius:10px;background:#fff;padding:18px;display:flex;flex-direction:column;gap:10px}
+.report-card h3{margin:0;color:#17335f}.report-card p{margin:0;color:#60708a;line-height:1.5;min-height:42px}
+.report-card .btn{margin-top:auto;align-self:flex-start}
+.management-subtitle{color:#60708a;margin:-6px 0 16px}
+#rosterImport textarea,#bulkUserPanel textarea{width:100%;box-sizing:border-box;min-height:160px;padding:12px;border:1px solid #c9d6e8;border-radius:8px;font:inherit}
+.feature-row input[type=checkbox]{width:18px;height:18px}
+@media(max-width:1000px){.report-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:700px){.report-grid{grid-template-columns:1fr}}
+
+.saas-wide{grid-column:1/-1}.saas-wide textarea{width:100%;box-sizing:border-box}
