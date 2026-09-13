@@ -1,0 +1,36 @@
+Workforce Portal v3.44 C/TPA JavaScript verification
+
+Validated scripts: 29
+Parser: node --check
+Result: PASS for every v344 C/TPA page script
+
+SHA-256:
+c873752791f33ba38637bd21288ab14a8423fd4d66d4a0bd72ef275c73d7ed68  assets/js/ctpa-access-page-v344.js
+9a6a75e1dee7a94d61554068b876c18a9f20644ce72f5da46e47bd30b5ce0692  assets/js/ctpa-audit-page-v344.js
+773374d77bfc502df94227b73b7d12863f0e0daa169561a1a1f885efb1642d59  assets/js/ctpa-billing-page-v344.js
+8a3e196a16e712b5adc63574b3fa6568f54c790d69c7bb13d4fd9bd7b234e49b  assets/js/ctpa-branding-page-v344.js
+4e684a54ca7bbb73ca03abcd51f47b932ec5947ffc56014c3dfdf571d8b63938  assets/js/ctpa-clearinghouse-page-v344.js
+e22c88766301afce59165d2947fe7230691ea2e666423c09a02437bf3bfff6ef  assets/js/ctpa-client-access-page-v344.js
+057b6a91d0068397bf0545b10ff25e4d023960aa324e130559bd5e1ad09d309e  assets/js/ctpa-clients-page-v344.js
+2ddcc0197f29318980ad2a40f5ff5bfdff6af1c7c4d70845db0f36c5f49d3788  assets/js/ctpa-compliance-page-v344.js
+320fa922ef23e269149eeafae7af0d53ca0d4c9e22d33e607e649ff0403b3186  assets/js/ctpa-directory-page-v344.js
+b09d580967602fd301eac19d8e938bb6c290cd4273a51b2bbbb0c0c8de8f0597  assets/js/ctpa-documents-page-v344.js
+9d946113a1c56b70d06cd4544aeec503d22cf5d3da553575b87b442521995543  assets/js/ctpa-dot-programs-page-v344.js
+4b8bbac3d0ca618c9b233cb4ce45c379af7ac44da6a4514b1ff2edd0e68885e7  assets/js/ctpa-employer-import-page-v344.js
+c2aad16d714d8a6a9034ece59cbdad50c21a34977771f4f2ec60d8d32cfb6966  assets/js/ctpa-employer-settings-page-v344.js
+54ab46b7bd7aa57118c03d9e0e4ff0e29553ebe9b9f7da0851c4ea78fde98953  assets/js/ctpa-enrollment-page-v344.js
+f6e3516e74e7eb251da64e19c7ea1162a5693e09292be5a62f7aff0f1a2058b6  assets/js/ctpa-integrations-page-v344.js
+55122d65af6956eb9c9e8cdc8af48797ba04f3beb25a1b188b7eb3d65b0cb7ec  assets/js/ctpa-list-page-v344.js
+365bf531fe9cab21fff0e6c02c92b210ec3272f6b6a673a61e4f25419d810099  assets/js/ctpa-nondot-programs-page-v344.js
+bfb1925de187d0bd411d0e3d5e3f87ba4f8b324434ae52dfbd28afa4a0fdf1cd  assets/js/ctpa-notifications-page-v344.js
+2363b7191643b69c0fb372833f25b6dd8a3656ee0e17cff7482cf23c87cd9661  assets/js/ctpa-policies-page-v344.js
+eae1682f2be342577925a3bed6566521a98dd483ca99afcc5403c886b0a02e47  assets/js/ctpa-pool-access-page-v344.js
+52d44a756b5b131f19d1dcb343051ad8b2325b32c20147c7961c19cc57413720  assets/js/ctpa-pools-page-v344.js
+9e4711bf614241878574f320385b43956851ed3d400742f81ac4f2a6f167d8c1  assets/js/ctpa-profile-page-v344.js
+3259777e7745595fd1119b363d32ab8e7b804a1cc8d2239b94ce31b3e17c0f4c  assets/js/ctpa-reports-page-v344.js
+469dd2b464dd101aeaae989077e21d9a0bfb52687cfd3abc802d6bf1413d910d  assets/js/ctpa-results-page-v344.js
+cee21e4c9212d1aba4270f674ef23a936e753958e378b4cf83900b97859cf0b0  assets/js/ctpa-selections-page-v344.js
+4c591bcb6178ede3753e911542c063a46e2f7586798f00940247f056e51602e2  assets/js/ctpa-settings-page-v344.js
+5ef1a3c833badca4ba9003ad12810220de021bc88b6570b0c60be345e5a24654  assets/js/ctpa-subscription-page-v344.js
+38dcb1c1e82199ac7212094eab53bd163780c513b3fdde37d03c2bc732666eab  assets/js/ctpa-testing-page-v344.js
+355df4423617932f32e434edbae9ea52d1ae5a73974c0580400ce1d061071875  assets/js/ctpa-workforce-page-v344.js
