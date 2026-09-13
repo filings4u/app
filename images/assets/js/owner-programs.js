@@ -1,1 +1,0 @@
-import{api,$,esc}from'./owner-saas.js';api({action:'programs'}).then(d=>{$('#rows').innerHTML=d.programs.map(x=>`<tr><td><strong>${esc(x.name)}</strong></td><td>${esc(x.dot_agency||x.regulatory_authority||'—')}</td><td>${esc(x.testing_panel||'—')}</td><td>${esc(x.effective_date||'—')}</td><td>${esc(x.status)}</td></tr>`).join('')||'<tr><td colspan="5">No programs.</td></tr>'})

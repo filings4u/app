@@ -1,1 +1,0 @@
-import{supabase}from'./supabase.js';export async function op(body){const{data,error}=await supabase.functions.invoke('workforce-admin-ctpa-operations',{body});if(error){let m=error.message;try{m=(await error.context.clone().json()).error||m}catch{}throw new Error(m)}if(data?.error)throw new Error(data.error);return data}

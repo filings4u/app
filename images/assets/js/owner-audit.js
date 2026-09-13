@@ -1,1 +1,0 @@
-import{api,$,esc}from'./owner-saas.js';api({action:'audit'}).then(d=>{$('#rows').innerHTML=d.audit.map(x=>`<tr><td>${esc(x.event_at)}</td><td><strong>${esc(x.action)}</strong></td><td>${esc(x.resource_type||'—')}</td><td>${esc(x.resource_id||'—')}</td><td>${esc(x.actor_user_id||'System')}</td></tr>`).join('')||'<tr><td colspan="5">No audit history.</td></tr>'})

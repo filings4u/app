@@ -1,1 +1,0 @@
-import{api,$,esc}from'./owner-saas.js';api({action:'notifications'}).then(d=>{$('#rows').innerHTML=d.notifications.map(x=>`<tr><td>${esc(x.queued_at||'—')}</td><td>${esc(x.event_type)}</td><td>${esc(x.channel)}</td><td><strong>${esc(x.subject||'—')}</strong></td><td>${esc(x.status)}</td></tr>`).join('')||'<tr><td colspan="5">No notifications.</td></tr>'})

@@ -1,3 +1,0 @@
-
-import{init,$,empty}from'./employer-admin-common.js';import{esc}from'./employer-management.js';
-const d=await init('notifications');if(d){$('#managementContent').innerHTML=`<div class="management-table-wrap"><table class="management-table"><thead><tr><th>Queued</th><th>Event</th><th>Channel</th><th>Recipient</th><th>Subject</th><th>Status</th><th>Failure</th></tr></thead><tbody>${d.notifications.length?d.notifications.map(x=>`<tr><td>${esc(x.queued_at||'—')}</td><td>${esc(x.event_type)}</td><td>${esc(x.channel)}</td><td>${esc(x.recipient_address||'—')}</td><td><strong>${esc(x.subject||'—')}</strong></td><td>${esc(x.status)}</td><td>${esc(x.failure_reason||'—')}</td></tr>`).join(''):empty(7,'No notifications.')}</tbody></table></div>`}
