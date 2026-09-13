@@ -748,3 +748,34 @@ small,.helper-text,.muted,.eyebrow,.metric-label,.metric-note,.card-head span,.m
 #reportBuilder .saas-actions{margin-top:12px!important}
 #reportPreview .saas-notice{margin-top:0!important}
 @media(max-width:900px){.management-page{padding-left:18px!important;padding-right:18px!important}.management-section-body{padding:16px!important}}
+
+/* v3.37 compact controls + true edge gutters */
+.management-page{padding-left:40px!important;padding-right:40px!important}
+.management-section-body{padding:22px 30px 28px!important}
+.management-section-body>#managementContent{padding:0 8px!important;gap:20px!important}
+.management-section-body>#managementContent>.admin-inline-editor,
+.management-section-body>#managementContent>.management-table-wrap,
+.management-section-body>#managementContent>.saas-notice,
+.management-section-body>#managementContent>.report-grid,
+.management-section-body>#managementContent>.management-actions{width:calc(100% - 20px)!important;margin-left:10px!important;margin-right:10px!important}
+.admin-inline-editor{padding:20px 22px!important}
+.admin-inline-editor input:not([type="checkbox"]):not([type="radio"]),.admin-inline-editor select{min-height:36px!important;height:36px!important}
+.admin-inline-editor input[type="checkbox"],.admin-inline-editor input[type="radio"],.config-choice input[type="checkbox"],.config-choice input[type="radio"]{width:16px!important;height:16px!important;min-height:16px!important;max-height:16px!important;padding:0!important;flex:0 0 16px!important}
+.btn{min-height:36px!important;padding:8px 13px!important;font-size:11px!important;border-radius:8px!important}
+.btn-small{min-height:30px!important;padding:6px 10px!important;font-size:10px!important}
+.btn-compact{min-height:34px!important;padding:7px 12px!important;font-size:11px!important}
+.saas-actions{padding:4px 2px 2px!important;gap:10px!important}
+#reportBuilder{width:calc(100% - 20px)!important;margin-left:10px!important;margin-right:10px!important;padding:20px!important}
+#reportBuilder .saas-form-grid{grid-template-columns:repeat(2,minmax(220px,375px))!important;gap:16px!important}
+#reportBuilder .saas-actions{margin-top:14px!important;margin-bottom:14px!important;padding-right:2px!important}
+#reportPreview{display:flex;flex-direction:column;gap:14px;padding:0 2px 2px}
+#reportPreview .management-table-wrap,#reportPreview .saas-notice{width:100%!important;margin:0!important}
+.report-subhead{margin:8px 0 0!important}
+.report-count{padding:12px 14px!important}
+.report-card{padding:16px!important;gap:8px!important;min-height:0!important}
+.report-card p{min-height:36px!important}
+.pool-management-grid{display:grid;grid-template-columns:minmax(220px,1fr) auto minmax(220px,1fr) auto;gap:10px;align-items:end;margin:14px 0 18px}
+.pool-management-grid label{display:grid;gap:6px}.pool-management-grid label span{font-size:9px;font-weight:800;color:#536983}
+.pool-management-grid select{width:100%}.compact-pool-table{margin:0!important}
+@media(max-width:1000px){.pool-management-grid{grid-template-columns:1fr auto}.management-page{padding-left:24px!important;padding-right:24px!important}}
+@media(max-width:700px){.pool-management-grid{grid-template-columns:1fr}.management-section-body{padding:16px 18px!important}.management-page{padding-left:14px!important;padding-right:14px!important}}
