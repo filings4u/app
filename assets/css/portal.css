@@ -426,3 +426,230 @@ small,.helper-text,.muted,.eyebrow,.metric-label,.metric-note,.card-head span,.m
 
 /* v3.23 owner production management */
 .management-help{color:var(--muted);line-height:1.6;margin:4px 0 18px}.invoice-line{display:grid;grid-template-columns:minmax(240px,1fr) 110px 150px auto;gap:10px;margin:10px 0}.invoice-line input{width:100%}.management-section-body>h3,#content>h3{margin:24px 0 10px;color:#17335f}.saas-notice a{font-weight:800;color:#24467f;text-decoration:underline}@media(max-width:920px){.invoice-line{grid-template-columns:1fr}}
+
+/* v3.24 Owner-Operator management polish */
+.management-section,.admin-inline-editor,.document-editor,.document-editor-body{font-family:var(--portal-font-family,Inter,Arial,sans-serif)}
+.admin-inline-editor{margin-top:20px;padding:20px;border:1px solid #d5e0ef;border-radius:12px;background:#fff}
+.saas-form-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;align-items:end}
+.saas-form-grid label,.admin-inline-editor label{display:flex;flex-direction:column;gap:7px;font-weight:700;color:#173b73}
+.saas-form-grid input,.saas-form-grid select,.admin-inline-editor input,.admin-inline-editor select,.admin-inline-editor textarea{width:100%;min-height:42px;padding:10px 12px;border:1px solid #c9d6e8;border-radius:8px;background:#fff;font:inherit;color:#10284b;box-sizing:border-box}
+.admin-inline-editor textarea{min-height:110px;resize:vertical}
+.form-action-cell{display:flex;align-items:flex-end}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:42px;padding:10px 16px;border-radius:9px;border:1px solid transparent;font:700 13px/1 var(--portal-font-family,Inter,Arial,sans-serif);cursor:pointer;text-decoration:none}
+.btn-orange{background:#ff6b00;color:#fff;border-color:#ff6b00}.btn-primary{background:#24467f;color:#fff;border-color:#24467f}.btn-outline{background:#fff;color:#173b73;border-color:#c9d6e8}.btn-small{min-height:34px;padding:7px 11px}
+.invoice-line{display:grid;grid-template-columns:minmax(260px,1fr) 110px 150px auto;gap:10px;margin:10px 0;align-items:center}
+.management-table input,.management-table select{min-height:36px;padding:7px 9px;border:1px solid #c9d6e8;border-radius:7px;background:#fff;font:inherit}
+.owner-access-editor{margin-bottom:24px}
+.rich-editor{border:1px solid #c9d6e8;border-radius:10px;overflow:hidden;background:#fff}
+.rich-toolbar{display:flex;gap:6px;flex-wrap:wrap;padding:9px;background:#f5f8fc;border-bottom:1px solid #dce5f1}
+.rich-toolbar button{min-width:34px;min-height:32px;border:1px solid #c9d6e8;border-radius:6px;background:#fff;color:#173b73;font-weight:700;cursor:pointer}
+.rich-surface{min-height:300px;padding:18px;outline:none;line-height:1.55;color:#172b4d;background:#fff}
+.invoice-brand-preview{border:1px solid #d5e0ef;border-radius:12px;background:#fff;padding:24px;margin-top:18px}
+.invoice-brand-head{display:flex;justify-content:space-between;gap:20px;border-bottom:2px solid #24467f;padding-bottom:14px;margin-bottom:18px}
+.invoice-brand-name{font-size:22px;font-weight:800;color:#24467f}.invoice-brand-accent{color:#ff6b00}
+@media(max-width:900px){.saas-form-grid{grid-template-columns:1fr}.invoice-line{grid-template-columns:1fr 90px 120px auto}}
+
+/* v3.25 Owner-Operator directory completion */
+.management-summary-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:14px!important;margin:0 0 20px!important}
+.management-summary-card{min-width:0!important;height:auto!important;padding:16px!important;border:1px solid #d5e0ef!important;border-radius:10px!important;background:#fff!important}
+.saas-actions,.management-actions,.invoice-links,.row-actions{display:flex!important;flex-direction:row!important;align-items:center!important;justify-content:flex-end!important;gap:10px!important;flex-wrap:wrap!important}
+.management-actions{justify-content:flex-start!important;margin:16px 0!important}
+.admin-inline-editor>.saas-actions,.admin-inline-editor form>.saas-actions{margin-top:16px!important}
+.document-source-editor{display:none!important}
+.rich-editor{margin-top:8px}
+.rich-surface{font-weight:400!important;font-size:14px!important}
+.rich-surface h1{font-size:24px}.rich-surface h2{font-size:19px}.rich-surface p{margin:0 0 12px}
+.management-table td .btn{white-space:nowrap}
+.thread-row{cursor:pointer}.thread-row:hover{background:#f7f9fc}
+.thread-detail td{background:#f7f9fc;padding:16px!important}
+.thread-message{padding:10px 12px;border:1px solid #dbe4f0;border-radius:8px;background:#fff;margin:8px 0}
+.file-upload-box{padding:14px;border:1px dashed #aebfd6;border-radius:9px;background:#f8fafc}
+.branded-document{border:1px solid #d5e0ef;border-radius:12px;background:#fff;padding:28px;max-width:900px}
+.branded-document-header{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid #24467f;padding-bottom:16px;margin-bottom:20px}
+.branded-document-title{font-size:22px;font-weight:800;color:#24467f}
+.branded-document-title span{color:#ff6b00}
+@media(max-width:900px){.management-summary-grid{grid-template-columns:1fr!important}.saas-actions,.invoice-links{justify-content:flex-start!important}}
+
+/* v3.26 global spacing guardrails — preserve page-specific work */
+.content.management-page{padding:28px 28px 36px!important;gap:20px!important}
+.management-page>*{min-width:0}
+.management-context-bar,.management-section,.admin-inline-editor,.saas-notice,.management-table-wrap,.file-upload-box{margin-left:0!important;margin-right:0!important}
+.management-section{overflow:visible!important}
+.management-section-head{padding:18px 20px!important}
+.management-section-body{padding:20px!important}
+.management-section-body>#content{display:block;min-width:0}
+#content>.saas-notice:first-child,#content>.management-summary-grid:first-child,#content>.admin-inline-editor:first-child{margin-top:0!important}
+#content>.management-actions{margin:16px 0 18px!important}
+#content>h3{margin:26px 0 12px!important}
+.management-summary-grid{gap:14px!important}
+.management-summary-card{padding:17px 18px!important}
+.management-table-wrap{overflow-x:auto!important;margin-top:10px!important}
+.management-table{width:100%;border-collapse:collapse}
+.management-table th,.management-table td{padding:13px 12px!important;vertical-align:middle}
+.admin-inline-editor{padding:20px!important;margin:18px 0!important}
+.saas-form-grid{gap:16px!important}
+.saas-form-grid label,label.editor-label{min-width:0}
+.saas-form-grid input,.saas-form-grid select,.saas-form-grid textarea{width:100%;box-sizing:border-box}
+.saas-actions{margin-top:18px!important}
+.dot-panel-editor{margin-top:20px;border:1px solid #d5e0ef;border-radius:10px;padding:18px;background:#f8fafc}
+.dot-panel-editor h3{margin:0 0 6px;color:#17335f}
+.dot-panel-editor p{margin:0 0 14px;color:#60708a}
+.dot-panel-table{width:100%;border-collapse:collapse;background:#fff}
+.dot-panel-table th,.dot-panel-table td{padding:10px!important;border-bottom:1px solid #e3eaf3;text-align:left}
+.dot-panel-table input,.dot-panel-table select{width:100%;min-width:90px;box-sizing:border-box}
+@media(max-width:900px){.content.management-page{padding:20px 16px 28px!important}.management-section-head,.management-section-body,.admin-inline-editor{padding:16px!important}}
+
+/* v3.27 spacing system — no adjacent UI surfaces touch */
+.content.management-page{
+  padding:30px 30px 40px!important;
+  gap:22px!important;
+}
+.management-page>.welcome,
+.management-page>.management-context-bar,
+.management-page>.management-section{margin:0!important}
+.management-section{
+  padding:0!important;
+  border-radius:12px!important;
+}
+.management-section-head{padding:20px 22px!important}
+.management-section-body{padding:22px!important}
+.management-section-body>#content{padding:0!important}
+#content>.management-section{
+  border:0!important;
+  border-radius:0!important;
+  padding:0!important;
+  margin:0!important;
+  background:transparent!important;
+}
+#content>.management-section>.section-heading{
+  padding:0 0 18px!important;
+  margin:0 0 20px!important;
+  border-bottom:1px solid var(--line)!important;
+}
+#content>.management-section>.section-heading h3{margin:0 0 6px!important}
+#content>.management-section>.section-heading p{margin:0!important;line-height:1.55}
+#content>.management-section>.admin-inline-editor{margin:0 0 24px!important}
+#content>.management-section>h3{margin:26px 0 12px!important}
+.management-table-wrap{
+  margin:0 0 24px!important;
+  border:1px solid var(--line)!important;
+  border-radius:10px!important;
+  overflow-x:auto!important;
+  overflow-y:hidden!important;
+}
+.management-table{border-spacing:0!important}
+.management-table th,.management-table td{padding:14px 14px!important}
+.management-table th:first-child,.management-table td:first-child{padding-left:16px!important}
+.management-table th:last-child,.management-table td:last-child{padding-right:16px!important}
+.admin-inline-editor{
+  padding:22px!important;
+  margin:20px 0 24px!important;
+  border-radius:10px!important;
+}
+.owner-access-editor{margin-top:0!important}
+.owner-access-grid{gap:18px 16px!important}
+.saas-form-grid{column-gap:18px!important;row-gap:16px!important}
+.saas-form-grid label>span{display:block;margin:0 0 7px!important}
+.management-actions{gap:12px!important}
+.management-summary-grid{margin:0 0 22px!important}
+
+/* DOT result report — intentionally generous column separation */
+.dot-panel-table{table-layout:fixed!important;border-collapse:separate!important;border-spacing:0!important}
+.dot-panel-table th,.dot-panel-table td{padding:13px 18px!important}
+.dot-panel-table th:nth-child(1),.dot-panel-table td:nth-child(1){width:30%}
+.dot-panel-table th:nth-child(2),.dot-panel-table td:nth-child(2){width:22%}
+.dot-panel-table th:nth-child(3),.dot-panel-table td:nth-child(3){width:22%}
+.dot-panel-table th:nth-child(4),.dot-panel-table td:nth-child(4){width:26%}
+.dot-panel-table input,.dot-panel-table select{min-height:40px!important}
+
+/* Printable/browser certificate based on the supplied consortium certificate */
+.certificate-document{max-width:1120px!important;padding:0!important;overflow:hidden!important;background:#fff!important}
+.certificate-document .branded-document-header{display:none!important}
+.consortium-certificate{
+  position:relative;
+  min-height:690px;
+  box-sizing:border-box;
+  padding:78px 80px 70px;
+  text-align:center;
+  overflow:hidden;
+  background:
+    linear-gradient(154deg,#f58220 0 10%,transparent 10.2%) top left/54% 86px no-repeat,
+    linear-gradient(26deg,#2f5fa5 0 10%,transparent 10.2%) top right/58% 84px no-repeat,
+    linear-gradient(26deg,#f58220 0 12%,transparent 12.2%) bottom left/55% 94px no-repeat,
+    linear-gradient(154deg,#2f5fa5 0 12%,transparent 12.2%) bottom right/58% 94px no-repeat,
+    #fff;
+}
+.consortium-certificate:before,.consortium-certificate:after{
+  content:"";position:absolute;width:170px;height:170px;border:1px solid rgba(47,95,165,.20);
+  border-radius:50%;transform:scaleX(.35) rotate(24deg);pointer-events:none
+}
+.consortium-certificate:before{left:-64px;top:110px;box-shadow:0 0 0 8px rgba(47,95,165,.035),0 0 0 18px rgba(245,130,32,.025)}
+.consortium-certificate:after{right:-62px;bottom:105px;box-shadow:0 0 0 8px rgba(245,130,32,.035),0 0 0 18px rgba(47,95,165,.025)}
+.certificate-kicker{font-size:54px;font-weight:900;letter-spacing:1px;color:#f58220;line-height:1}
+.certificate-subtitle{font-size:38px;font-weight:850;letter-spacing:1px;color:#2f5fa5;margin:12px 0 26px}
+.certificate-program{font-size:24px;line-height:1.5;color:#2c2f34;margin:0 auto 28px}
+.certificate-company{font-size:42px;line-height:1.15;font-weight:900;text-transform:uppercase;color:#2f5fa5;margin:0 0 32px}
+.certificate-copy{font-size:18px;line-height:1.55;color:#333;max-width:820px;margin:0 auto 30px}
+.certificate-validity{font-size:17px;line-height:1.5;margin:0 auto 44px}
+.certificate-signature{width:260px;margin:0 auto;display:flex;flex-direction:column;align-items:center}
+.certificate-signature-name{font-family:"Brush Script MT","Segoe Script",cursive;font-size:34px;line-height:1.1}
+.certificate-signature-line{display:block;width:220px;border-bottom:2px solid #555;margin:2px 0 7px}
+.certificate-signature strong{font-size:16px;letter-spacing:.4px}
+.certificate-brand{position:absolute;right:84px;bottom:76px;font-size:38px;font-weight:900;color:#2f5fa5}
+.certificate-brand .four{color:#f58220}
+.certificate-brand small{display:block;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#60708a;margin-top:4px}
+@media(max-width:760px){
+  .content.management-page{padding:20px 16px 30px!important}
+  .management-section-body{padding:16px!important}
+  .consortium-certificate{min-height:620px;padding:64px 28px}
+  .certificate-kicker{font-size:40px}.certificate-subtitle{font-size:29px}
+  .certificate-program{font-size:18px}.certificate-company{font-size:30px}
+  .certificate-brand{position:static;margin-top:35px}
+}
+@media print{
+  body{background:#fff!important}
+  body>main{max-width:none!important;margin:0!important;padding:0!important}
+  .certificate-document{border:0!important;box-shadow:none!important;max-width:none!important}
+  .consortium-certificate{min-height:7.5in}
+}
+
+/* v3.28 official document letterhead */
+.official-letterhead{display:grid;grid-template-columns:1fr auto;gap:28px;align-items:start;padding:24px 28px 20px;border-bottom:3px solid #24467f;background:#fff}
+.official-letterhead-logo{width:205px;max-height:70px;object-fit:contain;object-position:left center}
+.official-letterhead-contact{text-align:right;font-size:12px;line-height:1.55;color:#31445f}
+.official-letterhead-contact strong{display:block;color:#17335f;font-size:13px;margin-bottom:3px}
+.official-document-body{padding:30px 34px 40px}
+.official-document-footer{border-top:1px solid #cbd8ea;margin:30px 34px 0;padding:14px 0 22px;text-align:center;font-size:11px;color:#66758d;letter-spacing:.2px}
+.document-view-actions{max-width:1120px;margin:24px auto 10px!important}
+.result-report-document{max-width:1040px;margin:0 auto;background:#fff;border:1px solid #ccd9ea;border-radius:12px;overflow:hidden}
+.result-report-document .result-meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 28px;margin-bottom:26px}
+.result-report-document .result-meta p{margin:0;padding:7px 0;border-bottom:1px solid #eef2f8}
+.result-report-document .dot-panel-display{width:100%;border-collapse:separate;border-spacing:0;margin:14px 0 22px}
+.result-report-document .dot-panel-display th,.result-report-document .dot-panel-display td{padding:11px 22px!important;text-align:left;border-bottom:1px solid #e6edf7}
+.result-report-document .dot-panel-display th{background:#f4f7fc;color:#294d82;font-size:12px;text-transform:uppercase;letter-spacing:.25px}
+.selection-runner{margin-top:0!important}
+.management-help{margin:14px 0 0;color:var(--muted);font-size:12px;line-height:1.55}
+#pageStatus:empty{display:none}
+#pageStatus{margin:0 0 18px!important}
+
+/* Brand-forward official certificate */
+.certificate-document{max-width:1120px!important;border:0!important}
+.certificate-document .official-letterhead{display:none}
+.consortium-certificate{position:relative;min-height:720px;padding:78px 82px 66px;background:#fff;border:10px solid #17335f;box-shadow:inset 0 0 0 4px #f58220;text-align:center}
+.consortium-certificate:before{content:"";position:absolute;left:18px;top:18px;width:120px;height:120px;border-left:30px solid #24467f;border-top:30px solid #f58220;clip-path:polygon(0 0,100% 0,0 100%);border-radius:0;transform:none;box-shadow:none}
+.consortium-certificate:after{content:"";position:absolute;right:18px;bottom:18px;width:120px;height:120px;border-right:30px solid #24467f;border-bottom:30px solid #f58220;clip-path:polygon(100% 0,100% 100%,0 100%);border-radius:0;transform:none;box-shadow:none}
+.certificate-logo{width:220px;max-height:72px;object-fit:contain;margin:0 auto 28px}
+.certificate-kicker{font-size:48px;color:#f58220;letter-spacing:2px}
+.certificate-subtitle{font-size:34px;color:#24467f;margin:8px 0 26px}
+.certificate-program{font-size:20px;line-height:1.5;margin-bottom:26px}
+.certificate-company{font-size:39px;color:#24467f;margin-bottom:30px}
+.certificate-copy{font-size:17px;line-height:1.65;max-width:800px}
+.certificate-validity{font-size:16px;margin-top:28px}
+.certificate-bottom{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:end;margin:54px auto 0;max-width:760px}
+.certificate-signature{width:280px;margin:0;text-align:center;justify-self:start}
+.certificate-signature-name{font-size:34px}
+.certificate-seal{justify-self:end;text-align:right;color:#24467f;font-weight:800;line-height:1.5}
+.certificate-seal strong{display:block;color:#f58220;font-size:13px;text-transform:uppercase;letter-spacing:1.5px}
+.certificate-address{font-size:11px;color:#66758d;margin-top:8px}
+@media(max-width:760px){.official-letterhead{grid-template-columns:1fr}.official-letterhead-contact{text-align:left}.result-report-document .result-meta{grid-template-columns:1fr}.certificate-bottom{grid-template-columns:1fr}.certificate-signature,.certificate-seal{justify-self:center;text-align:center}}
+@media print{.official-letterhead{display:grid!important}.certificate-document .official-letterhead{display:none!important}.result-report-document,.branded-document{border:0!important;box-shadow:none!important}.official-document-body{padding:22px 28px}.document-view-actions{display:none!important}}

@@ -33,6 +33,7 @@ const ADMIN_NAV = [
     ['Driver Profile','owner-driver.html','driver'],
     ['Consortium Enrollment','owner-consortium.html','consortium'],
     ['Random Pool','owner-pool.html','pool'],
+    ['Random Selections','owner-selections.html','selections'],
     ['Testing','owner-testing.html','testing'],
     ['Results','owner-results.html','results'],
     ['RTD / Follow-Up','owner-rtd.html','rtd'],
