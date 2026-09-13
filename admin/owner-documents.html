@@ -36,7 +36,15 @@
     <div class="user-chip"><span class="avatar">S4</span><span class="user-meta"><strong>Andre Erving</strong><span>Platform Administrator</span></span></div>
   </div>
 </header>
-<div class="content management-page"><div class="welcome"><div><h1>Documents &amp; Certificates</h1><p>Manage certificates, policies, testing records, and compliance documents.</p></div></div><div class="management-context-bar"><div class="management-context-left"><div class="management-context-icon">D</div><div class="management-context-copy"><strong id="ownerName">Choose an Owner-Operator</strong><span id="ownerMeta">Owner-Operator management context</span></div></div><div class="management-context-actions"><span style="color:var(--muted);font-weight:800">CHANGE OWNER-OPERATOR</span><select id="ownerSelector"></select></div></div><section class="management-section"><div class="management-section-head"><div><h2>Document Management</h2><p>Manage certificates, policies, testing records, and compliance documents.</p></div></div><div class="management-section-body"><div id="content"><div class="management-empty">Select an Owner-Operator to load management controls.</div></div></div></section></div></main>
+<div class="content management-page">
+<div class="welcome"><div><h1>Documents &amp; Certificates</h1><p>Prepare, personalize, push, approve, and issue Owner-Operator New Entrant Audit compliance documents.</p></div></div>
+<div class="management-context-bar"><div class="management-context-left"><div class="management-context-icon">D</div><div class="management-context-copy"><strong id="ownerName">Choose an Owner-Operator</strong><span id="ownerMeta">Owner-Operator document workflow</span></div></div><div class="management-context-actions"><span>CHANGE OWNER-OPERATOR</span><select id="ownerSelector"></select></div></div>
+<div id="pageStatus" class="inline-status"></div>
+<section class="management-section"><div class="management-section-head"><div><h2>Required Onboarding Document</h2><p>The Letter of Agreement must be completed and approved before consortium enrollment access is released.</p></div></div><div class="management-section-body" id="requiredWorkflow"></div></section>
+<section class="management-section"><div class="management-section-head"><div><h2>Document Templates</h2><p>Maintain the master wording used to create personalized documents. Saving a template creates a new version; existing packets keep their original version.</p></div></div><div class="management-section-body"><div id="templateList"></div><div id="templateEditor" class="admin-inline-editor" style="display:none"></div></div></section>
+<section class="management-section"><div class="management-section-head"><div><h2>Owner-Operator Document Packets</h2><p>Each pushed document is a versioned owner-specific record with its own lifecycle and audit history.</p></div></div><div class="management-section-body" id="packetList"></div></section>
+<section class="management-section"><div class="management-section-head"><div><h2>Document Activity</h2><p>Review creation, push, view, signature submission, approval, issuance, and void events.</p></div></div><div class="management-section-body" id="eventList"></div></section>
+</div></main>
 </div>
 <script type="module" src="../assets/js/navigation.js"></script>
   <script type="module" src="../assets/js/portal.js"></script>
