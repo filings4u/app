@@ -653,3 +653,19 @@ small,.helper-text,.muted,.eyebrow,.metric-label,.metric-note,.card-head span,.m
 .certificate-address{font-size:11px;color:#66758d;margin-top:8px}
 @media(max-width:760px){.official-letterhead{grid-template-columns:1fr}.official-letterhead-contact{text-align:left}.result-report-document .result-meta{grid-template-columns:1fr}.certificate-bottom{grid-template-columns:1fr}.certificate-signature,.certificate-seal{justify-self:center;text-align:center}}
 @media print{.official-letterhead{display:grid!important}.certificate-document .official-letterhead{display:none!important}.result-report-document,.branded-document{border:0!important;box-shadow:none!important}.official-document-body{padding:22px 28px}.document-view-actions{display:none!important}}
+
+.certificate-tracking{display:inline-block;margin-top:18px;padding:8px 16px;border:1px solid #c8d6e9;border-radius:999px;color:#24467f;font-size:12px;letter-spacing:.4px;background:#f7f9fd}
+.certificate-admin-summary{margin:0 0 18px;padding:12px 14px;border:1px solid #cbd8ea;border-radius:8px;background:#f7f9fd;color:#17335f}
+@page{size:letter landscape;margin:0}
+@media print{
+ html,body{width:11in!important;height:8.5in!important;margin:0!important;padding:0!important;background:#fff!important;overflow:hidden!important}
+ body>*:not(#doc){display:none!important}
+ #doc.certificate-document{display:block!important;position:fixed!important;inset:0!important;width:11in!important;height:8.5in!important;max-width:none!important;margin:0!important;padding:.22in!important;box-sizing:border-box!important;background:#fff!important}
+ .consortium-certificate{width:100%!important;height:100%!important;min-height:0!important;box-sizing:border-box!important;padding:.42in .58in .34in!important;border-width:7px!important;box-shadow:inset 0 0 0 3px #f58220!important;break-inside:avoid!important;page-break-inside:avoid!important}
+ .certificate-logo{width:1.65in!important;max-height:.52in!important;margin-bottom:.12in!important}
+ .certificate-kicker{font-size:31px!important;line-height:1.05!important}.certificate-subtitle{font-size:22px!important;margin:.04in 0 .16in!important}
+ .certificate-program{font-size:13px!important;line-height:1.35!important;margin-bottom:.15in!important}.certificate-company{font-size:27px!important;margin-bottom:.16in!important}
+ .certificate-copy{font-size:12px!important;line-height:1.45!important;max-width:7.7in!important}.certificate-validity{font-size:12px!important;margin-top:.16in!important}
+ .certificate-tracking{font-size:9px!important;margin-top:.10in!important;padding:.05in .12in!important}.certificate-bottom{margin-top:.22in!important;gap:.5in!important;max-width:7.9in!important}
+ .certificate-signature{width:2.35in!important}.certificate-signature-name{font-size:25px!important}.certificate-seal{font-size:11px!important}.certificate-address{font-size:8px!important}
+}
