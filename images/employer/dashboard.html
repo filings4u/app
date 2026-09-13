@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#24467f">
+<title>Dashboard | screenings4u Workforce Compliance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/portal.css">
+</head>
+<body class="portal-body">
+<div class="portal-shell">
+
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <img src="../images/logo2.png" alt="screenings4u">
+    <div class="product-name">Workforce Compliance</div>
+    <div class="workspace">Employer Workspace</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section">Workspace</div>
+    <a class="nav-link" data-nav href="dashboard.html"><span class="nav-icon">▦</span><span>Dashboard</span></a><a class="nav-link" data-nav data-feature="employee_management" href="employees.html"><span class="nav-icon">👥</span><span>Employees & Drivers</span></a><a class="nav-link" data-nav data-feature="ders_supervisors" href="ders-supervisors.html"><span class="nav-icon">D</span><span>DERs & Supervisors</span></a><a class="nav-link" data-nav data-feature="team_users" href="account-users.html"><span class="nav-icon">U</span><span>Account Users</span></a><a class="nav-link" data-nav data-feature="locations" href="locations.html"><span class="nav-icon">L</span><span>Locations / Terminals</span></a><a class="nav-link" data-nav data-feature="programs" href="programs.html"><span class="nav-icon">P</span><span>Programs</span></a><a class="nav-link" data-nav data-feature="programs" href="program-enrollment.html"><span class="nav-icon">E</span><span>Program Enrollment</span></a><a class="nav-link" data-nav data-feature="random_pool" href="random-pools.html"><span class="nav-icon">R</span><span>Random Pools</span></a><a class="nav-link" data-nav data-feature="random_selections" href="random-selections.html"><span class="nav-icon">S</span><span>Random Selections</span></a><a class="nav-link" data-nav data-feature="random_pool" href="pool-membership.html"><span class="nav-icon">M</span><span>Pool Membership</span></a><a class="nav-link" data-nav data-feature="testing_orders" href="testing-orders.html"><span class="nav-icon">T</span><span>Testing</span></a><a class="nav-link" data-nav data-feature="results_summary" href="results.html"><span class="nav-icon">✓</span><span>Results</span></a><a class="nav-link" data-nav data-feature="compliance" href="compliance.html"><span class="nav-icon">!</span><span>Compliance</span></a><a class="nav-link" data-nav data-feature="rtd_follow_up" href="rtd-follow-up.html"><span class="nav-icon">R</span><span>RTD / Follow-Up</span></a><a class="nav-link" data-nav data-feature="documents" href="documents.html"><span class="nav-icon">D</span><span>Documents</span></a><a class="nav-link" data-nav data-feature="standard_reports" href="reports.html"><span class="nav-icon">↗</span><span>Reports</span></a><a class="nav-link" data-nav data-feature="audit_history" href="audit-history.html"><span class="nav-icon">A</span><span>Audit History</span></a><a class="nav-link" data-nav data-feature="notifications" href="notifications.html"><span class="nav-icon">N</span><span>Notifications</span></a><a class="nav-link" data-nav href="billing.html"><span class="nav-icon">$</span><span>Plan & Billing</span></a><a class="nav-link" data-nav data-feature="account_settings" href="account-settings.html"><span class="nav-icon">G</span><span>Account Settings</span></a>
+  </nav>
+  <div class="sidebar-bottom">
+    <div class="sidebar-help"><strong>Need help?</strong><span>Contact screenings4u support from your account.</span></div>
+  </div>
+</aside>
+
+<main class="portal-main">
+<header class="topbar">
+  <div class="topbar-left">
+    <button class="mobile-menu" data-mobile-menu aria-label="Open menu">☰</button>
+    <div class="page-title"><strong>Dashboard</strong><span>ABC Trucking</span></div>
+  </div>
+  <div class="topbar-actions">
+    <button class="top-action" aria-label="Notifications">🔔<span class="notification-dot"></span></button>
+    <button class="top-action" aria-label="Help">?</button>
+    <div class="user-chip"><span class="avatar">AE</span><span class="user-meta"><strong>Andre Erving</strong><span>Employer Administrator</span></span></div>
+  </div>
+</header>
+<div class="content">
+<div class="welcome">
+  <div><h1>Good afternoon, ABC Trucking</h1><p>Here is your workforce compliance snapshot for today.</p></div>
+  <a class="btn btn-orange" href="testing-orders.html">+ Order / Record Test</a>
+</div>
+<section class="metrics">
+  <article class="metric-card"><div class="metric-top"><span class="metric-label">Active Employees</span><span class="metric-icon">👥</span></div><div class="metric-value">48</div><div class="metric-note good">37 DOT-covered drivers</div></article>
+  <article class="metric-card"><div class="metric-top"><span class="metric-label">Open Tests</span><span class="metric-icon">T</span></div><div class="metric-value">3</div><div class="metric-note">2 scheduled • 1 pending</div></article>
+  <article class="metric-card"><div class="metric-top"><span class="metric-label">Compliance Alerts</span><span class="metric-icon">!</span></div><div class="metric-value">1</div><div class="metric-note">Action recommended</div></article>
+  <article class="metric-card"><div class="metric-top"><span class="metric-label">Documents</span><span class="metric-icon">D</span></div><div class="metric-value">126</div><div class="metric-note good">12 added this month</div></article>
+</section>
+
+<div class="grid grid-2">
+  <section class="card">
+    <div class="card-head"><div><h2>Compliance Status</h2><span>Current workforce and testing activity</span></div><a class="btn btn-outline" href="compliance.html">View Compliance</a></div>
+    <div class="card-body status-list">
+      <div class="status-row"><div><strong>Random testing pool</strong><small>37 eligible DOT drivers</small></div><span class="badge success">Active</span></div>
+      <div class="status-row"><div><strong>Pending random selections</strong><small>2 employees require testing</small></div><span class="badge warning">Action</span></div>
+      <div class="status-row"><div><strong>Policy documents</strong><small>Current policy on file</small></div><span class="badge success">Current</span></div>
+      <div class="status-row"><div><strong>Post-accident test</strong><small>Driver: James R. • Due today</small></div><span class="badge danger">Due</span></div>
+    </div>
+  </section>
+  <section class="card">
+    <div class="card-head"><div><h2>Program Progress</h2><span>Annual testing activity</span></div></div>
+    <div class="card-body progress-block">
+      <div class="progress-line"><div class="progress-meta"><strong>Drug testing</strong><span>14 / 18 complete</span></div><div class="progress-track"><div class="progress-fill" style="width:78%"></div></div></div>
+      <div class="progress-line"><div class="progress-meta"><strong>Alcohol testing</strong><span>4 / 6 complete</span></div><div class="progress-track"><div class="progress-fill" style="width:67%"></div></div></div>
+      <div class="progress-line"><div class="progress-meta"><strong>Documents current</strong><span>92%</span></div><div class="progress-track"><div class="progress-fill" style="width:92%"></div></div></div>
+    </div>
+  </section>
+</div>
+
+<div class="grid grid-2" style="margin-top:18px">
+  <section class="card"><div class="card-head"><div><h2>Recent Activity</h2><span>Latest activity in your account</span></div></div><div class="card-body activity">
+    <div class="activity-row"><span class="activity-icon">T</span><div><strong>Random test completed</strong><span>Michael Carter • DOT Drug Test</span></div><time>2h ago</time></div>
+    <div class="activity-row"><span class="activity-icon">D</span><div><strong>Document uploaded</strong><span>2026 Consortium Certificate</span></div><time>Yesterday</time></div>
+    <div class="activity-row"><span class="activity-icon">👥</span><div><strong>Employee added</strong><span>Samantha Lewis • CDL Driver</span></div><time>2 days</time></div>
+  </div></section>
+  <section class="card"><div class="card-head"><div><h2>Quick Actions</h2><span>Common account tasks</span></div></div><div class="card-body quick-grid">
+    <a class="quick" href="employees.html"><b>Add Employee</b><span>Create a new workforce record</span></a>
+    <a class="quick" href="testing-orders.html"><b>Order / Record Test</b><span>Create a testing workflow</span></a>
+    <a class="quick" href="documents.html"><b>Upload Document</b><span>Add compliance evidence</span></a>
+    <a class="quick" href="reports.html"><b>Run Report</b><span>Review program activity</span></a>
+  </div></section>
+</div>
+</div>
+</main>
+</div>
+<script type="module" src="../assets/js/portal.js"></script>
+<script type="module" src="../assets/js/employer-entitlements.js"></script></body></html>

@@ -1,0 +1,14 @@
+import{invokeOwnerDirectory}from'./owner-management.js';
+const q=new URLSearchParams(location.search),rid=q.get('report'),owner=q.get('owner'),el=document.querySelector('#report');
+const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=x=>x?new Date(x).toLocaleString():'—';
+const letterhead=`<header class="official-letterhead"><img class="official-letterhead-logo" src="images/logo.png" alt="screenings4u"><div class="official-letterhead-contact"><strong>screenings4u Workforce Compliance</strong>8537 S Pulaski Rd<br>Chicago, IL 60652<br>Office: 773-245-7009<br>workforce.screenings4u.com</div></header>`;
+try{
+ const data=await invokeOwnerDirectory({action:'workspace',owner_operator_id:owner}),r=(data.result_reports||[]).find(x=>x.id===rid);
+ if(!r)el.textContent='Result report not found.';
+ else{
+  const driver=r.employees?`${r.employees.first_name||''} ${r.employees.last_name||''}`.trim():'—',order=r.testing_orders?.order_number||'—',reason=r.testing_orders?.reason||r.test_reason||'—';
+  let panel='';const tmp=document.createElement('div');tmp.innerHTML=r.summary_html||'';const oldTable=tmp.querySelector('table');if(oldTable){oldTable.className='dot-panel-display';panel=oldTable.outerHTML}
+  el.className='result-report-document';el.innerHTML=`${letterhead}<div class="official-document-body"><div class="branded-document-header"><div><strong>Verified Test Result</strong><br><small>Report ${esc(r.report_number||'')}</small></div><div><strong>${esc(r.report_status||'final')}</strong><br><small>Finalized ${esc(fmt(r.finalized_at))}</small></div></div><div class="result-meta"><p><strong>Driver:</strong> ${esc(driver)}</p><p><strong>Order:</strong> ${esc(order)}</p><p><strong>Reason:</strong> ${esc(reason)}</p><p><strong>Regulatory Mode:</strong> ${esc(r.regulatory_mode||'—')}</p><p><strong>Specimen:</strong> ${esc(r.specimen_type||'—')}</p><p><strong>Laboratory:</strong> ${esc(r.laboratory_name||'—')}</p><p><strong>MRO:</strong> ${esc(r.mro_name||'—')}</p><p><strong>Verified Result:</strong> ${esc(r.verified_result||'—')}</p></div>${panel?`<h2>DOT Drug Panel</h2>${panel}`:''}<div class="result-verification"><p><strong>Overall Verified Result:</strong> ${esc(r.verified_result||'—')}</p><p><strong>MRO:</strong> ${esc(r.mro_name||'—')}</p><p><strong>Finalized:</strong> ${esc(fmt(r.finalized_at))}</p></div></div><footer class="official-document-footer">screenings4u Workforce Compliance • 8537 S Pulaski Rd, Chicago, IL 60652 • Office 773-245-7009 • workforce.screenings4u.com</footer>`;
+ }
+}catch(error){el.textContent=error?.message||'Unable to load result report.'}
