@@ -779,3 +779,14 @@ small,.helper-text,.muted,.eyebrow,.metric-label,.metric-note,.card-head span,.m
 .pool-management-grid select{width:100%}.compact-pool-table{margin:0!important}
 @media(max-width:1000px){.pool-management-grid{grid-template-columns:1fr auto}.management-page{padding-left:24px!important;padding-right:24px!important}}
 @media(max-width:700px){.pool-management-grid{grid-template-columns:1fr}.management-section-body{padding:16px 18px!important}.management-page{padding-left:14px!important;padding-right:14px!important}}
+
+/* v3.38 Employer field separation + compact table controls */
+.admin-inline-editor .saas-form-grid{margin-bottom:16px!important;row-gap:16px!important;column-gap:18px!important}
+.admin-inline-editor .saas-form-grid+ .management-table-wrap{margin-top:16px!important}
+.admin-inline-editor .management-table-wrap+ .saas-actions{margin-top:16px!important}
+.admin-inline-editor .management-table th,.admin-inline-editor .management-table td{padding-top:10px!important;padding-bottom:10px!important}
+.admin-inline-editor .management-table input[type="checkbox"],.admin-inline-editor .management-table input[type="radio"]{width:15px!important;height:15px!important;min-height:15px!important;max-height:15px!important}
+.admin-inline-editor label>span{display:block;margin-bottom:6px!important}
+.admin-inline-editor h3{margin:0 0 14px!important}.admin-inline-editor h3+p{margin:0 0 14px!important}
+.management-table-wrap{overflow-x:auto!important}
+@media(max-width:700px){.admin-inline-editor{padding:16px!important}.admin-inline-editor .saas-form-grid{margin-bottom:14px!important}}
