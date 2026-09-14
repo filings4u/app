@@ -50,6 +50,19 @@ export async function getContext(){
 }
 
 
+async function enforceCustomerOnboarding(ctx){
+  const actual=currentPortal();
+  if(!actual || actual==='admin' || ctx?.membership?.role_code==='platform_admin') return true;
+  if(location.pathname.endsWith('/onboarding.html')) return true;
+  try{
+    const portal=actual==='owner-operator'?'owner_operator':actual;
+    const {data,error}=await supabase.functions.invoke('workforce-customer-onboarding',{body:{action:'status',portal}});
+    if(error)throw error;
+    if(!data?.completed){location.replace(rootUrl(actual+'/onboarding.html'));return false}
+    return true;
+  }catch(error){console.error('Onboarding status unavailable',error);location.replace(rootUrl(actual+'/onboarding.html'));return false}
+}
+
 const portalViews = [
   { key:'admin', label:'Admin Portal', path:'admin/dashboard.html' },
   { key:'employer', label:'Employer Portal', path:'employer/dashboard.html' },
@@ -290,6 +303,7 @@ document.addEventListener('DOMContentLoaded',async()=>{
   wireUi();
   const ctx=await getContext();
   if(ctx){
+    if(!await enforceCustomerOnboarding(ctx)) return;
     render(ctx);
     buildAdminNavigation();
     wireSidebarPersistence();
