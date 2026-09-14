@@ -54,3 +54,10 @@ body.employer-portal{--employer-content-max:1500px;background:#f4f7fc}
 .employer-portal .support-wide{grid-column:1/-1}.employer-portal textarea{min-height:120px;resize:vertical}
 @media(max-width:920px){.employer-portal .portal-main>.content{padding:20px 18px 30px!important}}
 @media(max-width:640px){.employer-portal .portal-main>.content{padding:18px 14px 28px!important}}
+
+/* Reusable account document library selector */
+.account-library-selector{margin-top:18px;padding:16px;border:1px solid var(--line);border-radius:14px;background:#f8fbff}
+.account-library-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:12px}
+.account-library-head>div{display:flex;flex-direction:column;gap:4px}.account-library-head strong{color:var(--navy);font-size:14px}.account-library-head span{color:var(--muted);font-size:12px}
+.account-library-controls{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center}.account-library-controls select{width:100%;min-height:42px;border:1px solid var(--line);border-radius:10px;background:#fff;padding:0 12px;color:var(--navy)}
+@media(max-width:700px){.account-library-head{align-items:flex-start;flex-direction:column}.account-library-controls{grid-template-columns:1fr}.account-library-controls .btn{width:100%}}
