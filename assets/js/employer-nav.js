@@ -7,6 +7,8 @@
 
     { section: 'Workforce Management' },
     { label: 'Employees & Drivers', icon: '👥', href: 'employees.html', feature: 'employee_management' },
+    { label: 'Driver Qualification', icon: 'Q', href: 'driver-qualification.html', feature: 'driver_qualification' },
+    { label: 'Bulk Import', icon: 'B', href: 'bulk-import.html', feature: 'bulk_employee_import' },
     { label: 'DERs & Supervisors', icon: 'D', href: 'ders-supervisors.html', feature: 'ders_supervisors' },
     { label: 'Account Users', icon: 'U', href: 'account-users.html', feature: 'team_users' },
     { label: 'Locations / Terminals', icon: 'L', href: 'locations.html', feature: 'locations' },
@@ -20,8 +22,13 @@
 
     { section: 'Testing & Compliance' },
     { label: 'Testing Orders', icon: 'T', href: 'testing-orders.html', feature: 'testing_orders' },
+    { label: 'Collection Sites', icon: 'C', href: 'collection-sites.html', feature: 'collection_sites' },
+    { label: 'Post-Accident', icon: 'P', href: 'post-accident.html', feature: 'post_accident' },
     { label: 'Results', icon: '✓', href: 'results.html', feature: 'results_summary' },
     { label: 'Compliance', icon: '!', href: 'compliance.html', feature: 'compliance' },
+    { label: 'Action Center', icon: '!', href: 'action-center.html', feature: 'action_center' },
+    { label: 'Policy Acknowledgments', icon: 'P', href: 'policy-acknowledgments.html', feature: 'policy_acknowledgments' },
+    { label: 'Training Records', icon: 'T', href: 'training-records.html', feature: 'training_records' },
     { label: 'RTD / Follow-Up', icon: 'R', href: 'rtd-follow-up.html', feature: 'rtd_follow_up' },
     { label: 'Documents', icon: 'D', href: 'documents.html', feature: 'documents' },
     { label: 'Reports', icon: '↗', href: 'reports.html', feature: 'standard_reports' },
@@ -33,6 +40,9 @@
     { label: 'Order History', icon: 'O', href: 'order-history.html' },
     { label: 'Billing & Invoices', icon: '$', href: 'billing.html' },
     { label: 'Account Settings', icon: 'G', href: 'account-settings.html' },
+    { label: 'Company & DOT Profile', icon: 'C', href: 'company-profile.html' },
+    { label: 'Integrations', icon: 'I', href: 'integrations.html', feature: 'integrations' },
+    { label: 'Support Access', icon: 'A', href: 'support-access.html' },
     { label: 'Support', icon: '?', href: 'support.html' }
   ];
 
