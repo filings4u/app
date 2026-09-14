@@ -1,1 +1,24 @@
-import{supabase}from'./supabase.js';import{toast}from'./customer-popups.js';export const $=s=>document.querySelector(s);export const esc=(v='')=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));export const money=v=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(Number(v||0));export async function api(payload){const{data,error}=await supabase.functions.invoke('workforce-employer-management',{body:payload});if(error){let m=error.message||'Request failed.';try{const x=await error.context.clone().json();m=x.error||m}catch(_){}throw new Error(m)}if(data?.error)throw new Error(data.error);return data}export async function overview(){return await api({action:'overview'})}export function notice(el,msg,type=''){if(el)el.style.display='none';return toast(msg,type==='error'?'error':'success')}
+import{supabase}from'./supabase.js';
+export const $=s=>document.querySelector(s);
+export const esc=(v='')=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+export const money=v=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(Number(v||0));
+export async function api(payload){
+  const{data,error}=await supabase.functions.invoke('workforce-employer-management',{body:payload});
+  if(error){
+    let m=error.message||'Request failed.';
+    try{const x=await error.context.clone().json();m=x.error||m}catch(_){}
+    throw new Error(m)
+  }
+  if(data?.error)throw new Error(data.error);
+  return data
+}
+export async function overview(){return await api({action:'overview'})}
+export function notice(el,msg,type=''){
+  if(!el)return null;
+  el.textContent=String(msg||'');
+  el.classList.remove('error','success','warning');
+  if(type)el.classList.add(type);
+  el.style.display='block';
+  el.hidden=false;
+  return el;
+}
