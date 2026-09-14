@@ -1,1 +1,3 @@
-import{api,$,esc}from'./employer-saas.js';api({action:'notifications'}).then(d=>{$('#rows').innerHTML=d.notifications.length?d.notifications.map(n=>`<tr><td>${esc((n.queued_at||'').slice(0,10))}</td><td>${esc(n.event_type||'—')}</td><td>${esc(n.channel)}</td><td>${esc(n.recipient_address||'—')}</td><td><strong>${esc(n.subject||'—')}</strong></td><td>${esc(n.status)}</td></tr>`).join(''):'<tr><td colspan="6"><div class="saas-empty">No notifications.</div></td></tr>'})
+/* screenings4u Employer rebuild compatibility file: employer-notifications-live.js.
+   Employer pages now use employer-runtime.js. This file intentionally performs no DOM work. */
+(() => {})();

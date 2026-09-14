@@ -1,18 +1,3 @@
-import{init,$,status,empty}from'./employer-admin-common.js';import{invokeEmployer,esc}from'./employer-management.js';
-let d=await init('access');
-if(d){
- const root=$('#managementContent');
- const render=()=>{root.innerHTML=`
- <div class="saas-notice"><strong>Employer portal administration:</strong> create or invite Employer users, control roles and status, and preserve a complete access history. Customer users manage only their own Employer account.</div>
- <div class="admin-inline-editor"><h3>Create / Invite Employer Portal User</h3><form id="inviteForm"><div class="saas-form-grid">
- <label><span>First name</span><input name="first_name" required></label><label><span>Last name</span><input name="last_name" required></label>
- <label><span>Email address</span><input name="email" type="email" required></label><label><span>Role</span><select name="role_code"><option value="employer_admin">Employer Administrator</option><option value="der">DER</option><option value="hr_admin">HR Administrator</option><option value="supervisor">Supervisor</option></select></label>
- </div><div class="saas-actions"><button class="btn btn-orange">Send Portal Invitation</button><button type="button" class="btn btn-outline" id="bulkUsers">Bulk Import Users</button></div></form></div>
- <section id="bulkUserPanel" class="admin-inline-editor" style="display:none"><h3>Bulk Import Employer Users</h3><p>Paste CSV rows using: first_name,last_name,email,role_code</p><textarea id="bulkUserText" rows="8" placeholder="Jamie,Ross,jamie@example.com,der"></textarea><div class="saas-actions"><button class="btn btn-primary" id="submitBulkUsers">Import Invitations</button><button class="btn btn-outline" id="cancelBulkUsers">Cancel</button></div></section>
- <h3>Portal Users</h3><div class="management-table-wrap"><table class="management-table"><thead><tr><th>User</th><th>Role</th><th>Status</th><th>Primary</th><th>Action</th></tr></thead><tbody>${d.members.length?d.members.map(x=>`<tr><td><strong>${esc(x.profiles?.display_name||[x.profiles?.first_name,x.profiles?.last_name].filter(Boolean).join(' ')||x.user_id)}</strong></td><td><select data-role="${x.id}">${d.roles.map(r=>`<option value="${r.id}" ${r.id===x.role_id?'selected':''}>${esc(r.name)}</option>`).join('')}</select></td><td><select data-status="${x.id}"><option value="active" ${x.status==='active'?'selected':''}>Active</option><option value="suspended" ${x.status==='suspended'?'selected':''}>Suspended</option></select></td><td>${x.is_primary?'Yes':'No'}</td><td><button class="btn btn-outline btn-small" data-save="${x.id}">Save</button></td></tr>`).join(''):empty(5,'No Employer portal users yet.')}</tbody></table></div>`;
- $('#inviteForm').onsubmit=async e=>{e.preventDefault();let f=Object.fromEntries(new FormData(e.currentTarget));try{await invokeEmployer({action:'invite_member',employer_id:d.employer.id,member:f});status('Employer portal invitation created.','success')}catch(x){status(x.message,'error')}};
- $('#bulkUsers').onclick=()=>$('#bulkUserPanel').style.display='block';$('#cancelBulkUsers').onclick=()=>$('#bulkUserPanel').style.display='none';
- $('#submitBulkUsers').onclick=async()=>{const lines=$('#bulkUserText').value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean),users=lines.map(line=>{const[first_name,last_name,email,role_code]=line.split(',').map(v=>v.trim());return{first_name,last_name,email,role_code}});try{await invokeEmployer({action:'bulk_invite_members',employer_id:d.employer.id,users});status(`${users.length} portal invitation(s) submitted.`,'success')}catch(x){status(x.message,'error')}};
- document.querySelectorAll('[data-save]').forEach(b=>b.onclick=async()=>{b.disabled=true;try{await invokeEmployer({action:'save_member',employer_id:d.employer.id,member:{id:b.dataset.save,role_id:document.querySelector(`[data-role="${b.dataset.save}"]`).value,status:document.querySelector(`[data-status="${b.dataset.save}"]`).value}});status('Portal user access saved.','success')}catch(x){status(x.message,'error')}finally{b.disabled=false}})
- };render()
-}
+/* screenings4u Employer rebuild compatibility file: employer-access-page.js.
+   Employer pages now use employer-runtime.js. This file intentionally performs no DOM work. */
+(() => {})();

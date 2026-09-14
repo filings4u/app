@@ -1,1 +1,3 @@
-import{overview,$,esc}from'./employer-saas.js';overview().then(d=>{$('#rows').innerHTML=d.testing_orders.length?d.testing_orders.map(x=>`<tr><td>${esc(x.order_number||'—')}</td><td>${esc([x.employees?.first_name,x.employees?.last_name].filter(Boolean).join(' ')||'—')}</td><td>${esc(x.test_type||'—')}</td><td>${esc(x.program_type||'—')}</td><td><span class="saas-pill">${esc(x.status)}</span></td><td>${esc(x.completed_at||'—')}</td></tr>`).join(''):'<tr><td colspan="6"><div class="saas-empty">No testing records.</div></td></tr>'})
+/* screenings4u Employer rebuild compatibility file: employer-results-live.js.
+   Employer pages now use employer-runtime.js. This file intentionally performs no DOM work. */
+(() => {})();

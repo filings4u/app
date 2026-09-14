@@ -1,1 +1,3 @@
-import{advanced}from'./employer-advanced-api.js';import{esc}from'./employer-saas.js';advanced({action:'integrations'}).then(d=>{const a=d.integrations||[];rows.innerHTML=a.length?a.map(x=>`<tr><td><strong>${esc(x.name||x.integration_type)}</strong></td><td>${esc(x.provider||'—')}</td><td>${esc(x.integration_type)}</td><td><span class="saas-pill">${esc(x.status)}</span></td><td>${esc(x.last_sync_at?String(x.last_sync_at).replace('T',' ').slice(0,16):'—')}</td></tr>`).join(''):'<tr><td colspan="5"><div class="saas-empty">No integrations have been provisioned for this Employer account.</div></td></tr>'}).catch(e=>rows.innerHTML=`<tr><td colspan="5"><div class="saas-empty">${esc(e.message)}</div></td></tr>`);
+/* screenings4u Employer rebuild compatibility file: employer-integrations.js.
+   Employer pages now use employer-runtime.js. This file intentionally performs no DOM work. */
+(() => {})();

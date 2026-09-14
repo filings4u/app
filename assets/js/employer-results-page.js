@@ -1,3 +1,3 @@
-
-import{init,$,empty}from'./employer-admin-common.js';import{esc}from'./employer-management.js';
-const d=await init('results');if(d){$('#managementContent').innerHTML=`<div class="saas-notice"><strong>Result security:</strong> This Admin summary intentionally excludes sensitive result payloads. Sensitive result access should remain permission-controlled.</div><div class="management-table-wrap"><table class="management-table"><thead><tr><th>Order</th><th>Employee</th><th>Test</th><th>Preliminary</th><th>MRO</th><th>Final</th><th>Result Date</th><th>Notification</th></tr></thead><tbody>${d.results.length?d.results.map(r=>`<tr><td><strong>${esc(r.testing_orders?.order_number||'—')}</strong></td><td>${esc([r.testing_orders?.employees?.first_name,r.testing_orders?.employees?.last_name].filter(Boolean).join(' ')||'—')}</td><td>${esc(r.testing_orders?.test_type||'—')}</td><td>${esc(r.preliminary_status||'—')}</td><td>${esc(r.mro_status||'—')}</td><td>${esc(r.final_status||'Pending')}</td><td>${esc(r.result_date||'—')}</td><td>${esc(r.notification_status||'—')}</td></tr>`).join(''):empty(8,'No result records.')}</tbody></table></div>`}
+/* screenings4u Employer rebuild compatibility file: employer-results-page.js.
+   Employer pages now use employer-runtime.js. This file intentionally performs no DOM work. */
+(() => {})();

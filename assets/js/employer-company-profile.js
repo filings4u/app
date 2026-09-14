@@ -1,1 +1,3 @@
-import{advanced}from'./employer-advanced-api.js';import{notice}from'./employer-saas.js';let p;function fill(x){for(const [k,v] of Object.entries(x||{})){const el=profileForm.elements.namedItem(k);if(el)el.value=v??''}}advanced({action:'company_profile'}).then(d=>{p=d.employer;fill(p)}).catch(x=>notice(msg,x.message,'error'));profileForm.onsubmit=async e=>{e.preventDefault();try{notice(msg,'Saving company profile…');const r=await advanced({action:'save_company_profile',profile:Object.fromEntries(new FormData(e.currentTarget))});fill(r.employer);notice(msg,'Company profile saved.','success')}catch(x){notice(msg,x.message,'error')}};
+/* screenings4u Employer rebuild compatibility file: employer-company-profile.js.
+   Employer pages now use employer-runtime.js. This file intentionally performs no DOM work. */
+(() => {})();

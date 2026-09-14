@@ -1,1 +1,3 @@
-import{supabase}from'./supabase.js';export async function op(body){const{data,error}=await supabase.functions.invoke('workforce-employer-operations',{body});if(error){let m=error.message;try{m=(await error.context.clone().json()).error||m}catch(_){}throw new Error(m)}if(data?.error)throw new Error(data.error);return data}
+/* screenings4u Employer rebuild compatibility file: employer-operations.js.
+   Employer pages now use employer-runtime.js. This file intentionally performs no DOM work. */
+(() => {})();

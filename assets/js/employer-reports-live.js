@@ -1,1 +1,3 @@
-import{overview,$}from'./employer-saas.js';import{reportPdf}from'./pdf-download.js';let d;overview().then(x=>d=x);document.querySelectorAll('[data-report]').forEach(b=>b.onclick=()=>{if(!d)return;const k=b.dataset.report,map={employees:d.employees,testing:d.testing_orders,compliance:d.compliance_cases,programs:d.programs};reportPdf(map[k]||[],`${k.replaceAll('_',' ')} report`,`${k}-report`)})
+/* screenings4u Employer rebuild compatibility file: employer-reports-live.js.
+   Employer pages now use employer-runtime.js. This file intentionally performs no DOM work. */
+(() => {})();

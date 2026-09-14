@@ -46,14 +46,14 @@
 <main class="portal-main">
 <header class="topbar">
   <div class="topbar-left">
-    <button class="mobile-menu" data-mobile-menu aria-label="Open menu">☰</button>
+    <button class="sidebar-toggle" data-sidebar-toggle type="button" aria-expanded="true" aria-label="Hide sidebar" title="Hide sidebar"><span data-sidebar-toggle-icon aria-hidden="true">‹</span></button><button class="mobile-menu" data-mobile-menu aria-label="Open menu">☰</button>
     <div class="page-title"><strong>Plan & Billing</strong><span>Owner-Operator Account</span></div>
   </div>
   <div class="topbar-actions">
     <button class="top-action" aria-label="Notifications">🔔<span class="notification-dot"></span></button>
     <button class="top-action" aria-label="Help">?</button>
     <div class="user-chip"><span class="avatar">AE</span><span class="user-meta"><strong>Andre Erving</strong><span>Owner-Operator Administrator</span></span></div>
-  </div>
+  <div class="font-sizer" data-font-sizer><button type="button" data-font-decrease aria-label="Decrease portal text size">A−</button><span class="font-sizer-value" data-font-scale-value>100%</span><button type="button" data-font-increase aria-label="Increase portal text size">A+</button></div><a class="btn btn-outline" data-workspace-switcher href="../workspace-select.html" hidden>Switch Account</a><button class="btn btn-outline" data-logout type="button">Sign Out</button></div>
 </header>
 <div class="content"><div class="welcome"><div><h1>Billing</h1><p>Review your subscription plan and billing records.</p></div></div><section class="card"><div class="card-head"><div><h2>Subscription & Billing</h2><span>Review the plan purchased for your owner-operator account and its invoices.</span></div></div><div class="card-body"><div id="plan" class="saas-notice"></div></div><div class="card-body" style="padding:0"><div class="saas-table-wrap"><table class="saas-table"><thead><tr><th>Invoice</th><th>Issued</th><th>Total</th><th>Due</th><th>Status</th></tr></thead><tbody id="rows"></tbody></table></div></div></section></div></main>
 </div>

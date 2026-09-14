@@ -1,1 +1,3 @@
-import{overview,$,esc}from'./employer-saas.js';overview().then(d=>{$('#rows').innerHTML=d.documents.length?d.documents.map(x=>`<tr><td><strong>${esc(x.file_name||'Document')}</strong></td><td>${esc(x.document_type)}</td><td>${esc(d.employees.find(e=>e.id===x.employee_id)?.first_name||'Company')}</td><td>${esc(x.expires_at||'—')}</td><td>${esc(x.access_level||'—')}</td><td>${esc((x.uploaded_at||'').slice(0,10))}</td></tr>`).join(''):'<tr><td colspan="6"><div class="saas-empty">No documents.</div></td></tr>'})
+/* screenings4u Employer rebuild compatibility file: employer-documents-live.js.
+   Employer pages now use employer-runtime.js. This file intentionally performs no DOM work. */
+(() => {})();

@@ -1,1 +1,3 @@
-import{api,$,esc}from'./employer-saas.js';api({action:'audit'}).then(d=>{$('#rows').innerHTML=d.audit_events.length?d.audit_events.map(a=>`<tr><td>${esc(a.event_at||'—')}</td><td><strong>${esc(a.action)}</strong></td><td>${esc(a.resource_type||'—')}</td><td>${esc(a.resource_id||'—')}</td><td>${esc(a.actor_user_id||'System')}</td></tr>`).join(''):'<tr><td colspan="5"><div class="saas-empty">No audit events.</div></td></tr>'})
+/* screenings4u Employer rebuild compatibility file: employer-audit-live.js.
+   Employer pages now use employer-runtime.js. This file intentionally performs no DOM work. */
+(() => {})();

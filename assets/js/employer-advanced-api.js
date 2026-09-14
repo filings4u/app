@@ -1,1 +1,3 @@
-import{supabase}from'./supabase.js';export async function advanced(body){const phase1=['save_post_accident','respond_support_consent'].includes(body?.action),fn=phase1?'workforce-employer-phase1-actions':'workforce-employer-advanced';const{data,error}=await supabase.functions.invoke(fn,{body});if(error){let m=error.message||'Request failed.';try{const x=await error.context.clone().json();m=x.error||m}catch(_){}throw new Error(m)}if(data?.error)throw new Error(data.error);return data}
+/* screenings4u Employer rebuild compatibility file: employer-advanced-api.js.
+   Employer pages now use employer-runtime.js. This file intentionally performs no DOM work. */
+(() => {})();

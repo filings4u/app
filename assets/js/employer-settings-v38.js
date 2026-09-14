@@ -1,1 +1,3 @@
-import{api,$,notice}from'./employer-saas.js';let d;async function load(){d=await api({action:'settings'});let f=$('#form');for(const e of f.elements)if(e.name&&d.employer[e.name]!=null)e.value=d.employer[e.name];$('#plan').innerHTML=`<strong>Current plan:</strong> ${d.subscription?.plans?.name||'Not assigned'}`}$('#form').onsubmit=async e=>{e.preventDefault();$('#msg').style.display='block';try{notice($('#msg'),'Saving…');await api({action:'save_settings',settings:Object.fromEntries(new FormData(e.currentTarget))});notice($('#msg'),'Account settings saved.','success')}catch(x){notice($('#msg'),x.message,'error')}};load();
+/* screenings4u Employer rebuild compatibility file: employer-settings-v38.js.
+   Employer pages now use employer-runtime.js. This file intentionally performs no DOM work. */
+(() => {})();

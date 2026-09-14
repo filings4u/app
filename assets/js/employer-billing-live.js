@@ -1,1 +1,3 @@
-import{overview,$,esc,money}from'./employer-saas.js';overview().then(d=>{$('#rows').innerHTML=d.invoices.length?d.invoices.map(x=>`<tr><td><strong>${esc(x.invoice_number)}</strong></td><td>${esc(x.status)}</td><td>${money(x.total)}</td><td>${money(x.amount_paid)}</td><td>${money(x.amount_due)}</td><td>${esc(x.due_at||'—')}</td></tr>`).join(''):'<tr><td colspan="6"><div class="saas-empty">No invoices.</div></td></tr>'})
+/* screenings4u Employer rebuild compatibility file: employer-billing-live.js.
+   Employer pages now use employer-runtime.js. This file intentionally performs no DOM work. */
+(() => {})();
