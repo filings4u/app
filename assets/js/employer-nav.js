@@ -32,7 +32,8 @@
     { label: 'Subscription', icon: 'S', href: 'subscription.html' },
     { label: 'Order History', icon: 'O', href: 'order-history.html' },
     { label: 'Billing & Invoices', icon: '$', href: 'billing.html' },
-    { label: 'Account Settings', icon: 'G', href: 'account-settings.html' }
+    { label: 'Account Settings', icon: 'G', href: 'account-settings.html' },
+    { label: 'Support', icon: '?', href: 'support.html' }
   ];
 
   function esc(value){
@@ -64,7 +65,7 @@
       </div>
       <nav class="sidebar-nav" data-employer-nav>${navHtml()}</nav>
       <div class="sidebar-bottom">
-        <a class="sidebar-help employer-help-link" href="account-settings.html#support">
+        <a class="sidebar-help employer-help-link" href="support.html">
           <strong>Need help?</strong>
           <span>Contact screenings4u support from your account.</span>
         </a>
