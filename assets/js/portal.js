@@ -48,9 +48,18 @@ export async function getContext(){
   const params=new URLSearchParams(location.search);
   const workspaceFromUrl=params.get('workspace')||'';
   const selectedMembership=workspaceFromUrl||sessionStorage.getItem('s4u_workspace_membership')||'';
-  let {data,error}=await supabase.functions.invoke('workforce-session-context',{
-    body:{requested_portal:currentPortal(),membership_id:selectedMembership}
-  });
+  const contextCacheKey=`s4u_portal_context_${currentPortal()||'portal'}_${selectedMembership||'default'}`;
+  let cachedContext=null;
+  if(!workspaceFromUrl){
+    try{const c=JSON.parse(sessionStorage.getItem(contextCacheKey)||'null');if(c&&Date.now()-c.saved_at<30000)cachedContext=c.data;}catch{}
+  }
+  let data=cachedContext,error=null;
+  if(!data){
+    ({data,error}=await supabase.functions.invoke('workforce-session-context',{
+      body:{requested_portal:currentPortal(),membership_id:selectedMembership}
+    }));
+    if(data&&!error){try{sessionStorage.setItem(contextCacheKey,JSON.stringify({saved_at:Date.now(),data}));}catch{}}
+  }
 
   if(error && /jwt.*future|issued at future|jwt.*expired|invalid jwt/i.test(error.message||'')){
     const refreshed=await supabase.auth.refreshSession();

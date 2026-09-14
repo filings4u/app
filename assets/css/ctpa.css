@@ -1,0 +1,71 @@
+/* screenings4u C/TPA Portal Styles
+   Extracted from the shared portal stylesheet so C/TPA-specific layout
+   and billing/import rules can evolve independently.
+*/
+
+/* v3.39 C/TPA management spacing */
+.management-page .management-context-bar{margin-left:6px!important;margin-right:6px!important;width:calc(100% - 12px)!important}
+.management-page .management-section{margin-left:6px!important;margin-right:6px!important;width:calc(100% - 12px)!important}
+.management-section-body>#content{display:flex;flex-direction:column;gap:18px;padding:0 8px;min-width:0}
+.management-section-body>#content>.admin-inline-editor,.management-section-body>#content>.management-table-wrap,.management-section-body>#content>.saas-notice{width:calc(100% - 16px)!important;margin-left:8px!important;margin-right:8px!important;box-sizing:border-box}
+.management-section-body>#content>.admin-inline-editor{padding:18px 20px!important}
+.management-section-body>#content .btn{min-height:34px!important;padding:7px 12px!important}
+.management-section-body>#content input[type="checkbox"],.management-section-body>#content input[type="radio"]{width:15px!important;height:15px!important;min-height:15px!important;max-height:15px!important}
+.management-section-body>#content input:not([type="checkbox"]):not([type="radio"]):not([type="color"]),.management-section-body>#content select{min-height:36px!important;height:36px!important}
+.management-section-body>#content input[type="color"]{height:36px!important;min-height:36px!important;padding:3px!important}
+@media(max-width:700px){.management-page .management-context-bar,.management-page .management-section{margin-left:0!important;margin-right:0!important;width:100%!important}.management-section-body>#content{padding:0}}
+
+/* v3.40 — C/TPA admin spacing + platform account switcher */
+.account-viewer{display:flex;align-items:center;min-width:0}
+.account-view-select{height:40px;max-width:220px;min-width:150px;border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--blue);padding:0 30px 0 11px;font:800 10px/1 var(--portal-font-family,Inter,Arial,sans-serif);outline:none}
+.account-view-select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(36,70,127,.08)}
+.management-page{padding-left:24px!important;padding-right:24px!important}
+.management-page>.management-context-bar,.management-page>.management-section{margin-left:8px!important;margin-right:8px!important;width:calc(100% - 16px)!important;box-sizing:border-box}
+.management-section-body{padding:22px 28px 28px!important}
+.management-section-body>#content{padding:0 10px!important;gap:20px!important}
+.management-section-body>#content>.admin-inline-editor,.management-section-body>#content>.management-table-wrap,.management-section-body>#content>.saas-notice{width:calc(100% - 20px)!important;margin-left:10px!important;margin-right:10px!important}
+.management-form-grid{gap:16px 18px!important}
+.management-actions{margin-top:18px!important;margin-bottom:4px!important}
+.management-page .btn,.management-page .org-action{min-height:34px!important;padding:7px 12px!important}
+.management-page input[type="checkbox"],.management-page input[type="radio"]{width:15px!important;height:15px!important;min-height:15px!important;max-height:15px!important}
+.management-page input:not([type="checkbox"]):not([type="radio"]):not([type="color"]),.management-page select{min-height:36px!important;height:36px!important}
+@media(max-width:900px){.account-view-select{max-width:150px;min-width:110px}.management-page{padding-left:16px!important;padding-right:16px!important}.management-page>.management-context-bar,.management-page>.management-section{margin-left:0!important;margin-right:0!important;width:100%!important}.management-section-body{padding:18px!important}.management-section-body>#content{padding:0!important}}
+
+/* v3.41 — C/TPA page gutters, compact controls, import workflow */
+.content.management-page{padding:28px 36px 48px!important;box-sizing:border-box}
+.content.management-page>.welcome{margin:0 12px 22px!important}
+.content.management-page>.management-context-bar,
+.content.management-page>.management-section{margin-left:12px!important;margin-right:12px!important;width:calc(100% - 24px)!important;box-sizing:border-box}
+.management-section-head{padding:20px 24px!important}
+.management-section-body{padding:26px 32px 30px!important}
+.management-section-body>#content{padding:0 12px!important;gap:22px!important}
+.management-section-body>#content>.admin-inline-editor,
+.management-section-body>#content>.management-table-wrap,
+.management-section-body>#content>.saas-notice{width:calc(100% - 16px)!important;margin-left:8px!important;margin-right:8px!important;box-sizing:border-box}
+.management-section>.management-table-wrap{width:calc(100% - 36px)!important;margin:0 18px 22px!important;box-sizing:border-box}
+.management-section>.inline-status{margin-left:18px!important;margin-right:18px!important}
+.management-page .btn,.management-page .org-action{min-height:32px!important;padding:6px 11px!important;font-size:10px!important}
+.management-page input[type="checkbox"],.management-page input[type="radio"]{width:15px!important;height:15px!important;min-height:15px!important;max-height:15px!important}
+.management-table th,.management-table td{padding-left:16px!important;padding-right:16px!important}
+.ctpa-import-panel{display:flex;flex-direction:column;gap:18px!important}
+.ctpa-editor-head h3{margin:0 0 7px!important}.ctpa-editor-head p{margin:0!important;line-height:1.5}
+.import-toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-top:2px}
+.ctpa-upload-box{display:grid;gap:10px!important;padding:16px 18px!important;margin:0!important}
+.ctpa-upload-box label span{font-size:10px;font-weight:800;color:var(--blue)}
+.ctpa-upload-box input[type="file"]{height:auto!important;min-height:36px!important;padding:7px 9px!important;background:#fff}
+.ctpa-upload-box small{color:var(--muted);line-height:1.45}
+.section-subhead{margin:4px 8px -4px!important}
+@media(max-width:900px){.content.management-page{padding:20px 18px 36px!important}.content.management-page>.welcome,.content.management-page>.management-context-bar,.content.management-page>.management-section{margin-left:0!important;margin-right:0!important;width:100%!important}.management-section-body{padding:20px!important}.management-section-body>#content{padding:0!important}.management-section>.management-table-wrap{width:calc(100% - 20px)!important;margin:0 10px 18px!important}}
+
+/* v3.46 C/TPA billing spacing + client invoice management */
+.content.management-page{padding-left:42px!important;padding-right:42px!important}
+.content.management-page>.management-context-bar,.content.management-page>.management-section{margin-left:0!important;margin-right:0!important;width:100%!important}
+.management-section-body>#content{padding:0 18px!important}
+.billing-toolbar{display:flex;justify-content:flex-end;margin:0 0 18px}
+.billing-panel{border:1px solid #cddcf0;border-radius:12px;padding:22px;margin:0 0 22px;background:#fff;box-sizing:border-box}
+.billing-panel-head{margin-bottom:18px}.billing-panel-head h3{margin:0 0 6px;font-size:15px}.billing-panel-head p{margin:0;color:#60799e;line-height:1.5}
+.billing-form-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px 18px;margin-bottom:16px}.billing-field{display:flex;flex-direction:column;gap:6px;min-width:0}.billing-field span{font-size:11px;font-weight:700;color:#526c93}.billing-field input,.billing-field select,.billing-field textarea{width:100%;box-sizing:border-box;border:1px solid #bfd2ec;border-radius:8px;padding:8px 10px;font:inherit;background:#fff}.billing-field.full{margin:0 0 16px}.billing-field textarea{height:auto!important;min-height:70px!important;resize:vertical}.billing-actions,.row-actions{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap}.invoice-editor{margin-top:22px}.invoice-line{display:grid;grid-template-columns:minmax(0,2fr) minmax(110px,.5fr) minmax(140px,.7fr);gap:14px;margin-bottom:12px}.management-table-wrap{margin-top:14px!important;margin-bottom:6px!important}.management-table th,.management-table td{padding:12px 14px!important}.management-page .btn{margin:0!important}
+@media(max-width:900px){.content.management-page{padding-left:20px!important;padding-right:20px!important}.management-section-body>#content{padding:0!important}.billing-form-grid{grid-template-columns:1fr 1fr}.invoice-line{grid-template-columns:1fr}.billing-panel{padding:18px}}
+@media(max-width:620px){.billing-form-grid{grid-template-columns:1fr}}
+/* Standalone test-package indicator. Hidden automatically when live Supabase mode is enabled. */
+.demo-mode-banner{position:fixed;right:18px;bottom:18px;z-index:120;padding:9px 12px;border-radius:999px;background:#fff4df;border:1px solid #f1c879;color:#8a5600;font-size:11px;font-weight:900;box-shadow:0 8px 24px rgba(16,40,75,.12)}
