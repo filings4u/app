@@ -1,46 +1,33 @@
-<!doctype html>
+<!DOCTYPE html>
+
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#24467f">
-<link rel="icon" type="image/png" href="../images/fav.png">
-<title>Billing | screenings4u Workforce Compliance</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../assets/css/portal.css">
+<meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta content="#24467f" name="theme-color"/>
+<link href="../images/fav.png" rel="icon" type="image/png"/>
+<title>Billing & Invoices | screenings4u Workforce Compliance</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="../assets/css/portal.css" rel="stylesheet"/><link href="../assets/css/employer.css" rel="stylesheet"/>
 </head>
-<body class="portal-body">
+<body class="portal-body employer-portal">
 <div class="portal-shell">
-
-<aside class="sidebar">
-  <div class="sidebar-brand">
-    <img src="../images/logo2.png" alt="screenings4u">
-    <div class="product-name">Workforce Compliance</div>
-    <div class="workspace">Employer Workspace</div>
-  </div>
-  <nav class="sidebar-nav">
-    <div class="nav-section">Workspace</div>
-    <a class="nav-link" data-nav href="dashboard.html"><span class="nav-icon">▦</span><span>Dashboard</span></a><a class="nav-link" data-nav data-feature="employee_management" href="employees.html"><span class="nav-icon">👥</span><span>Employees & Drivers</span></a><a class="nav-link" data-nav data-feature="ders_supervisors" href="ders-supervisors.html"><span class="nav-icon">D</span><span>DERs & Supervisors</span></a><a class="nav-link" data-nav data-feature="team_users" href="account-users.html"><span class="nav-icon">U</span><span>Account Users</span></a><a class="nav-link" data-nav data-feature="locations" href="locations.html"><span class="nav-icon">L</span><span>Locations / Terminals</span></a><a class="nav-link" data-nav data-feature="programs" href="programs.html"><span class="nav-icon">P</span><span>Programs</span></a><a class="nav-link" data-nav data-feature="programs" href="program-enrollment.html"><span class="nav-icon">E</span><span>Program Enrollment</span></a><a class="nav-link" data-nav data-feature="random_pool" href="random-pools.html"><span class="nav-icon">R</span><span>Random Pools</span></a><a class="nav-link" data-nav data-feature="random_selections" href="random-selections.html"><span class="nav-icon">S</span><span>Random Selections</span></a><a class="nav-link" data-nav data-feature="random_pool" href="pool-membership.html"><span class="nav-icon">M</span><span>Pool Membership</span></a><a class="nav-link" data-nav data-feature="testing_orders" href="testing-orders.html"><span class="nav-icon">T</span><span>Testing</span></a><a class="nav-link" data-nav data-feature="results_summary" href="results.html"><span class="nav-icon">✓</span><span>Results</span></a><a class="nav-link" data-nav data-feature="compliance" href="compliance.html"><span class="nav-icon">!</span><span>Compliance</span></a><a class="nav-link" data-nav data-feature="rtd_follow_up" href="rtd-follow-up.html"><span class="nav-icon">R</span><span>RTD / Follow-Up</span></a><a class="nav-link" data-nav data-feature="documents" href="documents.html"><span class="nav-icon">D</span><span>Documents</span></a><a class="nav-link" data-nav data-feature="standard_reports" href="reports.html"><span class="nav-icon">↗</span><span>Reports</span></a><a class="nav-link" data-nav data-feature="audit_history" href="audit-history.html"><span class="nav-icon">A</span><span>Audit History</span></a><a class="nav-link" data-nav data-feature="notifications" href="notifications.html"><span class="nav-icon">N</span><span>Notifications</span></a><a class="nav-link" data-nav href="billing.html"><span class="nav-icon">$</span><span>Plan & Billing</span></a><a class="nav-link" data-nav data-feature="account_settings" href="account-settings.html"><span class="nav-icon">G</span><span>Account Settings</span></a>
-  </nav>
-  <div class="sidebar-bottom">
-    <div class="sidebar-help"><strong>Need help?</strong><span>Contact screenings4u support from your account.</span></div>
-  </div>
-</aside>
-
+<aside class="sidebar" data-employer-sidebar></aside>
 <main class="portal-main">
 <header class="topbar">
-  <div class="topbar-left">
-    <button class="mobile-menu" data-mobile-menu aria-label="Open menu">☰</button>
-    <div class="page-title"><strong>Billing</strong><span>ABC Trucking</span></div>
-  </div>
-  <div class="topbar-actions">
-    <button class="top-action" aria-label="Notifications">🔔<span class="notification-dot"></span></button>
-    <button class="top-action" aria-label="Help">?</button>
-    <div class="user-chip"><span class="avatar">AE</span><span class="user-meta"><strong>Andre Erving</strong><span>Employer Administrator</span></span></div>
-  </div>
-</header>
-<div class="content"><div class="welcome"><div><h1>Billing</h1><p>View your software subscription and account invoices.</p></div></div><section class="card"><div class="card-head"><div><h2>Invoices & Subscription</h2><span>Live records for your employer account.</span></div></div><div class="card-body" style="padding:0"><div class="saas-table-wrap"><table class="saas-table"><thead><tr><th>Invoice</th><th>Status</th><th>Total</th><th>Paid</th><th>Due</th><th>Due Date</th></tr></thead><tbody id="rows"></tbody></table></div></div></section></div></main>
+<div class="topbar-left">
+<button aria-label="Open menu" class="mobile-menu" data-mobile-menu="">☰</button>
+<div class="page-title"><strong>Billing & Invoices</strong><span>ABC Trucking</span></div>
 </div>
-<script type="module" src="../assets/js/portal.js"></script>
-<script type="module" src="../assets/js/employer-billing-live.js"></script><script type="module" src="../assets/js/employer-entitlements.js"></script></body></html>
+<div class="topbar-actions">
+<a aria-label="Notifications" class="top-action" href="notifications.html">🔔<span class="notification-dot"></span></a>
+<a aria-label="Help" class="top-action" href="account-settings.html#support">?</a>
+<div class="user-chip"><span class="avatar">AE</span><span class="user-meta"><strong>Andre Erving</strong><span>Employer Administrator</span></span></div>
+</div>
+</header>
+<div class="content"><div class="welcome"><div><h1>Billing & Invoices</h1><p>View invoices and payment activity for your Employer account.</p></div></div><section class="card"><div class="card-head"><div><h2>Invoices &amp; Subscription</h2><span>Live records for your employer account.</span></div></div><div class="card-body" style="padding:0"><div class="saas-table-wrap"><table class="saas-table"><thead><tr><th>Invoice</th><th>Status</th><th>Total</th><th>Paid</th><th>Due</th><th>Due Date</th></tr></thead><tbody id="rows"></tbody></table></div></div></section></div></main>
+</div>
+<script src="../assets/js/employer-nav.js"></script>
+<script src="../assets/js/portal.js" type="module"></script>
+<script src="../assets/js/employer-billing-live.js" type="module"></script><script src="../assets/js/employer-entitlements.js" type="module"></script></body></html>
