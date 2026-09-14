@@ -143,7 +143,13 @@ function renderNavItem(item){
   const active=item.href===currentFile()?'active':'';
   return `<a class="nav-link ${active}" data-nav href="${item.href}"><span class="nav-icon">${item.icon}</span><span>${item.label}</span></a>`;
 }
+function isAdminPortalPath(){
+  const parts=location.pathname.split('/').filter(Boolean);
+  return parts.includes('admin');
+}
+
 export function buildAdminNavigation(){
+  if(!isAdminPortalPath()) return;
   const nav=document.querySelector('.sidebar-nav');
   if(!nav) return;
   nav.innerHTML=ADMIN_NAV.map(renderNavItem).join('');
@@ -157,7 +163,7 @@ export function buildAdminNavigation(){
   });
   document.dispatchEvent(new CustomEvent('s4u:navigation-built'));
 }
-document.addEventListener('DOMContentLoaded',buildAdminNavigation);
+document.addEventListener('DOMContentLoaded',()=>{ if(isAdminPortalPath()) buildAdminNavigation(); });
 
 
 export function refreshNavigationContext(){

@@ -11,12 +11,17 @@ const entitlementByFile = {
 };
 
 function portalFor(ctx){
+  if(ctx?.portal==='admin') return 'admin';
+  if(ctx?.portal==='owner_operator' || ctx?.portal==='owner-operator') return 'owner-operator';
+  if(ctx?.portal==='ctpa') return 'ctpa';
+  if(ctx?.portal==='employer') return 'employer';
+
   const role=ctx?.membership?.role_code;
-  const audience=ctx?.subscription?.plan?.audience;
+  const audience=ctx?.subscription?.audience || ctx?.subscription?.plan?.audience;
   const orgType=ctx?.membership?.organization_type;
   if(role==='platform_admin') return 'admin';
-  if(audience==='owner_operator') return 'owner-operator';
-  if(audience==='ctpa' || orgType==='ctpa') return 'ctpa';
+  if(role==='owner_operator_admin' || audience==='owner_operator' || orgType==='owner_operator') return 'owner-operator';
+  if(role==='ctpa_admin' || audience==='ctpa' || orgType==='ctpa') return 'ctpa';
   return 'employer';
 }
 function currentPortal(){
@@ -145,7 +150,7 @@ function render(ctx){
   const org=ctx?.membership?.organization_name || 'Workforce Compliance';
   const role=ctx?.membership?.role_name || 'Account User';
   document.querySelectorAll('.page-title span').forEach(el=>el.textContent=org);
-  document.querySelectorAll('.workspace').forEach(el=>{ if(currentPortal()!=='admin') el.textContent=(ctx?.subscription?.plan?.name||role)+' Workspace'; });
+  document.querySelectorAll('.workspace').forEach(el=>{ if(currentPortal()!=='admin') el.textContent=(ctx?.subscription?.plan_name||ctx?.subscription?.plan?.name||role)+' Workspace'; });
   document.querySelectorAll('.user-chip .avatar').forEach(el=>el.textContent=initials(name,ctx?.user?.email));
   document.querySelectorAll('.user-meta strong').forEach(el=>el.textContent=name);
   document.querySelectorAll('.user-meta span').forEach(el=>el.textContent=role);
@@ -156,7 +161,7 @@ function render(ctx){
     if(location.pathname.endsWith('/'+file)) a.classList.add('active');
   });
   document.querySelectorAll('[data-org]').forEach(el=>el.textContent=org);
-  document.querySelectorAll('[data-plan]').forEach(el=>el.textContent=ctx?.subscription?.plan?.name||'Platform Administration');
+  document.querySelectorAll('[data-plan]').forEach(el=>el.textContent=ctx?.subscription?.plan_name||ctx?.subscription?.plan?.name||'Platform Administration');
 }
 
 

@@ -18,12 +18,18 @@ function setBusy(isBusy) {
   loginButton.textContent = isBusy ? 'SIGNING IN...' : 'SIGN IN TO WORKFORCE COMPLIANCE';
 }
 function portalFromContext(data) {
+  if (data?.portal === 'admin') return 'admin';
+  if (data?.portal === 'owner_operator' || data?.portal === 'owner-operator') return 'owner-operator';
+  if (data?.portal === 'ctpa') return 'ctpa';
+  if (data?.portal === 'employer') return 'employer';
+
   const role = data?.membership?.role_code;
-  const audience = data?.subscription?.plan?.audience;
+  const audience = data?.subscription?.audience || data?.subscription?.plan?.audience;
   const orgType = data?.membership?.organization_type;
+
   if (role === 'platform_admin') return 'admin';
-  if (audience === 'owner_operator') return 'owner-operator';
-  if (audience === 'ctpa' || orgType === 'ctpa') return 'ctpa';
+  if (role === 'owner_operator_admin' || audience === 'owner_operator' || orgType === 'owner_operator') return 'owner-operator';
+  if (role === 'ctpa_admin' || audience === 'ctpa' || orgType === 'ctpa') return 'ctpa';
   return 'employer';
 }
 async function routeAuthenticatedUser() {
