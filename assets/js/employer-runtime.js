@@ -64,7 +64,7 @@ async function sessionContext(){
   if(!data.has_access){ location.replace(rootUrl('access-required.html?reason=subscription')); return null; }
   if(data.membership?.id) sessionStorage.setItem('s4u_workspace_membership',data.membership.id);
   if(data.portal!=='employer' && data.portal!=='admin'){
-    const target=data.portal==='ctpa'?'ctpa/dashboard.html':data.portal==='owner_operator'?'owner-operator/dashboard.html':'workspace-select.html';
+    const target=data.portal==='ctpa'?'ctpa/dashboard.html':data.portal==='owner_operator'?'owner-operator/dashboard.html':data.portal==='employee'?'employee/dashboard.html':'workspace-select.html';
     location.replace(rootUrl(target)); return null;
   }
   return data;

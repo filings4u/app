@@ -69,3 +69,751 @@
 @media(max-width:620px){.billing-form-grid{grid-template-columns:1fr}}
 /* Standalone test-package indicator. Hidden automatically when live Supabase mode is enabled. */
 .demo-mode-banner{position:fixed;right:18px;bottom:18px;z-index:120;padding:9px 12px;border-radius:999px;background:#fff4df;border:1px solid #f1c879;color:#8a5600;font-size:11px;font-weight:900;box-shadow:0 8px 24px rgba(16,40,75,.12)}
+
+/* ============================================================
+   screenings4u Workforce — C/TPA Workspace v4
+   Shared C/TPA design layer. Keeps the existing portal shell,
+   authentication, entitlements, and live Supabase wiring intact.
+   ============================================================ */
+
+body.portal-body{
+  background:#f3f6fb;
+}
+
+body.portal-body .portal-shell{
+  --ctpa-card-radius:16px;
+  --ctpa-soft:#f7f9fc;
+  --ctpa-border:#dce5f0;
+}
+
+body.portal-body .sidebar{
+  background:linear-gradient(180deg,#102e59 0%,#173d73 54%,#153664 100%);
+  box-shadow:12px 0 34px rgba(16,40,75,.08);
+}
+
+body.portal-body .sidebar-brand{
+  padding:24px 22px 20px;
+}
+
+body.portal-body .sidebar-brand img{
+  width:174px;
+}
+
+body.portal-body .sidebar-brand .product-name{
+  margin-top:11px;
+  color:#ffb078;
+  font-size:11px;
+  letter-spacing:.09em;
+}
+
+body.portal-body .sidebar-brand .workspace{
+  color:rgba(255,255,255,.68);
+  font-size:11px;
+}
+
+body.portal-body .sidebar-nav{
+  padding:15px 12px 20px;
+  gap:3px;
+}
+
+body.portal-body .sidebar-nav .nav-section{
+  padding:15px 11px 7px;
+  color:rgba(255,255,255,.44);
+  font-size:10px!important;
+  font-weight:900;
+  letter-spacing:.11em;
+}
+
+body.portal-body .sidebar-nav .nav-link{
+  min-height:42px;
+  padding:8px 11px;
+  border:1px solid transparent;
+  border-radius:10px;
+  color:rgba(255,255,255,.78);
+  font-size:13px!important;
+  font-weight:700;
+}
+
+body.portal-body .sidebar-nav .nav-link:hover{
+  background:rgba(255,255,255,.07);
+  color:#fff;
+}
+
+body.portal-body .sidebar-nav .nav-link.active{
+  border-color:rgba(255,107,0,.18);
+  background:linear-gradient(90deg,rgba(255,107,0,.18),rgba(255,255,255,.055));
+  box-shadow:inset 3px 0 0 #ff6b00;
+}
+
+body.portal-body .nav-icon{
+  width:25px;
+  height:25px;
+  display:grid;
+  place-items:center;
+  flex:0 0 25px;
+  border-radius:7px;
+  color:#dbe8fa;
+  background:rgba(255,255,255,.055);
+  font-size:12px;
+  font-weight:900;
+}
+
+body.portal-body .nav-link.active .nav-icon{
+  background:#ff6b00;
+  color:#fff;
+}
+
+body.portal-body .sidebar-help{
+  border:1px solid rgba(255,255,255,.09);
+  background:rgba(255,255,255,.055);
+}
+
+body.portal-body .topbar{
+  min-height:70px;
+  height:70px;
+  padding:0 26px;
+  background:rgba(255,255,255,.97);
+  backdrop-filter:blur(12px);
+  box-shadow:0 3px 16px rgba(16,40,75,.035);
+}
+
+body.portal-body .page-title strong{
+  color:#173d78;
+  font-size:15px;
+  letter-spacing:-.01em;
+}
+
+body.portal-body .page-title span{
+  color:#75859b;
+  font-size:11px;
+}
+
+body.portal-body .top-action,
+body.portal-body .sidebar-toggle{
+  border-color:#dbe4ef;
+  background:#fff;
+  color:#24467f;
+  box-shadow:none;
+}
+
+body.portal-body .top-action:hover,
+body.portal-body .sidebar-toggle:hover{
+  background:#f5f8fc;
+  border-color:#cbd9ea;
+}
+
+body.portal-body .user-chip{
+  border:1px solid #dce5f0;
+  border-radius:12px;
+  background:#fff;
+  padding:6px 10px 6px 7px;
+}
+
+body.portal-body .user-chip .avatar{
+  background:#edf3fb;
+  color:#24467f;
+}
+
+body.portal-body .content{
+  width:min(1480px,100%);
+  padding:30px 34px 52px;
+}
+
+/* Page heading */
+.ctpa-page-header{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:22px;
+  margin:0 0 22px;
+}
+
+.ctpa-page-header-copy{
+  min-width:0;
+  max-width:900px;
+}
+
+.ctpa-eyebrow{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  margin-bottom:8px;
+  color:#ff6b00;
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+}
+
+.ctpa-eyebrow::before{
+  content:"";
+  width:25px;
+  height:2px;
+  flex:0 0 25px;
+  background:#ff6b00;
+}
+
+.ctpa-page-header h1{
+  margin:0;
+  color:#173d78;
+  font-size:28px;
+  line-height:1.12;
+  letter-spacing:-.035em;
+}
+
+.ctpa-page-header p{
+  margin:8px 0 0;
+  max-width:790px;
+  color:#6d7f96;
+  font-size:13px;
+  line-height:1.6;
+}
+
+.ctpa-page-actions{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:9px;
+  flex-wrap:wrap;
+}
+
+.inline-status{
+  min-height:0;
+  margin:-10px 0 18px;
+  padding:0;
+  border:0;
+  background:transparent;
+  color:#62738a;
+  font-size:12px;
+}
+
+.inline-status:not(:empty){
+  min-height:42px;
+  display:flex;
+  align-items:center;
+  padding:10px 13px;
+  border:1px solid #cfe1f5;
+  border-radius:10px;
+  background:#f3f8fe;
+  color:#24467f;
+}
+
+.inline-status.success:not(:empty){
+  border-color:#c8e6d7;
+  background:#f0faf5;
+  color:#19724e;
+}
+
+.inline-status.error:not(:empty){
+  border-color:#efcccc;
+  background:#fff5f5;
+  color:#ad3f3f;
+}
+
+/* Dashboard */
+body.portal-body .metrics{
+  gap:14px;
+  margin-bottom:18px;
+}
+
+body.portal-body .metric-card{
+  min-height:126px;
+  position:relative;
+  overflow:hidden;
+  padding:18px 19px;
+  border:1px solid #dce5f0;
+  border-radius:16px;
+  background:#fff;
+  box-shadow:0 8px 24px rgba(36,70,127,.055);
+}
+
+body.portal-body .metric-card::after{
+  content:"";
+  position:absolute;
+  width:88px;
+  height:88px;
+  right:-34px;
+  top:-34px;
+  border-radius:50%;
+  background:rgba(36,70,127,.045);
+}
+
+body.portal-body .metric-label{
+  position:relative;
+  z-index:1;
+  color:#718299;
+  font-size:11px;
+  font-weight:800;
+}
+
+body.portal-body .metric-value{
+  position:relative;
+  z-index:1;
+  margin-top:8px;
+  color:#173d78;
+  font-size:29px;
+  line-height:1;
+  letter-spacing:-.04em;
+}
+
+body.portal-body .metric-note{
+  position:relative;
+  z-index:1;
+  margin-top:9px;
+  color:#7b8a9e;
+  font-size:11px;
+}
+
+/* Cards */
+body.portal-body .card{
+  border:1px solid #dce5f0;
+  border-radius:16px;
+  box-shadow:0 8px 24px rgba(36,70,127,.055);
+}
+
+body.portal-body .card-head{
+  min-height:70px;
+  padding:17px 20px;
+  background:#fff;
+}
+
+body.portal-body .card-head h2{
+  color:#173d78;
+  font-size:14px;
+}
+
+body.portal-body .card-head span{
+  display:block;
+  margin-top:4px;
+  color:#7a899d;
+  font-size:11px;
+}
+
+body.portal-body .card-body{
+  padding:19px 20px;
+}
+
+body.portal-body .grid.grid-2{
+  gap:16px;
+}
+
+/* Buttons */
+body.portal-body .btn{
+  min-height:38px!important;
+  padding:8px 13px!important;
+  border-radius:9px!important;
+  font-size:11px!important;
+  font-weight:800!important;
+}
+
+body.portal-body .btn-orange{
+  background:#ff6b00;
+  border-color:#ff6b00;
+  box-shadow:0 7px 18px rgba(255,107,0,.14);
+}
+
+body.portal-body .btn-orange:hover{
+  background:#e86000;
+  border-color:#e86000;
+}
+
+body.portal-body .btn-outline{
+  background:#fff;
+  color:#24467f;
+  border-color:#cfdbea;
+}
+
+body.portal-body .btn-outline:hover{
+  background:#f4f7fb;
+  border-color:#b9cbe0;
+}
+
+/* Shared data table shell */
+.ctpa-table-shell{
+  overflow:hidden;
+  border:1px solid #dce5f0;
+  border-radius:16px;
+  background:#fff;
+  box-shadow:0 8px 24px rgba(36,70,127,.045);
+}
+
+.ctpa-table-toolbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  padding:14px 16px;
+  border-bottom:1px solid #e5ebf3;
+  background:#fbfcfe;
+}
+
+.ctpa-table-search{
+  width:min(360px,100%);
+  min-height:38px;
+  padding:0 12px 0 35px;
+  border:1px solid #d2deec;
+  border-radius:9px;
+  outline:0;
+  background:#fff
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='15' height='15' viewBox='0 0 24 24' fill='none' stroke='%2373869e' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20 20-3.4-3.4'/%3E%3C/svg%3E")
+    no-repeat 11px center;
+  color:#24364f;
+  font-size:12px;
+}
+
+.ctpa-table-search:focus{
+  border-color:#7ea2d1;
+  box-shadow:0 0 0 3px rgba(36,70,127,.07);
+}
+
+.ctpa-table-count{
+  color:#77879b;
+  font-size:11px;
+  font-weight:700;
+  white-space:nowrap;
+}
+
+.ctpa-table-shell .management-table-wrap{
+  margin:0!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+}
+
+body.portal-body .management-table{
+  min-width:720px;
+}
+
+body.portal-body .management-table th{
+  padding:11px 15px!important;
+  border-bottom:1px solid #e2e9f2;
+  background:#f7f9fc;
+  color:#697b91;
+  font-size:10px!important;
+  font-weight:900;
+  letter-spacing:.06em;
+}
+
+body.portal-body .management-table td{
+  padding:13px 15px!important;
+  border-bottom:1px solid #edf1f6;
+  color:#44556c;
+  font-size:12px!important;
+}
+
+body.portal-body .management-table tbody tr:last-child td{
+  border-bottom:0;
+}
+
+body.portal-body .management-table tbody tr:hover td{
+  background:#fbfcfe;
+}
+
+body.portal-body .management-table td strong{
+  color:#24364f;
+}
+
+.ctpa-status-pill{
+  display:inline-flex;
+  align-items:center;
+  min-height:24px;
+  padding:3px 8px;
+  border-radius:999px;
+  background:#eef3f8;
+  color:#52677f;
+  font-size:10px;
+  font-weight:850;
+  text-transform:capitalize;
+  white-space:nowrap;
+}
+
+.ctpa-status-pill.is-good{
+  background:#eaf8f1;
+  color:#18714d;
+}
+
+.ctpa-status-pill.is-warn{
+  background:#fff5df;
+  color:#9a6500;
+}
+
+.ctpa-status-pill.is-danger{
+  background:#fff0f0;
+  color:#ad4242;
+}
+
+.ctpa-status-pill.is-info{
+  background:#edf4fd;
+  color:#2c5e9d;
+}
+
+.saas-empty{
+  padding:40px 20px!important;
+  color:#76879b!important;
+  font-size:12px!important;
+}
+
+/* Forms / settings pages */
+body.portal-body .saas-form-grid{
+  gap:15px;
+}
+
+body.portal-body .saas-form-grid label,
+body.portal-body .card-body > label{
+  display:grid;
+  gap:6px;
+}
+
+body.portal-body .saas-form-grid label > span,
+body.portal-body .card-body > label > span{
+  color:#62758e;
+  font-size:11px!important;
+  font-weight:800;
+}
+
+body.portal-body .saas-form-grid input,
+body.portal-body .saas-form-grid select,
+body.portal-body .card-body > label input,
+body.portal-body .card-body > label select,
+body.portal-body .card-body > label textarea{
+  min-height:40px!important;
+  width:100%;
+  padding:8px 11px;
+  border:1px solid #cfdbea;
+  border-radius:9px;
+  background:#fff;
+  color:#26364c;
+  outline:0;
+}
+
+body.portal-body textarea{
+  min-height:92px!important;
+  resize:vertical;
+}
+
+body.portal-body input:focus,
+body.portal-body select:focus,
+body.portal-body textarea:focus{
+  border-color:#7ea2d1!important;
+  box-shadow:0 0 0 3px rgba(36,70,127,.07);
+}
+
+.config-choice-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+  margin:18px 0;
+}
+
+.config-choice{
+  min-height:50px;
+  display:flex!important;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  padding:10px 12px;
+  border:1px solid #dce5f0;
+  border-radius:10px;
+  background:#f9fbfd;
+}
+
+.config-choice span{
+  color:#3f526b;
+  font-size:11px;
+  font-weight:750;
+}
+
+.config-choice input{
+  width:17px!important;
+  height:17px!important;
+  min-height:17px!important;
+  flex:0 0 17px;
+  accent-color:#24467f;
+}
+
+/* Feature / report cards */
+body.portal-body .feature-grid{
+  gap:11px;
+}
+
+body.portal-body .feature-row{
+  min-height:64px;
+  padding:13px 14px;
+  border-color:#dce5f0;
+  border-radius:11px;
+  background:#fff;
+}
+
+body.portal-body .feature-row strong{
+  color:#283b54;
+  font-size:12px;
+}
+
+body.portal-body .feature-row span{
+  color:#7a8a9d;
+  font-size:10px;
+}
+
+/* Loading state */
+.ctpa-loading{
+  display:grid;
+  gap:14px;
+}
+
+.ctpa-loading-hero,
+.ctpa-loading-card{
+  position:relative;
+  overflow:hidden;
+  border:1px solid #e1e8f1;
+  border-radius:15px;
+  background:#fff;
+}
+
+.ctpa-loading-hero{
+  height:82px;
+}
+
+.ctpa-loading-card{
+  height:170px;
+}
+
+.ctpa-loading-hero::after,
+.ctpa-loading-card::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  transform:translateX(-100%);
+  background:linear-gradient(90deg,transparent,rgba(36,70,127,.045),transparent);
+  animation:ctpa-shimmer 1.2s infinite;
+}
+
+@keyframes ctpa-shimmer{
+  100%{transform:translateX(100%)}
+}
+
+/* Mobile */
+@media(max-width:1100px){
+  body.portal-body .topbar-actions .font-sizer{
+    display:none;
+  }
+  body.portal-body .content{
+    padding:25px 22px 44px;
+  }
+}
+
+@media(max-width:920px){
+  body.portal-body .portal-shell{
+    grid-template-columns:1fr;
+  }
+
+  body.portal-body .sidebar{
+    position:fixed;
+    inset:0 auto 0 0;
+    width:min(310px,86vw)!important;
+    height:100dvh;
+    transform:translateX(-104%);
+    transition:transform .2s ease;
+    box-shadow:20px 0 50px rgba(16,40,75,.2);
+    z-index:120;
+  }
+
+  body.portal-body .sidebar.open{
+    transform:translateX(0);
+  }
+
+  body.portal-body .topbar{
+    padding:0 14px;
+  }
+
+  body.portal-body .mobile-menu{
+    display:grid;
+    place-items:center;
+  }
+
+  body.portal-body .topbar-actions{
+    gap:7px;
+  }
+
+  body.portal-body .topbar-actions .top-action,
+  body.portal-body .topbar-actions .btn-outline,
+  body.portal-body .user-meta{
+    display:none!important;
+  }
+
+  body.portal-body .user-chip{
+    padding:4px;
+    border:0;
+    background:transparent;
+  }
+
+  body.portal-body .content{
+    padding:22px 14px 40px;
+  }
+
+  .ctpa-page-header{
+    gap:14px;
+  }
+
+  .ctpa-page-header h1{
+    font-size:25px;
+  }
+
+  body.portal-body .metrics{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+
+  body.portal-body .grid.grid-2{
+    grid-template-columns:1fr;
+  }
+
+  .config-choice-grid{
+    grid-template-columns:1fr;
+  }
+}
+
+@media(max-width:620px){
+  .ctpa-page-header{
+    flex-direction:column;
+    margin-bottom:18px;
+  }
+
+  .ctpa-page-actions{
+    width:100%;
+    justify-content:flex-start;
+  }
+
+  .ctpa-page-header h1{
+    font-size:23px;
+  }
+
+  .ctpa-page-header p{
+    font-size:12px;
+  }
+
+  body.portal-body .metrics{
+    grid-template-columns:1fr;
+  }
+
+  body.portal-body .metric-card{
+    min-height:105px;
+  }
+
+  .ctpa-table-toolbar{
+    align-items:stretch;
+    flex-direction:column;
+    gap:8px;
+  }
+
+  .ctpa-table-search{
+    width:100%;
+  }
+
+  body.portal-body .saas-form-grid{
+    grid-template-columns:1fr!important;
+  }
+
+  body.portal-body .feature-grid{
+    grid-template-columns:1fr;
+  }
+}
+
