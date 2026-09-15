@@ -27,6 +27,10 @@ const testApi=body=>invoke('workforce-admin-testing-actions',body);
 const poolApi=body=>invoke('workforce-admin-random-pool-management',body);
 const selectionApi=body=>invoke('workforce-admin-employer-selections',body);
 const resultApi=body=>invoke('workforce-admin-employer-results',body);
+const complianceApi=body=>invoke('workforce-admin-employer-compliance',body);
+const complianceSyncApi=body=>invoke('workforce-admin-employer-compliance-sync',body);
+const documentApi=body=>invoke('workforce-admin-employer-documents',body);
+const notificationApi=body=>invoke('workforce-admin-employer-notifications',body);
 const employerManagementApi=body=>invoke('workforce-employer-management',{...body,employer_id:employerId});
 
 function status(message,type=''){
@@ -481,15 +485,273 @@ function renderResults(){
         if(!window.confirm('Finalize this verified result? Finalized results are locked from the preliminary workflow.')){if(storagePath)await supabase.storage.from('workforce-documents').remove([storagePath]);return}
         status('Finalizing verified result…');
         const r=await resultApi({action:'finalize_result',employer_id:employerId,result_id:x.result_id,final_status:x.final_status,mro_verified_at:x.mro_verified_at||null,official_mro_document_id:documentId});
+        if(['positive','refusal'].includes(x.final_status)){try{await complianceSyncApi({employer_id:employerId})}catch(syncError){console.error('Compliance sync',syncError)}}
         status(`Verified result finalized. Report ${r.report?.report_number||''} created.`,'success');await load();
       }catch(e){status(e.message,'error')}
     };
   };
   load().catch(e=>{root.innerHTML=`<div class="management-empty">${esc(e.message)}</div>`;status(e.message,'error')});
 }
-function renderCompliance(){const root=$('#managementContent');root.innerHTML=table(['Case','Employee','Event','Priority','Status','Opened'],(detail.compliance_cases||[]).map(x=>`<tr><td><strong>${esc(x.case_number||'—')}</strong></td><td>${esc(employeeName(x.employees))}</td><td>${esc(pretty(x.event_type))}</td><td>${esc(pretty(x.priority))}</td><td>${esc(pretty(x.status))}</td><td>${esc(fmt(x.opened_at))}</td></tr>`).join(''),'No compliance cases.');}
-function renderDocuments(){const root=$('#managementContent');root.innerHTML=table(['File','Type','Uploaded','Access'],(detail.documents||[]).map(x=>`<tr><td><strong>${esc(x.file_name)}</strong></td><td>${esc(pretty(x.document_type))}</td><td>${esc(fmtDT(x.uploaded_at))}</td><td>${esc(pretty(x.access_level))}</td></tr>`).join(''),'No documents.');}
-function renderNotifications(){const root=$('#managementContent');root.innerHTML=table(['Queued','Event','Channel','Recipient','Subject','Status'],(detail.notifications||[]).map(x=>`<tr><td>${esc(fmtDT(x.queued_at))}</td><td>${esc(pretty(x.event_type))}</td><td>${esc(pretty(x.channel))}</td><td>${esc(x.recipient_address||'—')}</td><td>${esc(x.subject||'—')}</td><td>${esc(pretty(x.status))}</td></tr>`).join(''),'No notifications.');}
+function renderCompliance(){
+  const root=$('#managementContent');
+  root.innerHTML='<div class="management-empty">Loading compliance / SAP / RTD workspace…</div>';
+
+  const load=async()=>{
+    try{await complianceSyncApi({employer_id:employerId})}catch(e){console.error('Compliance violation sync',e)}
+    const d=await complianceApi({action:'workspace',employer_id:employerId});
+    const cases=d.cases||[],tasks=d.tasks||[],saps=d.sap_cases||[],follow=d.follow_up_tests||[],results=d.results||[],sapOrgs=d.sap_organizations||[];
+    const sapByCase=new Map(); saps.forEach(x=>{if(!sapByCase.has(x.compliance_case_id))sapByCase.set(x.compliance_case_id,x)});
+    const resultByOrder=new Map(); results.forEach(x=>{if(!resultByOrder.has(x.testing_order_id))resultByOrder.set(x.testing_order_id,x)});
+    const openCases=cases.filter(x=>!['resolved','closed'].includes(x.status));
+    const critical=openCases.filter(x=>x.priority==='critical');
+    const activeSap=saps.filter(x=>!['completed','closed'].includes(x.status));
+    const pendingFollow=follow.filter(x=>!['completed','cancelled'].includes(x.status));
+
+    root.innerHTML=`
+      <div class="management-stat-grid" style="margin-bottom:18px">
+        <div class="management-stat"><strong>${openCases.length}</strong><span>Open Compliance Cases</span></div>
+        <div class="management-stat"><strong>${critical.length}</strong><span>Critical Cases</span></div>
+        <div class="management-stat"><strong>${activeSap.length}</strong><span>Active SAP / RTD Cases</span></div>
+        <div class="management-stat"><strong>${pendingFollow.length}</strong><span>Follow-Up Tests Outstanding</span></div>
+      </div>
+      <div class="saas-notice"><strong>Automatic violation control:</strong> finalized Positive or Refusal results create a critical compliance case, place the employee / driver on Compliance Hold, create initial action tasks, and open the SAP / Return-to-Duty workflow. This sync is idempotent and will not create duplicate cases for the same testing order.</div>
+      <section class="card" style="margin-top:18px">
+        <div class="card-head"><div><h2>Compliance Cases</h2><span>Positive/refusal cases are tied directly to the source testing order and verified result.</span></div></div>
+        <div class="card-body">${table(['Case','Employee / Driver','Event','Source Order','Priority','Status','Clearinghouse','SAP / RTD','Actions'],cases.map(c=>{const s=sapByCase.get(c.id);return `<tr>
+          <td><strong>${esc(c.case_number)}</strong><br><small>${esc(fmt(c.violation_date||c.opened_at))}</small></td>
+          <td>${esc(employeeName(c.employees))}<br><small>${esc(pretty(c.employees?.employment_status))}</small></td>
+          <td>${esc(pretty(c.event_type))}</td>
+          <td>${esc(c.testing_orders?.order_number||'—')}<br><small>${esc(pretty(c.testing_orders?.program_type))}</small></td>
+          <td>${esc(pretty(c.priority))}</td><td>${esc(pretty(c.status))}</td>
+          <td>${esc(pretty(c.clearinghouse_status||'not applicable'))}</td>
+          <td>${esc(s?pretty(s.return_to_duty_status||s.status):'Not Started')}</td>
+          <td><button class="org-action" type="button" data-open-compliance-case="${esc(c.id)}">Manage</button></td>
+        </tr>`}).join(''),'No compliance cases.')}</div>
+      </section>
+      <section id="complianceCasePanel" class="admin-inline-editor" hidden>
+        <div class="management-section-head"><div><h3 id="complianceCaseTitle">Compliance Case</h3><p id="complianceCaseMeta"></p></div></div>
+        <div id="complianceCaseBody"></div>
+      </section>`;
+
+    const openCase=id=>{
+      const c=cases.find(x=>x.id===id);if(!c)return;
+      const panel=root.querySelector('#complianceCasePanel'),s=sapByCase.get(c.id),caseTasks=tasks.filter(x=>x.compliance_case_id===c.id),fus=s?follow.filter(x=>x.sap_case_id===s.id):[];
+      panel.hidden=false;root.querySelector('#complianceCaseTitle').textContent=`${c.case_number} · ${employeeName(c.employees)}`;
+      root.querySelector('#complianceCaseMeta').textContent=`${pretty(c.event_type)} · opened ${fmtDT(c.opened_at)} · source order ${c.testing_orders?.order_number||'—'}`;
+      panel.querySelector('#complianceCaseBody').innerHTML=`
+        <form id="caseEditor" class="saas-form">
+          <input type="hidden" name="id" value="${esc(c.id)}">
+          <div class="saas-form-grid">
+            <label><span>Priority</span><select name="priority">${['low','normal','high','critical'].map(v=>`<option value="${v}" ${c.priority===v?'selected':''}>${esc(pretty(v))}</option>`).join('')}</select></label>
+            <label><span>Case Status</span><select name="status">${['open','in_progress','pending','resolved','closed'].map(v=>`<option value="${v}" ${c.status===v?'selected':''}>${esc(pretty(v))}</option>`).join('')}</select></label>
+            <label><span>Clearinghouse Status</span><select name="clearinghouse_status"><option value="" ${!c.clearinghouse_status?'selected':''}>Not Applicable / Blank</option>${['not_recorded','pending','reported','corrected'].map(v=>`<option value="${v}" ${c.clearinghouse_status===v?'selected':''}>${esc(pretty(v))}</option>`).join('')}</select></label>
+            <label><span>Clearinghouse Reported At</span><input name="clearinghouse_reported_at" type="datetime-local" value="${c.clearinghouse_reported_at?new Date(c.clearinghouse_reported_at).toISOString().slice(0,16):''}"></label>
+            <label><span>Clearinghouse Reference</span><input name="clearinghouse_reference" value="${esc(c.clearinghouse_reference||'')}"></label>
+            <label><span>Compliance Due</span><input name="compliance_due_at" type="datetime-local" value="${c.compliance_due_at?new Date(c.compliance_due_at).toISOString().slice(0,16):''}"></label>
+            <label style="grid-column:1/-1"><span>Resolution / Case Notes</span><textarea name="resolution" rows="3">${esc(c.resolution||'')}</textarea></label>
+          </div><div class="saas-actions"><button class="btn btn-orange">Save Compliance Case</button></div>
+        </form>
+        <section class="card" style="margin-top:18px"><div class="card-head"><div><h2>Compliance Tasks</h2><span>Required actions and due dates.</span></div></div><div class="card-body">
+          ${table(['Task','Due','Status','Action'],caseTasks.map(t=>`<tr><td><strong>${esc(t.title)}</strong><br><small>${esc(t.description||'')}</small></td><td>${esc(fmtDT(t.due_at))}</td><td><select data-task-status="${esc(t.id)}">${['open','in_progress','complete','cancelled'].map(v=>`<option value="${v}" ${t.status===v?'selected':''}>${esc(pretty(v))}</option>`).join('')}</select></td><td><button class="org-action" data-save-task-status="${esc(t.id)}" type="button">Save</button></td></tr>`).join(''),'No compliance tasks.')}
+          <form id="newComplianceTask" class="saas-form" style="margin-top:14px"><input type="hidden" name="compliance_case_id" value="${esc(c.id)}"><div class="saas-form-grid"><label><span>New Task</span><input name="title" required></label><label><span>Due</span><input name="due_at" type="datetime-local"></label><label style="grid-column:1/-1"><span>Description</span><input name="description"></label></div><div class="saas-actions"><button class="btn btn-outline">Add Task</button></div></form>
+        </div></section>
+        <section class="card" style="margin-top:18px"><div class="card-head"><div><h2>SAP / Return-to-Duty</h2><span>${sapOrgs.length?sapOrgs.length+' SAP provider organization(s) configured':'No SAP provider organizations are currently configured; the case may remain unassigned until a provider is added.'}</span></div></div><div class="card-body">
+          <form id="sapEditor" class="saas-form"><input type="hidden" name="id" value="${esc(s?.id||'')}"><input type="hidden" name="compliance_case_id" value="${esc(c.id)}"><div class="saas-form-grid">
+            <label><span>SAP Organization</span><select name="sap_organization_id"><option value="">Unassigned</option>${sapOrgs.map(o=>`<option value="${esc(o.id)}" ${s?.sap_organization_id===o.id?'selected':''}>${esc(o.legal_name)}</option>`).join('')}</select></label>
+            <label><span>Evaluation Date</span><input name="evaluation_date" type="date" value="${esc(s?.evaluation_date||'')}"></label>
+            <label><span>SAP Case Status</span><select name="status">${['open','in_progress','completed','closed'].map(v=>`<option value="${v}" ${String(s?.status||'open')===v?'selected':''}>${esc(pretty(v))}</option>`).join('')}</select></label>
+            <label><span>RTD Status</span><select name="return_to_duty_status">${['sap_referral_required','sap_evaluation_scheduled','sap_evaluation_complete','eligible_for_rtd_test','rtd_test_ordered','rtd_test_passed','rtd_test_failed','follow_up_active','follow_up_complete','completed'].map(v=>`<option value="${v}" ${String(s?.return_to_duty_status||'sap_referral_required')===v?'selected':''}>${esc(pretty(v))}</option>`).join('')}</select></label>
+            <label style="grid-column:1/-1"><span>SAP Recommendations</span><textarea name="recommendations" rows="3">${esc(s?.recommendations||'')}</textarea></label>
+          </div><div class="saas-actions"><button class="btn btn-orange">Save SAP / RTD Case</button>${s?'<button class="btn btn-outline" type="button" id="createRtdOrder">Create RTD Testing Order</button><button class="btn btn-outline" type="button" id="syncRtdWorkflow">Sync Results</button><button class="btn btn-outline" type="button" id="releaseToDuty">Release to Duty</button>':''}</div></form>
+          ${s?`<div style="margin-top:18px">${table(['#','Required By','Status','Testing Order','Order Status','Action'],fus.map(f=>`<tr><td>${f.sequence_number}</td><td>${esc(fmt(f.required_by))}</td><td>${esc(pretty(f.status))}</td><td>${esc(f.testing_orders?.order_number||'Not created')}</td><td>${esc(pretty(f.testing_orders?.status||'—'))}</td><td>${!f.testing_order_id?`<button class="org-action" data-create-follow-order="${esc(f.id)}" type="button">Create Order</button>`:'—'}</td></tr>`).join(''),'No follow-up tests scheduled.')}</div>
+          <form id="followUpForm" class="saas-form" style="margin-top:14px"><input type="hidden" name="sap_case_id" value="${esc(s.id)}"><div class="saas-form-grid"><label><span>Sequence #</span><input name="sequence_number" type="number" min="1" required></label><label><span>Required By</span><input name="required_by" type="date"></label><label><span>Status</span><select name="status"><option value="required">Required</option><option value="ordered">Ordered</option><option value="completed">Completed</option><option value="cancelled">Cancelled</option></select></label></div><div class="saas-actions"><button class="btn btn-outline">Add Follow-Up Requirement</button></div></form>`:''}
+        </div></section>`;
+
+      const caseForm=panel.querySelector('#caseEditor');caseForm.onsubmit=async ev=>{ev.preventDefault();try{status('Saving compliance case…');await complianceApi({action:'save_case',employer_id:employerId,case:formData(caseForm)});status('Compliance case saved.','success');await load()}catch(e){status(e.message,'error')}};
+      panel.querySelectorAll('[data-save-task-status]').forEach(btn=>btn.onclick=async()=>{const t=caseTasks.find(x=>x.id===btn.dataset.saveTaskStatus),st=panel.querySelector(`[data-task-status="${btn.dataset.saveTaskStatus}"]`).value;try{await complianceApi({action:'save_task',employer_id:employerId,task:{...t,status:st}});status('Task updated.','success');await load()}catch(e){status(e.message,'error')}});
+      const nt=panel.querySelector('#newComplianceTask');nt.onsubmit=async ev=>{ev.preventDefault();try{await complianceApi({action:'save_task',employer_id:employerId,task:formData(nt)});status('Compliance task added.','success');await load()}catch(e){status(e.message,'error')}};
+      const sf=panel.querySelector('#sapEditor');sf.onsubmit=async ev=>{ev.preventDefault();try{await complianceApi({action:'save_sap',employer_id:employerId,sap:formData(sf)});status('SAP / RTD case saved.','success');await load()}catch(e){status(e.message,'error')}};
+      panel.querySelector('#createRtdOrder')?.addEventListener('click',async()=>{try{const r=await complianceApi({action:'create_rtd_order',employer_id:employerId,sap_case_id:s.id});status(r.already_exists?'An open RTD testing order already exists.':'Return-to-duty testing order created.','success');await load()}catch(e){status(e.message,'error')}});
+      panel.querySelector('#syncRtdWorkflow')?.addEventListener('click',async()=>{try{const r=await complianceApi({action:'sync_workflow',employer_id:employerId,sap_case_id:s.id});status(`Workflow synced: ${r.follow_up_completed||0}/${r.follow_up_total||0} follow-up tests complete.`,'success');await load()}catch(e){status(e.message,'error')}});
+      panel.querySelector('#releaseToDuty')?.addEventListener('click',async()=>{if(!window.confirm('Release this employee from Compliance Hold? A finalized negative RTD result is required.'))return;try{await complianceApi({action:'release_to_duty',employer_id:employerId,sap_case_id:s.id});status('Employee released from Compliance Hold. Follow-up requirements remain active when applicable.','success');await load()}catch(e){status(e.message,'error')}});
+      const ff=panel.querySelector('#followUpForm');if(ff)ff.onsubmit=async ev=>{ev.preventDefault();try{await complianceApi({action:'save_follow_up',employer_id:employerId,follow_up:formData(ff)});status('Follow-up requirement saved.','success');await load()}catch(e){status(e.message,'error')}};
+      panel.querySelectorAll('[data-create-follow-order]').forEach(btn=>btn.onclick=async()=>{try{await complianceApi({action:'create_follow_up_order',employer_id:employerId,follow_up_test_id:btn.dataset.createFollowOrder});status('Follow-up testing order created.','success');await load()}catch(e){status(e.message,'error')}});
+      panel.scrollIntoView({behavior:'smooth',block:'center'});
+    };
+    root.querySelectorAll('[data-open-compliance-case]').forEach(btn=>btn.onclick=()=>openCase(btn.dataset.openComplianceCase));
+  };
+  load().catch(e=>{root.innerHTML=`<div class="management-empty">${esc(e.message)}</div>`;status(e.message,'error')});
+}
+function renderDocuments(){
+  const root=$('#managementContent');
+  root.innerHTML='<div class="management-empty">Loading Employer documents and compliance records…</div>';
+
+  const load=async()=>{
+    const d=await documentApi({action:'workspace',employer_id:employerId});
+    const docs=d.documents||[],links=d.links||[],employees=d.employees||[],programs=d.programs||[],orders=d.testing_orders||[],cases=d.compliance_cases||[],tasks=d.compliance_tasks||[],saps=d.sap_cases||[],follow=d.follow_up_tests||[],reports=d.result_reports||[];
+    const linkMap=new Map();
+    links.forEach(l=>{if(!linkMap.has(l.document_id))linkMap.set(l.document_id,[]);linkMap.get(l.document_id).push(l)});
+    const sensitive=docs.filter(x=>x.access_level==='sensitive').length;
+    const legalHold=docs.filter(x=>x.legal_hold).length;
+    const unavailable=docs.filter(x=>x.storage_bucket_available===false).length;
+    const complianceDocs=docs.filter(x=>x.compliance_case_id||linkMap.get(x.id)?.some(l=>l.target_type==='compliance_case')).length;
+
+    root.innerHTML=`
+      <div class="management-stat-grid" style="margin-bottom:18px">
+        <div class="management-stat"><strong>${docs.length}</strong><span>Employer Documents</span></div>
+        <div class="management-stat"><strong>${complianceDocs}</strong><span>Compliance-Linked</span></div>
+        <div class="management-stat"><strong>${sensitive}</strong><span>Sensitive Records</span></div>
+        <div class="management-stat"><strong>${legalHold}</strong><span>Legal Hold</span></div>
+      </div>
+      ${unavailable?`<div class="saas-notice"><strong>Legacy file warning:</strong> ${unavailable} document record(s) reference a storage bucket that is not currently available. The database records are preserved, but those file bytes cannot be opened until the original storage object is restored or replaced.</div>`:''}
+
+      <section class="admin-inline-editor">
+        <div class="management-section-head"><div><h3>Upload Employer Record</h3><p>Store a document once, classify its access level, and link it directly to an employee, program, testing order, or compliance case.</p></div></div>
+        <form id="adminDocumentForm" class="saas-form">
+          <div class="saas-form-grid">
+            <label style="grid-column:1/-1"><span>File *</span><input id="adminDocumentFile" type="file" accept="application/pdf,image/png,image/jpeg" required></label>
+            <label><span>Document Type *</span><input name="document_type" value="compliance_record" required></label>
+            <label><span>Access Level *</span><select name="access_level"><option value="standard">Standard</option><option value="restricted">Restricted</option><option value="sensitive">Sensitive</option></select></label>
+            <label><span>Title</span><input name="title"></label>
+            <label><span>Employee / Driver</span><select name="employee_id"><option value="">Not linked</option>${employees.map(x=>`<option value="${esc(x.id)}">${esc(employeeName(x))}${x.employee_number?` · ${esc(x.employee_number)}`:''}</option>`).join('')}</select></label>
+            <label><span>Program</span><select name="program_id"><option value="">Not linked</option>${programs.map(x=>`<option value="${esc(x.id)}">${esc(x.name)} · ${esc(pretty(x.program_type))}</option>`).join('')}</select></label>
+            <label><span>Testing Order</span><select name="testing_order_id"><option value="">Not linked</option>${orders.map(x=>`<option value="${esc(x.id)}">${esc(x.order_number)} · ${esc(pretty(x.reason))}</option>`).join('')}</select></label>
+            <label><span>Compliance Case</span><select name="compliance_case_id"><option value="">Not linked</option>${cases.map(x=>`<option value="${esc(x.id)}">${esc(x.case_number)} · ${esc(pretty(x.event_type))}</option>`).join('')}</select></label>
+            <label><span>Retention Until</span><input name="retention_until" type="date"></label>
+            <label><span>Legal Hold</span><select name="legal_hold"><option value="false">No</option><option value="true">Yes</option></select></label>
+            <label style="grid-column:1/-1"><span>Description</span><textarea name="description" rows="3"></textarea></label>
+          </div>
+          <div class="saas-actions"><button class="btn btn-orange" type="submit">Upload & Register</button></div>
+        </form>
+      </section>
+
+      <section class="card" style="margin-top:18px">
+        <div class="card-head"><div><h2>Document Repository</h2><span>Files, access classification, retention, and linked workflow records.</span></div></div>
+        <div class="card-body">${table(['File','Type','Access','Linked Records','Uploaded','Retention','Actions'],docs.map(x=>{
+          const l=linkMap.get(x.id)||[],linked=[
+            x.employee_id?`Employee`:null,x.program_id?`Program`:null,x.testing_order_id?`Testing Order`:null,x.compliance_case_id?`Compliance Case`:null,
+            ...l.map(v=>pretty(v.target_type))
+          ].filter(Boolean);
+          return `<tr>
+            <td><strong>${esc(x.metadata?.title||x.file_name)}</strong><br><small>${esc(x.file_name)}</small>${x.legal_hold?'<br><span class="badge warning">Legal Hold</span>':''}${x.storage_bucket_available===false?'<br><span class="badge warning">File Unavailable</span>':''}</td>
+            <td>${esc(pretty(x.document_type))}</td><td>${esc(pretty(x.access_level))}</td>
+            <td>${esc([...new Set(linked)].join(', ')||'Unlinked')}</td>
+            <td>${esc(fmtDT(x.uploaded_at))}</td><td>${esc(fmt(x.retention_until))}</td>
+            <td><div class="row-actions"><button class="org-action" type="button" data-view-document="${esc(x.id)}">Open</button><button class="org-action" type="button" data-manage-document="${esc(x.id)}">Manage</button>${!x.legal_hold?`<button class="org-action danger" type="button" data-archive-document="${esc(x.id)}">Archive</button>`:''}</div></td>
+          </tr>`;
+        }).join(''),'No Employer documents.')}</div>
+      </section>
+
+      <section class="card" style="margin-top:18px">
+        <div class="card-head"><div><h2>Compliance Record Index</h2><span>Operational records that should be supported by documents where appropriate.</span></div></div>
+        <div class="card-body">
+          ${table(['Case','Employee / Driver','Event','Status','Tasks','SAP / RTD','Follow-Up','Result Report'],cases.map(c=>{
+            const s=saps.find(x=>x.compliance_case_id===c.id),fts=s?follow.filter(x=>x.sap_case_id===s.id):[],caseTasks=tasks.filter(x=>x.compliance_case_id===c.id),rp=c.testing_order_id?reports.find(x=>x.testing_order_id===c.testing_order_id):null;
+            return `<tr><td><strong>${esc(c.case_number)}</strong></td><td>${esc(employeeName(c.employees))}</td><td>${esc(pretty(c.event_type))}</td><td>${esc(pretty(c.status))}</td><td>${caseTasks.filter(x=>!['complete','cancelled'].includes(x.status)).length} open / ${caseTasks.length}</td><td>${esc(s?pretty(s.return_to_duty_status||s.status):'Not Started')}</td><td>${fts.filter(x=>x.status==='completed').length}/${fts.length}</td><td>${rp?esc(rp.report_number):'—'}</td></tr>`;
+          }).join(''),'No compliance records.')}</div>
+      </section>
+
+      <section id="documentManagePanel" class="admin-inline-editor" hidden>
+        <div class="management-section-head"><div><h3 id="documentManageTitle">Manage Document</h3><p>Update classification or add workflow links without duplicating the file.</p></div></div>
+        <div id="documentManageBody"></div>
+      </section>`;
+
+    const uploadForm=root.querySelector('#adminDocumentForm');
+    uploadForm.onsubmit=async ev=>{
+      ev.preventDefault();const file=root.querySelector('#adminDocumentFile')?.files?.[0];
+      if(!file)return status('Choose a file.','error');
+      if(file.size>10*1024*1024)return status('File must be 10 MB or smaller.','error');
+      if(!['application/pdf','image/png','image/jpeg'].includes(file.type))return status('Upload a PDF, PNG, or JPG.','error');
+      try{
+        const x=formData(uploadForm);x.legal_hold=x.legal_hold==='true';
+        status('Preparing secure upload…');
+        const ticket=await documentApi({action:'create_upload',employer_id:employerId,document:{file_name:file.name,document_type:x.document_type}});
+        const up=await supabase.storage.from(ticket.bucket).uploadToSignedUrl(ticket.path,ticket.token,file,{contentType:file.type});
+        if(up.error)throw up.error;
+        status('Registering Employer document…');
+        await documentApi({action:'register',employer_id:employerId,document:{...x,file_name:file.name,storage_bucket:ticket.bucket,storage_path:ticket.path,mime_type:file.type,size_bytes:file.size}});
+        status('Document uploaded and registered.','success');await load();
+      }catch(e){status(e.message,'error')}
+    };
+
+    root.querySelectorAll('[data-view-document]').forEach(btn=>btn.onclick=async()=>{try{status('Creating secure document link…');const r=await documentApi({action:'signed_url',employer_id:employerId,document_id:btn.dataset.viewDocument});window.open(r.url,'_blank','noopener');status('Secure document link created.','success')}catch(e){status(e.message,'error')}});
+
+    root.querySelectorAll('[data-archive-document]').forEach(btn=>btn.onclick=async()=>{if(!window.confirm('Archive this document record? The file remains retained according to its storage and retention rules.'))return;try{await documentApi({action:'archive',employer_id:employerId,document_id:btn.dataset.archiveDocument});status('Document archived.','success');await load()}catch(e){status(e.message,'error')}});
+
+    root.querySelectorAll('[data-manage-document]').forEach(btn=>btn.onclick=()=>{
+      const x=docs.find(d=>d.id===btn.dataset.manageDocument),panel=root.querySelector('#documentManagePanel'),body=root.querySelector('#documentManageBody'),existing=linkMap.get(x.id)||[];
+      panel.hidden=false;root.querySelector('#documentManageTitle').textContent=x.metadata?.title||x.file_name;
+      body.innerHTML=`<form id="documentMetaForm" class="saas-form"><input type="hidden" name="id" value="${esc(x.id)}"><div class="saas-form-grid">
+        <label><span>Document Type</span><input name="document_type" value="${esc(x.document_type)}"></label>
+        <label><span>Access</span><select name="access_level">${['standard','restricted','sensitive'].map(v=>`<option value="${v}" ${x.access_level===v?'selected':''}>${esc(pretty(v))}</option>`).join('')}</select></label>
+        <label><span>Title</span><input name="title" value="${esc(x.metadata?.title||x.file_name)}"></label>
+        <label style="grid-column:1/-1"><span>Description</span><textarea name="description" rows="3">${esc(x.metadata?.description||'')}</textarea></label>
+      </div><div class="saas-actions"><button class="btn btn-orange">Save Document Metadata</button></div></form>
+      <div style="margin-top:18px"><h4>Existing Links</h4>${existing.length?existing.map(l=>`<span class="badge neutral">${esc(pretty(l.target_type))}</span>`).join(' '):'<span class="management-empty">No additional links.</span>'}</div>
+      <form id="documentLinkForm" class="saas-form" style="margin-top:16px"><div class="saas-form-grid"><label><span>Link Type</span><select name="target_type"><option value="employee">Employee</option><option value="program">Program</option><option value="testing_order">Testing Order</option><option value="compliance_case">Compliance Case</option></select></label><label><span>Link Target</span><select name="target_id"></select></label></div><div class="saas-actions"><button class="btn btn-outline">Add Link</button></div></form>`;
+      const mf=body.querySelector('#documentMetaForm');mf.onsubmit=async ev=>{ev.preventDefault();try{await documentApi({action:'update_document',employer_id:employerId,document:formData(mf)});status('Document metadata updated.','success');await load()}catch(e){status(e.message,'error')}};
+      const lf=body.querySelector('#documentLinkForm'),type=lf.elements.target_type,target=lf.elements.target_id;
+      const rebuild=()=>{const rows=type.value==='employee'?employees:type.value==='program'?programs:type.value==='testing_order'?orders:cases;target.innerHTML=rows.map(r=>`<option value="${esc(r.id)}">${esc(type.value==='employee'?employeeName(r):type.value==='program'?r.name:type.value==='testing_order'?r.order_number:r.case_number)}</option>`).join('')};type.onchange=rebuild;rebuild();
+      lf.onsubmit=async ev=>{ev.preventDefault();const y=formData(lf);try{await documentApi({action:'link',employer_id:employerId,document_id:x.id,target_type:y.target_type,target_id:y.target_id});status('Document linked to workflow record.','success');await load()}catch(e){status(e.message,'error')}};
+      panel.scrollIntoView({behavior:'smooth',block:'center'});
+    });
+  };
+  load().catch(e=>{root.innerHTML=`<div class="management-empty">${esc(e.message)}</div>`;status(e.message,'error')});
+}
+function renderNotifications(){
+  const root=$('#managementContent');
+  root.innerHTML='<div class="management-empty">Loading Employer Notifications / Action Center…</div>';
+
+  const load=async()=>{
+    const d=await notificationApi({action:'workspace',employer_id:employerId}),actions=d.actions||[],notifications=d.notifications||[];
+    root.innerHTML=`
+      <div class="management-stat-grid" style="margin-bottom:18px">
+        <div class="management-stat"><strong>${actions.length}</strong><span>Action Items</span></div>
+        <div class="management-stat"><strong>${d.counts?.critical||0}</strong><span>Critical</span></div>
+        <div class="management-stat"><strong>${d.counts?.queued_notifications||0}</strong><span>Queued Notices</span></div>
+        <div class="management-stat"><strong>${d.counts?.failed_notifications||0}</strong><span>Delivery Failures</span></div>
+      </div>
+
+      <section class="admin-inline-editor">
+        <div class="management-section-head"><div><h3>Send Employer Notice</h3><p>Queue an in-app or email notice without bypassing the notification delivery workflow.</p></div></div>
+        <form id="adminEmployerNoticeForm" class="saas-form">
+          <div class="saas-form-grid">
+            <label><span>Channel</span><select name="channel"><option value="in_app">In-App</option><option value="email">Email</option></select></label>
+            <label><span>Recipient</span><select name="recipient_kind"><option value="employer_admins">Employer Admins</option><option value="ders">DERs</option><option value="all_staff">All Employer Staff</option><option value="primary">Primary Contact Email</option><option value="safety">Safety Contact Email</option><option value="hr">HR Contact Email</option><option value="billing">Billing Contact Email</option></select></label>
+            <label style="grid-column:1/-1"><span>Subject</span><input name="subject" maxlength="180" required></label>
+            <label style="grid-column:1/-1"><span>Message</span><textarea name="body" rows="4" maxlength="5000" required></textarea></label>
+          </div>
+          <div class="saas-actions"><button class="btn btn-orange" type="submit">Queue Notice</button></div>
+        </form>
+      </section>
+
+      <section class="card" style="margin-top:18px">
+        <div class="card-head"><div><h2>Action Center</h2><span>Live operational items generated from testing, MRO, compliance, RTD, training, credentials, post-accident, documents, and delivery failures.</span></div></div>
+        <div class="card-body">${table(['Priority','Type','Item','Due','Status','Portal'],actions.map(a=>`<tr>
+          <td><span class="badge ${a.priority==='critical'?'danger':a.priority==='high'?'warning':'neutral'}">${esc(pretty(a.priority))}</span></td>
+          <td>${esc(pretty(a.type))}</td><td><strong>${esc(a.title)}</strong><br><small>${esc(a.detail||'')}</small></td>
+          <td>${esc(fmtDT(a.due_at))}</td><td>${esc(pretty(a.status))}</td><td>${esc(a.url||'—')}</td>
+        </tr>`).join(''),'No open action-center items.')}</div>
+      </section>
+
+      <section class="card" style="margin-top:18px">
+        <div class="card-head"><div><h2>Notification History</h2><span>Queue and delivery status for notices scoped to this Employer.</span></div></div>
+        <div class="card-body">${table(['Queued','Event','Channel','Recipient','Subject','Status','Failure','Actions'],notifications.map(n=>`<tr>
+          <td>${esc(fmtDT(n.queued_at))}</td><td>${esc(pretty(n.event_type))}</td><td>${esc(pretty(n.channel))}</td><td>${esc(n.recipient_address||n.recipient_user_id||'In-App')}</td>
+          <td>${esc(n.subject||'—')}</td><td>${esc(pretty(n.status))}</td><td>${esc(n.failure_reason||'—')}</td>
+          <td>${n.status==='queued'?`<button class="org-action" data-cancel-notice="${esc(n.id)}" type="button">Cancel</button>`:'—'}</td>
+        </tr>`).join(''),'No notifications for this Employer.')}</div>
+      </section>`;
+
+    const form=root.querySelector('#adminEmployerNoticeForm');
+    const channel=form.elements.channel,recipient=form.elements.recipient_kind;
+    const adjust=()=>{const email=channel.value==='email';[...recipient.options].forEach(o=>{const isEmail=['primary','safety','hr','billing'].includes(o.value);o.hidden=email?!isEmail:isEmail});if(email&&!['primary','safety','hr','billing'].includes(recipient.value))recipient.value='primary';if(!email&&['primary','safety','hr','billing'].includes(recipient.value))recipient.value='employer_admins'};
+    channel.onchange=adjust;adjust();
+    form.onsubmit=async ev=>{ev.preventDefault();try{status('Queueing Employer notice…');const r=await notificationApi({action:'queue_notice',employer_id:employerId,notice:formData(form)});status(`${r.count||0} notice(s) queued.`,'success');await load()}catch(e){status(e.message,'error')}};
+    root.querySelectorAll('[data-cancel-notice]').forEach(btn=>btn.onclick=async()=>{if(!window.confirm('Cancel this queued notification?'))return;try{await notificationApi({action:'cancel_notification',employer_id:employerId,notification_id:btn.dataset.cancelNotice});status('Queued notification cancelled.','success');await load()}catch(e){status(e.message,'error')}});
+  };
+  load().catch(e=>{root.innerHTML=`<div class="management-empty">${esc(e.message)}</div>`;status(e.message,'error')});
+}
 function renderAudit(){const root=$('#managementContent');root.innerHTML=table(['Date','Action','Resource','ID'],(detail.audit_events||[]).map(x=>`<tr><td>${esc(fmtDT(x.event_at))}</td><td><strong>${esc(pretty(x.action))}</strong></td><td>${esc(pretty(x.resource_type))}</td><td>${esc(x.resource_id||'—')}</td></tr>`).join(''),'No audit events.');}
 function renderAccess(derOnly=false){
   const root=$('#managementContent');
