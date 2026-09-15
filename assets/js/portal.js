@@ -282,9 +282,11 @@ function addPlatformPortalSwitcher(ctx){
 async function addPlatformAccountSwitcher(actual,actions,userChip){
   if(!['ctpa','employer'].includes(actual) || actions.querySelector('[data-account-viewer]'))return;
   try{
-    const {data,error}=await supabase.functions.invoke('workforce-admin-ctpa-context',{body:{action:'list_accounts'}});
+    const fn=actual==='ctpa'?'workforce-admin-ctpa-context':'workforce-admin-employer-context';
+    const body=actual==='ctpa'?{action:'list_accounts'}:{action:'list'};
+    const {data,error}=await supabase.functions.invoke(fn,{body});
     if(error)throw error;
-    const list=actual==='ctpa'?(data?.ctpas||[]):(data?.employers||[]);
+    const list=actual==='ctpa'?(data?.ctpas||[]):(data?.employers||[]).map(x=>({...x,name:x.name||x.legal_name||'Employer'}));
     const param=actual==='ctpa'?'ctpa':'employer';
     const selected=new URLSearchParams(location.search).get(param)||sessionStorage.getItem(`s4u_platform_${param}_view`)||'';
     const wrap=document.createElement('div');wrap.className='account-viewer';wrap.dataset.accountViewer='';

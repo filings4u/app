@@ -789,3 +789,11 @@ small,.helper-text,.muted,.eyebrow,.metric-label,.metric-note,.card-head span,.m
 .admin-inline-editor h3{margin:0 0 14px!important}.admin-inline-editor h3+p{margin:0 0 14px!important}
 .management-table-wrap{overflow-x:auto!important}
 @media(max-width:700px){.admin-inline-editor{padding:16px!important}.admin-inline-editor .saas-form-grid{margin-bottom:14px!important}}
+
+/* Employer employees & access wiring v2 */
+.access-state{display:inline-flex;align-items:center;min-height:24px;padding:3px 8px;border-radius:999px;font-size:10px;font-weight:850;white-space:nowrap}
+.access-state.is-linked{background:#eaf8f1;color:#18714d}.access-state.is-unlinked{background:#f1f4f8;color:#68798e}
+.admin-inline-editor-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:16px}.admin-inline-editor-head h3{margin:0 0 5px}.admin-inline-editor-head p{margin:0;color:var(--muted);font-size:11px;line-height:1.5}
+.management-check{display:flex!important;align-items:center!important;gap:8px!important;align-self:end;min-height:38px}.management-check input{width:16px!important;height:16px!important;min-height:16px!important}.management-form-grid .full{grid-column:1/-1}
+.management-table td select{min-width:135px;max-width:190px;height:34px;border:1px solid var(--line);border-radius:8px;background:#fff;padding:0 8px;color:var(--blue)}
+@media(max-width:700px){.admin-inline-editor-head{flex-direction:column}.management-table td select{min-width:120px}}

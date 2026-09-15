@@ -53,6 +53,8 @@ const api = body => invoke('workforce-employer-management',body);
 const advanced = body => invoke(['save_post_accident','respond_support_consent'].includes(body.action)?'workforce-employer-phase1-actions':'workforce-employer-advanced',body);
 const testing = body => invoke('workforce-employer-testing',body);
 const pools = body => invoke('workforce-employer-pools',body);
+const employeeAccess = body => invoke('workforce-employer-employee-access',body);
+const resultWorkflow = body => invoke('workforce-employer-results',body);
 
 async function sessionContext(){
   const {data:{session}}=await supabase.auth.getSession();
@@ -189,16 +191,249 @@ async function initDashboard(){ const d=await api({action:'overview'}); setText(
   const pr=$('#programRows'); if(pr){pr.replaceChildren(); for(const p of (d.programs||[]).slice(0,6)){const div=document.createElement('div'); div.className='status-item'; div.textContent=`${p.name} — ${pretty(p.program_type)}${p.dot_agency?' / '+p.dot_agency:''}`; pr.append(div);} if(!pr.children.length){const e=document.createElement('div');e.className='saas-empty';e.textContent='No programs configured.';pr.append(e)}}
   const trr=$('#testRows'); if(trr){trr.replaceChildren(); for(const x of tests.slice(0,6)){const div=document.createElement('div');div.className='status-item';div.textContent=`${x.order_number||'Order'} — ${employeeName(x.employees)} — ${pretty(x.status)}`;trr.append(div);} if(!trr.children.length){const e=document.createElement('div');e.className='saas-empty';e.textContent='No testing activity.';trr.append(e)}}
   if(context?.entitlements?.action_center){try{const a=await advanced({action:'workforce_action_center'}); const s=$('#actionSummary'); if(s){s.textContent=`${a.credentials?.length||0} credential · ${a.training?.length||0} training · ${a.compliance?.length||0} compliance · ${a.post_accidents?.length||0} post-accident item(s)`;}}catch(e){console.warn(e)}} }
-async function initEmployees(){ let d=await api({action:'overview'}); const render=()=>tableRows('employeeRows',(d.employees||[]).map(e=>{const b=actionButton('Edit',()=>fillForm($('#employeeForm'),e));return tr([employeeName(e),e.employee_number||'—',e.email||'—',e.dot_covered?'Yes':'No',pretty(e.employment_status),b])}),6,'No employees or drivers yet.'); render(); $('#employeeForm')?.addEventListener('submit',async ev=>{ev.preventDefault(); const form=ev.currentTarget; try{notice('Saving employee…'); await api({action:'save_employee',employee:formObject(form)}); form.reset(); d=await api({action:'overview'}); render(); notice('Employee saved.','success')}catch(e){notice(e.message,'error')}}); }
+async function initEmployees(){
+  let d=await api({action:'overview'}),accessData=null;
+  try{accessData=await employeeAccess({action:'list'})}catch(e){console.warn('Employee access list unavailable',e)}
+  const render=()=>tableRows('employeeRows',(d.employees||[]).map(e=>{
+    const b=actionButton('Edit',()=>fillForm($('#employeeForm'),e));
+    const a=accessData?.employees?.find(x=>x.id===e.id)?.portal_access||{linked:!!e.auth_user_id,status:e.auth_user_id?'linked':'none'};
+    const wrap=document.createElement('div');wrap.className='management-actions';
+    const badge=document.createElement('span');badge.className='access-state '+(a.status==='active'?'is-linked':'is-unlinked');badge.textContent=a.linked?pretty(a.status):'Not Enabled';wrap.append(badge);
+    if(accessData?.can_manage){
+      if(!a.linked){const enable=actionButton('Enable Portal',async()=>{try{notice('Creating Employee Portal access…');await employeeAccess({action:'invite',employee_id:e.id});d=await api({action:'overview'});accessData=await employeeAccess({action:'list'});render();notice('Employee Portal access enabled.','success')}catch(x){notice(x.message,'error')}});enable.disabled=!e.email;wrap.append(enable)}
+      else {const target=a.status==='active'?'suspended':'active';wrap.append(actionButton(target==='active'?'Activate':'Suspend',async()=>{try{await employeeAccess({action:'set_status',employee_id:e.id,status:target});accessData=await employeeAccess({action:'list'});render();notice(`Employee Portal access ${target}.`,'success')}catch(x){notice(x.message,'error')}}));}
+    }
+    return tr([employeeName(e),e.employee_number||'—',e.email||'—',e.dot_covered?'Yes':'No',pretty(e.employment_status),wrap,b])
+  }),7,'No employees or drivers yet.');
+  render();
+  $('#employeeForm')?.addEventListener('submit',async ev=>{ev.preventDefault();const form=ev.currentTarget;try{notice('Saving employee…');await api({action:'save_employee',employee:formObject(form)});form.reset();d=await api({action:'overview'});try{accessData=await employeeAccess({action:'list'})}catch{}render();notice('Employee saved.','success')}catch(e){notice(e.message,'error')}});
+}
+
 async function initLocations(){ let d=await api({action:'overview'}); const render=()=>tableRows('locationRows',(d.locations||[]).map(x=>tr([x.name,pretty(x.location_type),[x.city,x.state].filter(Boolean).join(', ')||'—',pretty(x.status),actionButton('Edit',()=>fillForm($('#locationForm'),x))])),5,'No locations configured.'); render(); $('#locationForm')?.addEventListener('submit',async ev=>{ev.preventDefault(); const form=ev.currentTarget; try{await api({action:'save_location',location:formObject(form)});form.reset();d=await api({action:'overview'});render();notice('Location saved.','success')}catch(e){notice(e.message,'error')}}); }
-async function initPrograms(){ let d=await api({action:'overview'}); const render=()=>tableRows('programTableRows',(d.programs||[]).map(x=>tr([x.name,pretty(x.program_type),x.dot_agency||'—',pretty(x.status),actionButton('Edit',()=>fillForm($('#programForm'),x))])),5,'No programs configured.'); render(); $('#programForm')?.addEventListener('submit',async ev=>{ev.preventDefault();const form=ev.currentTarget;try{await api({action:'save_program',program:formObject(form)});form.reset();d=await api({action:'overview'});render();notice('Program saved.','success')}catch(e){notice(e.message,'error')}}); }
-async function initEnrollment(){ const ov=await api({action:'overview'}); const x=await api({action:'employee_programs'}); setOptions('#enrollEmployee',ov.employees||[],e=>e.id,e=>employeeName(e),'Choose employee'); setOptions('#enrollProgram',ov.programs||[],p=>p.id,p=>`${p.name} — ${pretty(p.program_type)}`,'Choose program'); const render=()=>tableRows('enrollmentRows',(x.employee_programs||[]).map(v=>tr([employeeName(v.employees),v.programs?.name||'—',pretty(v.programs?.program_type),pretty(v.status)])),4,'No program enrollments.');render(); $('#enrollmentForm')?.addEventListener('submit',async ev=>{ev.preventDefault();try{await api({action:'save_employee_program',enrollment:formObject(ev.currentTarget)});notice('Enrollment saved.','success');location.reload()}catch(e){notice(e.message,'error')}}); }
-async function initRandomPools(){const w=await pools({action:'workspace'});tableRows('poolRows',(w.pools||[]).map(p=>tr([p.name,w.programs?.find(x=>x.id===p.program_id)?.name||'—',pretty(p.program_type),p.dot_agency||'—',p.drug_testing_rate==null?'—':`${p.drug_testing_rate}%`,p.alcohol_testing_rate==null?'—':`${p.alcohol_testing_rate}%`,pretty(p.status)])),7,'No random pools configured.');}
-async function initPoolMembership(){const w=await pools({action:'workspace'});tableRows('poolMemberRows',(w.pool_memberships||[]).map(v=>tr([employeeName(v.employees),v.random_pools?.name||'—',pretty(v.random_pools?.program_type),fmtDate(v.effective_date),pretty(v.eligibility_status)])),5,'No active pool memberships.');}
-async function initSelections(){const h=await pools({action:'selection_history'});tableRows('selectionRows',(h.events||[]).map(x=>tr([fmtDateTime(x.selection_date),x.random_pools?.name||'—',String(x.population_size??0),String(x.drug_selection_count??0),String(x.alcohol_selection_count??0),pretty(x.status)])),6,'No random selection events.');}
-async function initTesting(){let d=await testing({action:'list'}); const fill=()=>{setOptions('#testEmployee',d.employees||[],e=>e.id,e=>employeeName(e),'Choose employee');setOptions('#testProgram',d.programs||[],p=>p.id,p=>`${p.name} — ${pretty(p.program_type)}`,'Optional program'); const sites=(d.sites||[]).map(x=>x.collection_sites||x).filter(Boolean);setOptions('#testSite',sites,s=>s.id,s=>`${s.name} — ${[s.city,s.state].filter(Boolean).join(', ')}`,'Optional collection site');};fill(); const nextStatus=s=>({created:'assigned',assigned:'employee_notified',employee_notified:'scheduled',scheduled:'at_collection',at_collection:'collected',collected:'laboratory',laboratory:'mro_review',mro_review:'final_result',final_result:'closed'}[s]); const render=()=>tableRows('testingRows',(d.orders||[]).map(o=>{const n=nextStatus(o.status);const b=n?actionButton(`→ ${pretty(n)}`,async()=>{try{await testing({action:'update_status',test:{id:o.id,status:n}});d=await testing({action:'list'});render();notice('Testing status updated.','success')}catch(e){notice(e.message,'error')}}):'—';return tr([o.order_number||'—',employeeName(o.employees),pretty(o.reason),pretty(o.test_type),o.collection_sites?.name||'—',pretty(o.status),b])}),7,'No testing orders.');render(); $('#testingForm')?.addEventListener('submit',async ev=>{ev.preventDefault();const form=ev.currentTarget;try{await testing({action:'create',test:formObject(form)});form.reset();d=await testing({action:'list'});fill();render();notice('Testing order created.','success')}catch(e){notice(e.message,'error')}});}
+async function initPrograms(){
+  let d=await api({action:'overview'});
+  const render=()=>tableRows('programTableRows',(d.programs||[]).map(x=>tr([x.name,pretty(x.program_type),x.dot_agency||'—',pretty(x.status),actionButton('Edit',()=>fillForm($('#programForm'),x))])),5,'No programs configured.');
+  render();
+  $('#programForm')?.addEventListener('submit',async ev=>{ev.preventDefault();const form=ev.currentTarget;try{const x=formObject(form);if(!x.effective_date)throw new Error('Effective date is required.');await api({action:'save_program',program:x});form.reset();d=await api({action:'overview'});render();notice('Program saved.','success')}catch(e){notice(e.message,'error')}});
+}
+
+async function initEnrollment(){
+  const ov=await api({action:'overview'});let x=await api({action:'employee_programs'});
+  setOptions('#enrollEmployee',ov.employees||[],e=>e.id,e=>employeeName(e),'Choose employee');setOptions('#enrollProgram',ov.programs||[],p=>p.id,p=>`${p.name} — ${pretty(p.program_type)}`,'Choose program');
+  const form=$('#enrollmentForm');
+  const render=()=>tableRows('enrollmentRows',(x.employee_programs||[]).map(v=>{const edit=actionButton('Edit',()=>fillForm(form,v));return tr([employeeName(v.employees),v.programs?.name||'—',pretty(v.programs?.program_type),fmtDate(v.effective_date),pretty(v.status),edit])}),6,'No program enrollments.');render();
+  form?.addEventListener('submit',async ev=>{ev.preventDefault();try{const enrollment=formObject(ev.currentTarget);if(!enrollment.effective_date)throw new Error('Effective date is required.');await api({action:'save_employee_program',enrollment});x=await api({action:'employee_programs'});ev.currentTarget.reset();render();notice(enrollment.id?'Enrollment updated.':'Enrollment saved.','success')}catch(e){notice(e.message,'error')}});
+}
+
+async function initRandomPools(){
+  const w=await pools({action:'workspace'});
+  const memberships=w.pool_memberships||[];
+  const rows=(w.pools||[]).map(p=>{
+    const members=memberships.filter(m=>m.pool_id===p.id);
+    const eligible=members.filter(m=>m.eligibility_status==='eligible').length;
+    return tr([p.name,w.programs?.find(x=>x.id===p.program_id)?.name||'—',pretty(p.program_type),p.dot_agency||'—',p.drug_testing_rate==null?'—':`${p.drug_testing_rate}%`,p.alcohol_testing_rate==null?'—':`${p.alcohol_testing_rate}%`,`${eligible} / ${members.length}`,fmtDate(p.effective_date),pretty(p.status)]);
+  });
+  tableRows('poolRows',rows,9,'No random pools configured.');
+  const card=$('#poolRows')?.closest('.card');
+  const span=card?.querySelector('.card-head span');
+  if(span)span.textContent='Pool configuration is managed through screenings4u Admin and reflected here in real time.';
+}
+async function initPoolMembership(){
+  const w=await pools({action:'workspace'});
+  const rows=(w.pool_memberships||[]).map(v=>tr([employeeName(v.employees),v.random_pools?.name||'—',w.programs?.find(p=>p.id===v.random_pools?.program_id)?.name||pretty(v.random_pools?.program_type),pretty(v.employees?.employment_status),fmtDate(v.effective_date),pretty(v.eligibility_status),v.ineligible_reason||'—']));
+  tableRows('poolMemberRows',rows,7,'No current pool memberships.');
+  const card=$('#poolMemberRows')?.closest('.card');
+  const span=card?.querySelector('.card-head span');
+  if(span)span.textContent='Membership and eligibility are administered against the employee’s active program enrollment.';
+}
+async function initSelections(){
+  const h=await pools({action:'selection_history'}),events=h.events||[],members=h.members||[];
+  const content=$('#pageContent');
+  const selectedFor=id=>members.filter(x=>x.selection_event_id===id);
+  const latest=events[0]||null;
+  if(content){
+    content.innerHTML=`
+      <div class="saas-notice" id="pageNotice" hidden></div>
+      <section class="metrics">
+        <article class="metric-card"><div class="metric-label">Selection Events</div><div class="metric-value">${events.length}</div><div class="metric-note">Locked Employer selection history</div></article>
+        <article class="metric-card"><div class="metric-label">Selected Records</div><div class="metric-value">${members.length}</div><div class="metric-note">Across all retained events</div></article>
+        <article class="metric-card"><div class="metric-label">Latest Population</div><div class="metric-value">${latest?.population_size??0}</div><div class="metric-note">${latest?fmtDateTime(latest.selection_date):'No selection yet'}</div></article>
+        <article class="metric-card"><div class="metric-label">Administration</div><div class="metric-value" style="font-size:18px">Admin Managed</div><div class="metric-note">Selections are run and locked by screenings4u Admin</div></article>
+      </section>
+      <section class="card">
+        <div class="card-head"><div><h2>Selection History</h2><span>Read-only locked random-selection events supplied by the screenings4u Admin workflow.</span></div></div>
+        <div class="card-body"><div class="management-table-wrap"><table class="management-table"><thead><tr><th>Date</th><th>Pool</th><th>Population</th><th>Drug</th><th>Alcohol</th><th>Selected</th><th>Status</th><th></th></tr></thead><tbody id="selectionRows"></tbody></table></div></div>
+      </section>
+      <section class="card" id="employerSelectionDetail" style="margin-top:18px" hidden>
+        <div class="card-head"><div><h2 id="employerSelectionTitle">Selected Employees / Drivers</h2><span id="employerSelectionMeta"></span></div></div>
+        <div class="card-body" id="employerSelectionBody"></div>
+      </section>`;
+  }
+  tableRows('selectionRows',events.map(ev=>{
+    const list=selectedFor(ev.id);
+    const b=actionButton('View Selected',()=>{
+      const panel=$('#employerSelectionDetail');
+      panel.hidden=false;
+      setText('#employerSelectionTitle',`${ev.random_pools?.name||'Random Pool'} · ${fmtDateTime(ev.selection_date)}`);
+      setText('#employerSelectionMeta',`${ev.population_size||0} in population snapshot · ${list.length} selected`);
+      const body=$('#employerSelectionBody');body.replaceChildren();
+      const wrap=document.createElement('div');wrap.className='management-table-wrap';
+      const table=document.createElement('table');table.className='management-table';
+      table.innerHTML='<thead><tr><th>Employee / Driver</th><th>Test Type</th><th>Selected</th></tr></thead>';
+      const tbody=document.createElement('tbody');
+      if(!list.length){const row=document.createElement('tr'),cell=document.createElement('td');cell.colSpan=3;cell.innerHTML='<div class="saas-empty">No selected employee records were returned for this event.</div>';row.append(cell);tbody.append(row)}
+      else list.forEach(m=>tbody.append(tr([employeeName(m.employees),pretty(m.test_type),fmtDateTime(m.selected_at)])));
+      table.append(tbody);wrap.append(table);body.append(wrap);panel.scrollIntoView({behavior:'smooth',block:'center'});
+    });
+    return tr([fmtDateTime(ev.selection_date),ev.random_pools?.name||'—',String(ev.population_size??0),String(ev.drug_selection_count??0),String(ev.alcohol_selection_count??0),String(list.length),pretty(ev.status),b]);
+  }),8,'No random selection events.');
+}
+async function initTesting(){
+  let d=await testing({action:'list'});
+  const root=$('#pageContent');
+  const draw=()=>{
+    const orders=d.orders||[],employees=d.employees||[],programs=d.programs||[],enrollments=d.employee_programs||[],sites=(d.sites||[]).map(x=>({...x,...(x.collection_sites||{})})),results=d.results||[];
+    const resultMap=new Map(results.map(x=>[x.testing_order_id,x]));
+    const open=orders.filter(x=>!['closed','cancelled','refused','no_show','unable_to_collect','invalid_specimen'].includes(x.status));
+    const awaiting=orders.filter(x=>['assigned','employee_notified','scheduled','at_collection'].includes(x.status));
+    const lab=orders.filter(x=>['collected','laboratory','mro_review'].includes(x.status));
+    const canManage=d.can_manage!==false;
+
+    root.innerHTML=`
+      <div class="saas-notice" id="pageNotice" hidden></div>
+      <section class="metrics">
+        <article class="metric-card"><div class="metric-label">Testing Orders</div><div class="metric-value">${orders.length}</div><div class="metric-note">${open.length} currently open</div></article>
+        <article class="metric-card"><div class="metric-label">Awaiting Collection</div><div class="metric-value">${awaiting.length}</div><div class="metric-note">Assigned through at-collection</div></article>
+        <article class="metric-card"><div class="metric-label">Lab / MRO</div><div class="metric-value">${lab.length}</div><div class="metric-note">Collected through MRO review</div></article>
+        <article class="metric-card"><div class="metric-label">Random Orders</div><div class="metric-value">${orders.filter(x=>x.selection_member_id).length}</div><div class="metric-note">Created from locked selections</div></article>
+      </section>
+
+      ${canManage?`<section class="card">
+        <div class="card-head"><div><h2 id="employerTestEditorTitle">Create Testing Order</h2><span>Random testing orders are created from Random Selections; use this form for other testing reasons.</span></div><button class="btn btn-outline btn-small" id="newEmployerTestOrder" type="button">New Order</button></div>
+        <div class="card-body">
+          <form class="management-form" id="testingForm">
+            <input type="hidden" name="id">
+            <div class="grid grid-2">
+              <label>Employee / Driver<select id="testEmployee" name="employee_id" required></select></label>
+              <label>Program<select id="testProgram" name="program_id" required></select></label>
+              <label>Reason<select name="reason" required><option value="pre_employment">Pre-Employment</option><option value="reasonable_suspicion">Reasonable Suspicion</option><option value="post_accident">Post-Accident</option><option value="return_to_duty">Return-to-Duty</option><option value="follow_up">Follow-Up</option><option value="other">Other</option></select></label>
+              <label>Test Type<select name="test_type" required><option value="drug">Drug</option><option value="alcohol">Alcohol</option><option value="drug_and_alcohol">Drug + Alcohol</option></select></label>
+              <label>Collection Site<select id="testSite" name="collection_site_id"></select></label>
+              <label>Deadline<input name="collection_deadline" type="datetime-local"></label>
+              <label>Panel<input name="testing_panel" placeholder="Uses program default when blank"></label>
+              <label>Collection Type<select name="collection_type"><option value="">Program default</option><option value="urine">Urine</option><option value="oral_fluid">Oral Fluid</option></select></label>
+            </div>
+            <div class="saas-notice" id="employerTestHelp" style="margin-top:12px">Choose an employee / driver and an assigned program.</div>
+            <div class="saas-actions"><button class="btn btn-orange" type="submit">Save Testing Order</button></div>
+          </form>
+        </div>
+      </section>`:`<div class="saas-notice">Your Employer role has read-only Testing Orders access. screenings4u Admin or an authorized Employer testing manager controls order changes.</div>`}
+
+      <section class="card" style="margin-top:18px">
+        <div class="card-head"><div><h2>Testing Order Lifecycle</h2><span>Orders created here and by screenings4u Admin use the same Workforce records.</span></div></div>
+        <div class="card-body"><div class="management-table-wrap"><table class="management-table"><thead><tr><th>Order</th><th>Employee / Driver</th><th>Program</th><th>Reason</th><th>Test</th><th>Site</th><th>Deadline</th><th>Status</th><th>Result</th><th></th></tr></thead><tbody id="testingRows"></tbody></table></div></div>
+      </section>`;
+
+    const rows=orders.map(o=>{
+      const r=resultMap.get(o.id);
+      const statusWrap=document.createElement('div');
+      if(canManage){
+        const select=document.createElement('select');
+        for(const value of d.statuses||[]){const opt=document.createElement('option');opt.value=value;opt.textContent=pretty(value);opt.selected=value===o.status;select.append(opt)}
+        select.addEventListener('change',async()=>{const old=o.status;try{await testing({action:'update_status',test:{id:o.id,status:select.value}});d=await testing({action:'list'});draw();notice('Testing lifecycle updated.','success')}catch(e){select.value=old;notice(e.message,'error')}});
+        statusWrap.append(select);
+      }else statusWrap.textContent=pretty(o.status);
+
+      let actions='—';
+      if(canManage){
+        actions=actionButton('Edit',()=>{
+          const form=$('#testingForm'); if(!form)return;
+          clearForm();
+          const set=(name,val)=>{const el=form.elements[name];if(el)el.value=val??''};
+          set('id',o.id);set('employee_id',o.employee_id);set('reason',o.reason);set('test_type',o.test_type);
+          rebuildPrograms(); set('program_id',o.program_id); rebuildSites(); set('collection_site_id',o.collection_site_id||'');
+          set('collection_deadline',o.collection_deadline?new Date(o.collection_deadline).toISOString().slice(0,16):'');
+          set('testing_panel',o.testing_panel||'');set('collection_type',o.collection_type||'');
+          if(o.selection_member_id){
+            form.elements.employee_id.disabled=true;form.elements.program_id.disabled=true;form.elements.reason.disabled=true;form.elements.test_type.disabled=true;
+            $('#employerTestHelp').textContent='This order came from a locked Random Selection. Employee, program, reason, and test type are protected.';
+          }else $('#employerTestHelp').textContent='Editing an existing testing order.';
+          setText('#employerTestEditorTitle',`Edit ${o.order_number}`);
+          form.scrollIntoView({behavior:'smooth',block:'center'});
+        });
+      }
+      return tr([
+        `${o.order_number}${o.selection_member_id?' · Random':''}`,
+        employeeName(o.employees),o.programs?.name||'—',pretty(o.reason),pretty(o.test_type),
+        o.collection_sites?.name||'—',fmtDateTime(o.collection_deadline),statusWrap,
+        r?`${pretty(r.final_status)}${r.finalized_at||r.result_date?' · '+fmtDate(r.finalized_at||r.result_date):''}`:'—',
+        actions
+      ]);
+    });
+    tableRows('testingRows',rows,10,'No testing orders.');
+
+    if(!canManage)return;
+    const form=$('#testingForm'),employee=$('#testEmployee'),program=$('#testProgram'),site=$('#testSite'),help=$('#employerTestHelp');
+    const eligiblePrograms=(employeeId,reason)=>programs.filter(p=>enrollments.some(en=>en.employee_id===employeeId&&en.program_id===p.id&&(reason==='pre_employment'?['active','pending'].includes(en.status):en.status==='active')));
+    const rebuildPrograms=()=>{
+      const prior=program.value,employeeId=employee.value,reason=form.elements.reason.value,rows=employeeId?eligiblePrograms(employeeId,reason):programs;
+      setOptions('#testProgram',rows,p=>p.id,p=>`${p.name} — ${pretty(p.program_type)}${p.dot_agency?' — '+p.dot_agency:''}`,'Choose program');
+      if(prior&&rows.some(p=>p.id===prior))program.value=prior;
+      help.textContent=employeeId?(rows.length?`${rows.length} assigned program(s) available.`:'This employee / driver has no qualifying program assignment for this reason.'):'Choose an employee / driver and an assigned program.';
+      rebuildSites();
+    };
+    const rebuildSites=()=>{
+      const p=programs.find(x=>x.id===program.value),type=form.elements.test_type.value,prior=site.value;
+      const rows=sites.filter(s=>{if(!p)return true;if(p.program_type==='DOT'&&!s.dot_capable)return false;if(p.program_type==='NON_DOT'&&!s.non_dot_capable)return false;if((type==='drug'||type==='drug_and_alcohol')&&!s.drug_testing)return false;if((type==='alcohol'||type==='drug_and_alcohol')&&!s.alcohol_testing)return false;return true;});
+      setOptions('#testSite',rows,s=>s.id||s.collection_site_id,s=>`${s.name} — ${[s.city,s.state].filter(Boolean).join(', ')}`,'Not assigned');
+      if(prior&&rows.some(s=>(s.id||s.collection_site_id)===prior))site.value=prior;
+      if(p&&!form.elements.testing_panel.value)form.elements.testing_panel.value=p.testing_panel||'';
+      const method=String(p?.testing_method||'').toLowerCase().replace(' ','_');if(p&&!form.elements.collection_type.value&&['urine','oral_fluid'].includes(method))form.elements.collection_type.value=method;
+    };
+    const clearForm=()=>{
+      form.reset();form.elements.id.value='';[...form.elements].forEach(el=>el.disabled=false);
+      setOptions('#testEmployee',employees,e=>e.id,e=>`${employeeName(e)}${e.employee_number?' — '+e.employee_number:''}`,'Choose employee / driver');
+      rebuildPrograms();setText('#employerTestEditorTitle','Create Testing Order');help.textContent='Choose an employee / driver and an assigned program.';
+    };
+    window.clearEmployerTestingOrder=clearForm;
+    clearForm();
+    employee.onchange=rebuildPrograms;form.elements.reason.onchange=rebuildPrograms;program.onchange=rebuildSites;form.elements.test_type.onchange=rebuildSites;
+    $('#newEmployerTestOrder')?.addEventListener('click',clearForm);
+    form.addEventListener('submit',async ev=>{
+      ev.preventDefault();const x=formObject(form);
+      if(x.id){const current=orders.find(o=>o.id===x.id);if(current?.selection_member_id){x.employee_id=current.employee_id;x.program_id=current.program_id;x.reason=current.reason;x.test_type=current.test_type;}}
+      try{notice(x.id?'Saving testing order…':'Creating testing order…');await testing({action:x.id?'save':'create',test:x});d=await testing({action:'list'});draw();notice(x.id?'Testing order updated.':'Testing order created.','success')}catch(e){notice(e.message,'error')}
+    });
+  };
+  draw();
+}
 async function initSites(){const d=await advanced({action:'collection_sites'});const render=()=>{const q=($('#siteSearch')?.value||'').trim().toLowerCase();const rows=(d.sites||[]).filter(x=>{const z=x.collection_sites||{};return !q||[z.name,z.city,z.state,z.postal_code].some(v=>String(v||'').toLowerCase().includes(q))}).map(x=>{const z=x.collection_sites||{};return tr([z.name||'—',[z.city,z.state,z.postal_code].filter(Boolean).join(', ')||'—',z.dot_capable?'Yes':'No',z.non_dot_capable?'Yes':'No',z.drug_testing?'Yes':'No',z.alcohol_testing?'Yes':'No',x.is_primary?'Yes':'No'])});tableRows('siteRows',rows,7,'No matching assigned collection sites.');};render();$('#siteSearch')?.addEventListener('input',render);}
-async function initResults(){const d=await api({action:'results'});tableRows('resultRows',(d.results||[]).map(x=>tr([x.testing_orders?.order_number||'—',employeeName(x.testing_orders?.employees),pretty(x.testing_orders?.test_type),pretty(x.preliminary_status),pretty(x.mro_status),pretty(x.final_status),fmtDate(x.result_date||x.finalized_at)])),7,'No results available.');}
+async function initResults(){
+  const d=await resultWorkflow({action:'workspace'}),orders=d.orders||[],results=d.results||[],reports=d.reports||[];
+  const root=$('#pageContent'),orderMap=new Map(orders.map(x=>[x.id,x])),reportMap=new Map(reports.map(x=>[x.test_result_id,x]));
+  const finalized=results.filter(x=>x.finalized_at&&x.final_status!=='pending'&&x.final_status!=='mro_pending');
+  const mroQueue=results.filter(x=>x.final_status==='mro_pending'||String(x.mro_status||'').includes('pending'));
+  root.innerHTML=`
+    <div class="saas-notice" id="pageNotice" hidden></div>
+    <section class="metrics">
+      <article class="metric-card"><div class="metric-label">Results</div><div class="metric-value">${results.length}</div><div class="metric-note">Current testing-result records</div></article>
+      <article class="metric-card"><div class="metric-label">MRO Review</div><div class="metric-value">${mroQueue.length}</div><div class="metric-note">Pending verification</div></article>
+      <article class="metric-card"><div class="metric-label">Finalized</div><div class="metric-value">${finalized.length}</div><div class="metric-note">Verified final outcomes</div></article>
+      <article class="metric-card"><div class="metric-label">Access</div><div class="metric-value" style="font-size:18px">${d.can_sensitive?'DER Sensitive':'Summary'}</div><div class="metric-note">${d.can_sensitive?'Authorized sensitive-result role':'Employer result summary access'}</div></article>
+    </section>
+    <div class="saas-notice"><strong>Result workflow:</strong> screenings4u Admin records laboratory activity and MRO verification. Finalized results and official screenings4u Result Reports appear here from the same testing-order record.</div>
+    <section class="card">
+      <div class="card-head"><div><h2>Testing Results</h2><span>Verified outcomes and current MRO workflow status.</span></div></div>
+      <div class="card-body"><div class="management-table-wrap"><table class="management-table"><thead><tr><th>Order</th><th>Employee / Driver</th><th>Test</th><th>Preliminary</th><th>MRO</th><th>Final</th><th>Date</th><th>Report</th></tr></thead><tbody id="resultRows"></tbody></table></div></div>
+    </section>`;
+  const rows=results.map(r=>{
+    const o=orderMap.get(r.testing_order_id)||{},rp=reportMap.get(r.id);
+    const report=rp?linkButton('View Result Report',rootUrl(`result-report.html?report=${encodeURIComponent(rp.id)}&employer=${encodeURIComponent(context.membership.employer_id)}`)):'—';
+    const mro=d.can_sensitive?(r.mros?.name||pretty(r.mro_status||'—')):pretty(r.mro_status||'—');
+    return tr([o.order_number||'—',employeeName(o.employees),pretty(o.test_type),pretty(r.preliminary_status),mro,pretty(r.final_status),fmtDateTime(r.finalized_at||r.result_date),report]);
+  });
+  tableRows('resultRows',rows,8,'No results available.');
+}
 async function initActionCenter(){const d=await advanced({action:'workforce_action_center'});setText('#actionCredentials',d.credentials?.length||0);setText('#actionTraining',d.training?.length||0);setText('#actionCompliance',d.compliance?.length||0);setText('#actionPostAccident',d.post_accidents?.length||0);const rows=[];(d.credentials||[]).forEach(x=>rows.push(tr(['Credential',employeeName(x.employees),x.credential_type,fmtDate(x.expires_at),pretty(x.status)])));(d.training||[]).forEach(x=>rows.push(tr(['Training',employeeName(x.employees),x.training_title,fmtDate(x.expires_at),pretty(x.status)])));(d.compliance||[]).forEach(x=>rows.push(tr(['Compliance',employeeName(x.employees),x.case_number||x.event_type,fmtDate(x.opened_at),pretty(x.status)])));(d.post_accidents||[]).forEach(x=>rows.push(tr(['Post-Accident',employeeName(x.employees),'Testing required',fmtDateTime(x.occurred_at),'Open'])));tableRows('actionRows',rows,5,'No action-center items.');}
 async function initCompliance(){const d=await api({action:'compliance_detail'});tableRows('complianceRows',(d.cases||[]).map(x=>tr([x.case_number||'—',employeeName(x.employees),pretty(x.event_type),pretty(x.priority),pretty(x.status),fmtDate(x.opened_at)])),6,'No compliance cases.');}
 async function initPostAccident(){let d=await advanced({action:'post_accidents'});const fill=()=>{setOptions('#paEmployee',d.employees||[],e=>e.id,e=>employeeName(e),'Choose employee');setOptions('#paProgram',d.programs||[],x=>x.id,x=>`${x.name} — ${pretty(x.program_type)}`,'Optional program');};const render=()=>tableRows('postAccidentRows',(d.events||[]).map(x=>tr([employeeName((d.employees||[]).find(e=>e.id===x.employee_id)),fmtDateTime(x.occurred_at),pretty(x.program_type),x.dot_agency||'—',x.testing_required?'Yes':'No',pretty(x.status)])),6,'No post-accident events.');fill();render();$('#paType')?.addEventListener('change',e=>{$('#paAgency').disabled=e.currentTarget.value==='NON_DOT'});$('#postAccidentForm')?.addEventListener('submit',async ev=>{ev.preventDefault();const form=ev.currentTarget,x=formObject(form);x.decision_data={fatality:!!x.fatality,injury:!!x.injury,tow:!!x.tow,citation:!!x.citation,contribution:'no',faa_accident:!!x.fatality,fra_event:x.fatality?'major_accident':'none',fra_exception:'no',phmsa_accident:!!x.fatality,smi:!!x.fatality,directly_involved:true,disabled_transit:!!x.tow};try{await advanced({action:'save_post_accident',event:x,create_orders:true});form.reset();d=await advanced({action:'post_accidents'});fill();render();notice('Post-accident determination saved and required testing orders created.','success')}catch(e){notice(e.message,'error')}});}
@@ -220,7 +455,22 @@ async function initSupport(){async function load(){const d=await invoke('workfor
 function parseCSV(text){const rows=[];let row=[],field='',quote=false;for(let i=0;i<text.length;i++){const c=text[i],n=text[i+1];if(c==='"'&&quote&&n==='"'){field+='"';i++;continue}if(c==='"'){quote=!quote;continue}if(c===','&&!quote){row.push(field);field='';continue}if((c==='\n'||c==='\r')&&!quote){if(c==='\r'&&n==='\n')i++;row.push(field);field='';if(row.some(v=>v.trim()!==''))rows.push(row);row=[];continue}field+=c}row.push(field);if(row.some(v=>v.trim()!==''))rows.push(row);if(rows.length<2)return[];const head=rows[0].map(x=>x.trim().toLowerCase());return rows.slice(1).map(r=>Object.fromEntries(head.map((h,i)=>[h,(r[i]||'').trim()])))}
 async function initBulk(){ $('#bulkForm')?.addEventListener('submit',async ev=>{ev.preventDefault();const file=$('#bulkFile')?.files?.[0];if(!file)return notice('Choose a CSV file.','error');try{const rows=parseCSV(await file.text());if(!rows.length)throw new Error('The CSV has no data rows.');const r=await advanced({action:'bulk_import',file_name:file.name,rows});const s=$('#bulkSummary');if(s)s.textContent=`Imported ${r.imported||0}; rejected ${r.rejected||0}.`;notice('Import finished.','success')}catch(e){notice(e.message,'error')}});}
 async function initEmployeeCompliance(){const [c,t,p,te]=await Promise.all([advanced({action:'credentials'}),advanced({action:'training'}),advanced({action:'policies'}),testing({action:'list'})]);const employees=c.employees||[];const rows=employees.map(e=>{const cs=(c.credentials||[]).filter(x=>x.employee_id===e.id),ts=(t.records||[]).filter(x=>x.employee_id===e.id),ps=(p.acknowledgments||[]).filter(x=>x.employee_id===e.id),xs=(te.orders||[]).filter(x=>x.employee_id===e.id);return tr([employeeName(e),String(cs.length),String(ts.length),String(ps.length),String(xs.length),e.dot_covered?'Yes':'No'])});tableRows('employeeComplianceRows',rows,6,'No employees available.');}
-async function initMembers(filterDER=false){const d=await invoke('workforce-employer-members',{action:'list'});const members=(d.members||[]).filter(x=>!filterDER||['der','supervisor'].includes(x.roles?.code));const id=filterDER?'derRows':'memberRows';const cols=filterDER?4:5;const rows=members.map(m=>{const user=m.profiles?.full_name||[m.profiles?.first_name,m.profiles?.last_name].filter(Boolean).join(' ')||m.profiles?.email||'Account User'; if(filterDER)return tr([user,m.roles?.name||m.roles?.code||'—',pretty(m.status),m.is_primary?'Yes':'No']); const select=document.createElement('select'); for(const r of d.roles||[]){const o=document.createElement('option');o.value=r.id;o.textContent=r.name;if(r.id===m.role_id)o.selected=true;select.append(o)} const save=actionButton('Save',async()=>{try{await api({action:'save_member_role',member:{id:m.id,role_id:select.value,status:m.status}});notice('User role saved.','success')}catch(e){notice(e.message,'error')}});return tr([user,select,pretty(m.status),m.is_primary?'Yes':'No',save])});tableRows(id,rows,cols,filterDER?'No DERs or supervisors.':'No account users.');}
+async function initMembers(filterDER=false){
+  let d=await invoke('workforce-employer-members',{action:'list'});
+  const render=()=>{
+    const members=(d.members||[]).filter(x=>!filterDER||['der','supervisor'].includes(x.roles?.code));
+    const id=filterDER?'derRows':'memberRows',cols=filterDER?4:5;
+    const rows=members.map(m=>{
+      const user=m.profiles?.full_name||[m.profiles?.first_name,m.profiles?.last_name].filter(Boolean).join(' ')||m.profiles?.email||'Account User';
+      if(filterDER)return tr([user,m.roles?.name||m.roles?.code||'—',pretty(m.status),m.is_primary?'Yes':'No']);
+      const select=document.createElement('select');for(const r of d.roles||[]){const o=document.createElement('option');o.value=r.id;o.textContent=r.name;if(r.id===m.role_id)o.selected=true;select.append(o)}
+      const save=actionButton('Save',async()=>{try{await api({action:'save_member_role',member:{id:m.id,role_id:select.value,status:m.status}});notice('User role saved.','success')}catch(e){notice(e.message,'error')}});
+      return tr([user,select,pretty(m.status),m.is_primary?'Yes':'No',save])
+    });
+    tableRows(id,rows,cols,filterDER?'No DERs or supervisors.':'No account users.');
+  };
+  render();
+}
 async function initOnboarding(){ const data=await invoke('workforce-customer-onboarding',{action:'status',portal:'employer'}); if(data.completed){location.replace('dashboard.html');return;}const f=$('#onboardingForm');fillForm(f,{...data.profile,...data.entity,...data.organization,...data.onboarding,contact_email:data.onboarding?.contact_email||data.user?.email});const same=$('#sameBilling'),box=$('#billingAddress');const sync=()=>{if(box)box.hidden=!!same?.checked};same?.addEventListener('change',sync);sync();f?.addEventListener('submit',async ev=>{ev.preventDefault();const form=ev.currentTarget,x=formObject(form);try{await invoke('workforce-customer-onboarding',{action:'complete',portal:'employer',onboarding:x});location.replace('dashboard.html')}catch(e){notice(e.message,'error')}});}
 
 async function initTestingSetup(){const d=await api({action:'entitlements'});const root=$('#testingSetup');if(!root)return;root.replaceChildren();const vals=[['Plan',d.subscription?.plans?.name||d.subscription?.plan_name||'Active plan'],['Testing Orders',d.entitlements?.testing_orders?'Enabled':'Not enabled'],['Collection Sites',d.entitlements?.collection_sites?'Enabled':'Not enabled'],['Results / MRO workflow',d.entitlements?.results_summary?'Enabled':'Not enabled'],['Post-Accident',d.entitlements?.post_accident?'Enabled':'Not enabled']];for(const [k,v] of vals){const row=document.createElement('div');row.className='setting-row';const a=document.createElement('strong');a.textContent=k;const b=document.createElement('span');b.textContent=v;row.append(a,b);root.append(row)}}
