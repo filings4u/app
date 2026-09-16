@@ -1611,3 +1611,4 @@ body.portal-body .feature-row span{
   }
 }
 
+.enterprise-editor-toolbar{display:flex;flex-wrap:wrap;gap:6px;margin:18px 0 8px}.enterprise-editor-toolbar button{border:1px solid #d4dfec;background:#fff;border-radius:8px;padding:8px 11px;color:#24467f;font-weight:800;cursor:pointer}.enterprise-rich-editor{min-height:320px;border:1px solid #ccd9e9;border-radius:12px;padding:24px;background:#fff;line-height:1.65;outline:none}.enterprise-rich-editor:focus{border-color:#24467f;box-shadow:0 0 0 3px rgba(36,70,127,.08)}

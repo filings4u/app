@@ -20,6 +20,6 @@ if(d){
    const analytes=[...document.querySelectorAll('[name="drug_analyte"]')],screens=[...document.querySelectorAll('[name="drug_screen"]')],confirms=[...document.querySelectorAll('[name="drug_confirm"]')],results=[...document.querySelectorAll('[name="drug_result"]')];
    const drug_panel=analytes.map((x,i)=>({analyte:x.value,screen_cutoff:screens[i].value,confirm_cutoff:confirms[i].value,units:'ng/mL',result:results[i].value}));
    await invokeOwnerWorkflow({action:'save_result_details',owner_operator_id:d.owner_operator.id,report_id:saved.report.id,drug_panel});
-   status('Final result, DOT drug panel, and screenings4u Result Report saved.','success');setTimeout(()=>location.reload(),250)
+   status('Final result, DOT drug panel, and screenings4u Result Report saved.','success');document.dispatchEvent(new CustomEvent('s4u:data-changed'))
  }catch(x){status(x.message,'error')}}
 }

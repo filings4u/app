@@ -1,5 +1,16 @@
-import { portalReady } from './portal.js?v=20260916-admin-loadfix2';
+import { portalReady } from './portal.js?v=20260916-combined1';
+import { supabase } from './supabase.js';
 await portalReady;
-/* screenings4u Employer rebuild compatibility file: employer-directory-page.js.
-   Employer pages now use employer-runtime.js. This file intentionally performs no DOM work. */
-(() => {})();
+const $=s=>document.querySelector(s), esc=(v='')=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money=v=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(Number(v||0));
+async function invoke(name,body={}){const {data,error}=await supabase.functions.invoke(name,{body});if(error){let m=error.message;try{m=(await error.context?.clone?.().json())?.error||m}catch{}throw new Error(m||'Request failed.')}if(data?.error)throw new Error(data.error);return data}
+let rows=[];
+function displayName(e){return e.workforce_display_name||`${e.legal_name}${e.workforce_classification?` · ${String(e.workforce_classification).replace('_','-')}`:''}`}
+function draw(){const q=$('#employerSearch')?.value.trim().toLowerCase()||'',st=$('#directoryStatus')?.value||'';const x=rows.filter(e=>(!st||e.status===st)&&(!q||[displayName(e),e.legal_name,e.dba_name,e.dot_number,e.mc_number,e.primary_contact_email,e.billing_contact_email].some(v=>String(v||'').toLowerCase().includes(q))));$('#employerBody').innerHTML=x.length?x.map(e=>`<tr><td><strong>${esc(displayName(e))}</strong><small>${esc(e.dba_name||'')}</small></td><td>${esc(e.dot_number||'—')}<small>${esc(e.mc_number||'')}</small></td><td>${esc(e.subscription?.plans?.name||'No plan')}<small>${e.subscription?.plans?.monthly_price!=null?money(e.subscription.plans.monthly_price):''}</small></td><td>${esc(e.billing_contact_email||e.primary_contact_email||'—')}</td><td><span class="badge ${e.status==='active'?'success':'warning'}">${esc(e.status||'—')}</span></td><td>${e.created_at?new Date(e.created_at).toLocaleDateString():'—'}</td><td><a class="org-action" href="employer-profile.html?employer_id=${encodeURIComponent(e.id)}">Manage</a></td></tr>`).join(''):'<tr><td colspan="7"><div class="management-empty">No Employers found.</div></td></tr>'}
+async function load(){const d=await invoke('workforce-admin-employer-context',{action:'list'});rows=d.employers||[];draw()}
+$('#employerSearch')?.addEventListener('input',draw);$('#directoryStatus')?.addEventListener('change',draw);
+const add=$('#addCustomerBtn'),sec=$('#createCustomerSection'),form=$('#createCustomerForm'),msg=$('#createCustomerStatus');
+add&& (add.onclick=()=>{sec.style.display='block';sec.scrollIntoView({behavior:'smooth',block:'start'})});$('#cancelCustomerCreate')&&($('#cancelCustomerCreate').onclick=()=>sec.style.display='none');
+try{const d=await invoke('workforce-admin-organizations',{action:'plans'});$('#customerPlan').innerHTML='<option value="">Select plan</option>'+d.plans.filter(p=>p.audience==='employer').map(p=>`<option value="${p.id}">${esc(p.name)} — ${money(p.monthly_price)}/month</option>`).join('')}catch(e){msg.textContent=e.message;msg.className='inline-status error'}
+if(form)form.onsubmit=async ev=>{ev.preventDefault();const x=Object.fromEntries(new FormData(form));x.organization_type='employer';x.workforce_classification=String(x.workforce_classification||'NON_DOT').toUpperCase();msg.textContent='Creating Employer…';msg.className='inline-status';try{await invoke('workforce-admin-organizations',{action:'create',...x});msg.textContent='Employer created successfully.';msg.className='inline-status success';form.reset();form.organization_type.value='employer';sec.style.display='none';await load()}catch(e){msg.textContent=e.message;msg.className='inline-status error'}};
+load().catch(e=>{$('#employerBody').innerHTML=`<tr><td colspan="7"><div class="management-empty">${esc(e.message)}</div></td></tr>`});

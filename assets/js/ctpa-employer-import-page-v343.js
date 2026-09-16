@@ -83,7 +83,7 @@ if (d) {
       const csv = await f.text();
       const r = await op({ action: 'import_employers', ctpa_id: d.ctpa.id, file_name: f.name, csv });
       status(`Import complete: ${r.imported} imported, ${r.updated} updated, ${r.rejected} rejected.`, 'success');
-      setTimeout(() => location.reload(), 800);
+      document.dispatchEvent(new CustomEvent('s4u:data-changed'));
     } catch (e) {
       status(e.message, 'error');
     }
