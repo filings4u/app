@@ -212,7 +212,7 @@ const FONT_SCALES=[0.9,1,1.1,1.2,1.3];
 function applyFontScale(value){
   let v=Number(value);
   if(!FONT_SCALES.includes(v))v=1;
-  document.documentElement.style.setProperty('--portal-font-scale',String(v));
+  document.documentElement.style.setProperty('--portal-font-scale',String(v));document.documentElement.style.zoom=String(v);
   localStorage.setItem(FONT_SCALE_KEY,String(v));
   document.querySelectorAll('[data-font-scale-value]').forEach(x=>{x.textContent=`${Math.round(v*100)}%`;});
 }

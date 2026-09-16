@@ -8,8 +8,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../assets/css/portal.css?v=20260916-combined-final1">
-<link rel="stylesheet" href="../assets/css/admin-shell.css?v=20260916-combined-final1">
+<link rel="stylesheet" href="../assets/css/portal.css?v=20260916-employer-final3">
+<link rel="stylesheet" href="../assets/css/admin-shell.css?v=20260916-employer-final3">
 </head>
 <body class="portal-body">
 <div class="portal-shell">
@@ -40,7 +40,7 @@
 </header>
 <div class="content"><div class="welcome"><div><h1>Regulatory Rules</h1><p>Control the regulatory data that drives compliant software behavior; rates are not hardcoded in customer pages.</p></div></div><section class="card"><div class="card-head"><div><h2>Regulatory Rules Engine</h2><span>Manage effective-dated DOT and non-DOT rules used by programs and random-selection workflows.</span></div><button class="btn btn-orange" id="new">+ Add Rule</button></div><div class="card-body" style="padding:0"><div class="saas-table-wrap"><table class="saas-table"><thead><tr><th>Rule</th><th>Authority</th><th>Agency</th><th>Program</th><th>Drug Rate</th><th>Alcohol Rate</th><th>Effective</th><th>Status</th><th></th></tr></thead><tbody id="rows"></tbody></table></div></div></section><section class="card" id="editor" style="display:none"><div class="card-body"><form id="form" class="saas-form"><input type="hidden" name="id"><div class="saas-form-grid"><label><span>Rule Name *</span><input name="rule_name" required></label><label><span>Authority *</span><input name="authority" required></label><label><span>DOT Agency</span><select name="dot_agency"><option value="">None</option><option>FMCSA</option><option>FAA</option><option>FRA</option><option>FTA</option><option>PHMSA</option><option>USCG</option></select></label><label><span>Program Type *</span><select name="program_type"><option value="dot">DOT</option><option value="non_dot">Non-DOT</option></select></label><label><span>Drug Random Rate</span><input name="drug_rate" type="number" step="0.01"></label><label><span>Alcohol Random Rate</span><input name="alcohol_rate" type="number" step="0.01"></label><label><span>Effective Date *</span><input name="effective_date" type="date" required></label><label><span>End Date</span><input name="end_date" type="date"></label><label><span>Version</span><input name="version"></label><label><span>Status</span><select name="status"><option>active</option><option>inactive</option></select></label></div><div id="msg" class="saas-notice" style="display:none"></div><div class="saas-actions"><button type="button" class="btn btn-outline" id="cancel">Cancel</button><button class="btn btn-orange">Save Rule</button></div></form></div></section></div></main>
 </div>
-<script src="../assets/js/supabase-config.js"></script><script type="module" src="../assets/js/admin-shell.js?v=20260916-combined-final1"></script>
-<script type="module" src="../assets/js/portal.js?v=20260916-combined-final1"></script>
+<script src="../assets/js/supabase-config.js"></script><script type="module" src="../assets/js/admin-shell.js?v=20260916-employer-final3"></script>
+<script type="module" src="../assets/js/portal.js?v=20260916-employer-final3"></script>
 
-<script type="module" src="../assets/js/admin-regulatory-live.js?v=20260916-combined-final1"></script><script type="module" src="../assets/js/workforce-session-guard.js?v=20260916-combined-final1"></script></body></html>
+<script type="module" src="../assets/js/admin-regulatory-live.js?v=20260916-employer-final3"></script><script type="module" src="../assets/js/workforce-session-guard.js?v=20260916-employer-final3"></script></body></html>

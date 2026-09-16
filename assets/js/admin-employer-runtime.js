@@ -34,6 +34,7 @@ const notificationApi=body=>invoke('workforce-admin-employer-notifications',body
 const reportingApi=body=>invoke('workforce-admin-employer-reporting',body);
 const selectionDeliveryApi=body=>invoke('workforce-admin-employer-selection-delivery',body);
 const pdfApi=body=>invoke('workforce-pdf-export',body);
+const selectionPdfApi=body=>invoke('workforce-admin-selection-pdf',body);
 const postAccidentApi=body=>invoke('workforce-admin-post-accident',body);
 function downloadBase64File(base64,name,type='application/pdf'){const bytes=Uint8Array.from(atob(base64),c=>c.charCodeAt(0)),blob=new Blob([bytes],{type}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name||'download.pdf';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
 const employerManagementApi=body=>invoke('workforce-employer-management',{...body,employer_id:employerId});
@@ -1004,10 +1005,10 @@ function renderSelections(){
         <div id="selectionDetailBody"></div>
       </section>`;
 
-    const blobDownload=(content,name,type)=>{const blob=new Blob([content],{type}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)};
+    const blobDownload=(content,name,type)=>{const blob=new Blob([content],{type}),url=URL.createObjectURL(blob),downloadLink=document.createElement('a');downloadLink.href=url;downloadLink.download=name;document.body.append(downloadLink);downloadLink.click();downloadLink.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)};
     const sendSelectionNotice=async id=>{try{status('Sending branded selection email to the Employer / DER…');const r=await selectionDeliveryApi({action:'send_notice',employer_id:employerId,selection_event_id:id});status(`Random-selection email sent to ${r.recipient}.`,'success');await load()}catch(e){status(e.message,'error')}};
     const downloadSelectionCsv=async id=>{try{const r=await selectionDeliveryApi({action:'report',employer_id:employerId,selection_event_id:id});blobDownload(r.content,r.file_name||'random-selection.csv',r.mime_type||'text/csv')}catch(e){status(e.message,'error')}};
-    const downloadSelectionPdf=async id=>{try{const r=await pdfApi({action:'selection',selection_event_id:id,employer_id:employerId});downloadBase64File(r.base64,r.filename,r.mime_type)}catch(e){status(e.message,'error')}};
+    const downloadSelectionPdf=async id=>{try{status('Preparing random-selection PDF…');const r=await selectionPdfApi({selection_event_id:id,employer_id:employerId});downloadBase64File(r.base64,r.filename,r.mime_type);status('Random-selection PDF downloaded.','success')}catch(e){status(e.message,'error')}};
     const form=root.querySelector('#adminSelectionForm');
     const poolSelect=form.elements.pool_id,help=root.querySelector('#selectionPoolHelp');
     const updateHelp=()=>{
