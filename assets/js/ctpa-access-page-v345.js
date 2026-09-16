@@ -1,3 +1,5 @@
+import { portalReady } from './portal.js?v=20260916-admin-loadfix2';
+await portalReady;
 import {init,$,status,empty} from './ctpa-admin-common.js';
 import {invokeCtpa,esc} from './ctpa-management.js';
 

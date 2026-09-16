@@ -1,3 +1,5 @@
+import { portalReady } from './portal.js?v=20260916-admin-loadfix2';
+await portalReady;
 import{init,$,status,empty,fd}from'./owner-admin-common.js';import{supabase}from'./supabase.js';import{invokeOwnerDirectory,invokeOwnerWorkflow,esc}from'./owner-management.js';
 const d=await init('results');
 if(d){

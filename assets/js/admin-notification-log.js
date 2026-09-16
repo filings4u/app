@@ -1,3 +1,5 @@
+import { portalReady } from './portal.js?v=20260916-admin-loadfix2';
+await portalReady;
 import { supabase } from './supabase.js';
 const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
 const esc=(v='')=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));

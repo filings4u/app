@@ -1,3 +1,5 @@
+import { portalReady } from './portal.js?v=20260916-admin-loadfix2';
+await portalReady;
 import{init,$,empty,status}from'./ctpa-admin-common.js';import{esc,money,ctpaId}from'./ctpa-management.js';import{op}from'./ctpa-ops.js';
 const d=await init('billing');
 const field=(id,label,val='',type='text')=>`<label class="billing-field"><span>${label}</span><input id="${id}" type="${type}" value="${esc(val||'')}"></label>`;

@@ -1,3 +1,5 @@
+import { portalReady } from './portal.js?v=20260916-admin-loadfix2';
+await portalReady;
 
 import{orgApi,esc,money,setContext,manageHref,entityId,statusBadge,plans}from'./admin-customer-directory.js';
 const TYPE='ctpa',search=document.querySelector('#search'),status=document.querySelector('#directoryStatus'),body=document.querySelector('#body'),msg=document.querySelector('#directoryStatusMessage');let rows=[],planRows=[];

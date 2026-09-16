@@ -1,3 +1,5 @@
+import { portalReady } from './portal.js?v=20260916-admin-loadfix2';
+await portalReady;
 import{api,esc,msg}from'./admin-providers.js';
 const KIND='sap',LIST='saps',table=document.querySelector('#providerTable'),search=document.querySelector('#search');
 let rows=[],employers=[],assignments=[];

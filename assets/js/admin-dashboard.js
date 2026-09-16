@@ -1,3 +1,5 @@
+import { portalReady } from './portal.js?v=20260916-admin-loadfix2';
+await portalReady;
 import { supabase } from './supabase.js';
 
 const setText=(selector,value)=>{const el=document.querySelector(selector);if(el)el.textContent=value;};
@@ -37,4 +39,4 @@ async function loadAdminDashboard(){
   }
 }
 
-document.addEventListener('DOMContentLoaded',loadAdminDashboard);
+loadAdminDashboard();

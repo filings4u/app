@@ -1,3 +1,5 @@
+import { portalReady } from './portal.js?v=20260916-admin-loadfix2';
+await portalReady;
 import { supabase } from './supabase.js';
 let organizations=[];
 let plans=[];
