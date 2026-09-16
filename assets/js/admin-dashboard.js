@@ -1,6 +1,6 @@
-import { portalReady } from './portal.js?v=20260916-admin-loadfix2';
+import { portalReady } from './portal.js?v=20260916-auth-isolation-v4';
 await portalReady;
-import { supabase } from './supabase.js';
+import { supabase } from './supabase.js?v=20260916-auth-isolation-v4';
 
 const setText=(selector,value)=>{const el=document.querySelector(selector);if(el)el.textContent=value;};
 const plural=(n,one,many=one+'s')=>`${n} ${n===1?one:many}`;

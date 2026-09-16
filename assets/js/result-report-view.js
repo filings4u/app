@@ -1,4 +1,4 @@
-import { supabase } from './supabase.js';
+import { supabase, authScope, workspaceStorageKey, workspaceStorageKeyFor, createScopedClient, authStorageKeyFor, loginPageForScope, clearPortalSessionState } from './supabase.js?v=20260916-auth-isolation-v4';
 const q=new URLSearchParams(location.search),rid=q.get('report'),employer=q.get('employer'),ctpa=q.get('ctpa'),owner=q.get('owner'),mode=q.get('mode')||(owner?'owner':'employer'),el=document.querySelector('#report');
 const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=x=>x?new Date(x).toLocaleString():'—';
@@ -14,8 +14,8 @@ try{
       :mode==='owner'
         ?await invoke('workforce-owner-results',{action:'get_report',report_id:rid})
         :mode==='employee'
-          ?await invoke('workforce-employee-portal',{action:'get_result_report',membership_id:sessionStorage.getItem('s4u_workspace_membership')||'',report_id:rid})
-          :await invoke('workforce-employer-results',{action:'get_report',membership_id:sessionStorage.getItem('s4u_workspace_membership')||'',report_id:rid});
+          ?await invoke('workforce-employee-portal',{action:'get_result_report',membership_id:sessionStorage.getItem(workspaceStorageKey)||'',report_id:rid})
+          :await invoke('workforce-employer-results',{action:'get_report',membership_id:sessionStorage.getItem(workspaceStorageKey)||'',report_id:rid});
   const r=data.report;if(!r)throw new Error('Result report not found.');
   const driver=r.employees?`${r.employees.first_name||''} ${r.employees.last_name||''}`.trim():'—',order=r.testing_orders?.order_number||'—',reason=r.testing_orders?.reason||r.test_reason||'—';
   el.className='result-report-document';

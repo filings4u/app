@@ -1,3 +1,3 @@
-import { portalReady } from './portal.js?v=20260916-admin-loadfix2';
+import { portalReady } from './portal.js?v=20260916-auth-isolation-v4';
 await portalReady;
 import{globalData,filterRows,esc}from'./admin-global.js';const rows=await globalData('results'),body=document.querySelector('#rows'),search=document.querySelector('#search');function draw(a){body.innerHTML=a.map(r=>{let o=r.testing_orders||{};return `<tr><td><strong>${esc(o.order_number||'—')}</strong></td><td>${esc(o.employers?.legal_name||'—')}</td><td>${esc([o.employees?.first_name,o.employees?.last_name].filter(Boolean).join(' ')||'—')}</td><td>${esc(o.test_type||'—')}</td><td>${esc(r.final_status||r.mro_status||r.preliminary_status||'Pending')}</td><td>${esc(r.result_date||'—')}</td><td>${esc(r.notification_status||'—')}</td></tr>`}).join('')||'<tr><td colspan="7">No records.</td></tr>'}filterRows(search,rows,draw);

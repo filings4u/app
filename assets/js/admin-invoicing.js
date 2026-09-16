@@ -1,4 +1,4 @@
-import {supabase} from './supabase.js';import{portalReady}from'./portal.js';await portalReady;
+import {supabase} from './supabase.js?v=20260916-auth-isolation-v4';import{portalReady}from'./portal.js?v=20260916-auth-isolation-v4';await portalReady;
 const $=s=>document.querySelector(s),esc=(v='')=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),money=(v,c='USD')=>new Intl.NumberFormat('en-US',{style:'currency',currency:c||'USD'}).format(Number(v||0)),pretty=v=>String(v||'').replaceAll('_',' ').replace(/\b\w/g,m=>m.toUpperCase());
 async function api(body){const{data,error}=await supabase.functions.invoke('workforce-admin-invoicing',{body});if(error){let m=error.message;try{m=(await error.context?.clone?.().json())?.error||m}catch{}throw new Error(m)}if(data?.error)throw new Error(data.error);return data}
 let state={customers:[],invoices:[]};const status=(m,t='')=>{const e=$('#invoiceStatus');e.textContent=m||'';e.className='inline-status'+(t?` ${t}`:'')};

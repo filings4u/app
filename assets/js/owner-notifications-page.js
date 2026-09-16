@@ -1,4 +1,4 @@
-import { portalReady } from './portal.js?v=20260916-admin-loadfix2';
+import { portalReady } from './portal.js?v=20260916-auth-isolation-v4';
 await portalReady;
 import{init,$,status,empty}from'./owner-admin-common.js';import{invokeOwnerDirectory,esc}from'./owner-management.js';
 const d=await init('notifications');if(d){let w=await invokeOwnerDirectory({action:'workspace',owner_operator_id:d.owner_operator.id});

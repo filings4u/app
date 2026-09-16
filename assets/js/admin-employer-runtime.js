@@ -1,5 +1,5 @@
-import { supabase } from './supabase.js';
-import { portalReady } from './portal.js';
+import { supabase } from './supabase.js?v=20260916-auth-isolation-v4';
+import { portalReady } from './portal.js?v=20260916-auth-isolation-v4';
 
 const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
 const esc=(v='')=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));

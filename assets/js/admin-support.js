@@ -1,6 +1,6 @@
-import { portalReady } from './portal.js?v=20260916-admin-loadfix2';
+import { portalReady } from './portal.js?v=20260916-auth-isolation-v4';
 await portalReady;
-import { supabase } from './supabase.js';
+import { supabase } from './supabase.js?v=20260916-auth-isolation-v4';
 const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
 const esc=(v='')=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
 const pretty=v=>String(v||'—').replaceAll('_',' ').replace(/\b\w/g,m=>m.toUpperCase());

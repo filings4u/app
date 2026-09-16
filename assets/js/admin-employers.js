@@ -1,5 +1,5 @@
 function adminNotice(message,type=''){let x=document.querySelector('#adminInlineNotice');if(!x){x=document.createElement('div');x.id='adminInlineNotice';x.className='inline-status';document.querySelector('.content')?.prepend(x)}x.textContent=message;x.className=`inline-status ${type}`.trim()}
-import { supabase } from './supabase.js';
+import { supabase } from './supabase.js?v=20260916-auth-isolation-v4';
 const $=s=>document.querySelector(s); let employers=[], current=null, detail=null, tab='account';
 const esc=(v='')=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
 const money=v=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(Number(v||0));

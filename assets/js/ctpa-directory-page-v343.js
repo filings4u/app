@@ -1,4 +1,4 @@
-import { portalReady } from './portal.js?v=20260916-admin-loadfix2';
+import { portalReady } from './portal.js?v=20260916-auth-isolation-v4';
 await portalReady;
 
 import{orgApi,esc,money,setContext,manageHref,entityId,statusBadge,plans}from'./admin-customer-directory.js';

@@ -1,3 +1,3 @@
-import { portalReady } from './portal.js?v=20260916-admin-loadfix2';
+import { portalReady } from './portal.js?v=20260916-auth-isolation-v4';
 await portalReady;
 import{init,$,empty}from'./ctpa-admin-common.js';import{esc}from'./ctpa-management.js';const d=await init('audit');if(d){$('#content').innerHTML=`<div class="management-table-wrap"><table class="management-table"><thead><tr><th>Date</th><th>Action</th><th>Resource</th><th>Resource ID</th><th>Actor</th><th>IP</th></tr></thead><tbody>${d.audit_events.length?d.audit_events.map(x=>`<tr><td>${esc(x.event_at)}</td><td><strong>${esc(x.action)}</strong></td><td>${esc(x.resource_type||'—')}</td><td>${esc(x.resource_id||'—')}</td><td>${esc(x.actor_user_id||'System')}</td><td>${esc(x.ip_address||'—')}</td></tr>`).join(''):empty(6,'No audit history.')}</tbody></table></div>`}

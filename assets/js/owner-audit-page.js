@@ -1,4 +1,4 @@
-import { portalReady } from './portal.js?v=20260916-admin-loadfix2';
+import { portalReady } from './portal.js?v=20260916-auth-isolation-v4';
 await portalReady;
 import{init,$,empty}from'./owner-admin-common.js';import{esc,ownerId}from'./owner-management.js';
 const d=await init('audit');

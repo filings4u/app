@@ -1,5 +1,5 @@
 import { buildAdminNavigation } from './navigation.js?v=20260916-admin-final';
-import { supabase } from './supabase.js';
+import { supabase, authScope, workspaceStorageKey, workspaceStorageKeyFor, createScopedClient, authStorageKeyFor, loginPageForScope, clearPortalSessionState } from './supabase.js?v=20260916-auth-isolation-v4';
 
 const ROOT = new URL('../../', import.meta.url);
 const rootUrl = (file='') => new URL(file, ROOT).href;
@@ -41,13 +41,13 @@ function allowed(ctx,key){
 export async function getContext(){
   const {data:{session}}=await supabase.auth.getSession();
   if(!session){
-    location.replace(rootUrl('login.html?next='+encodeURIComponent(location.pathname+location.search)));
+    location.replace(rootUrl(loginPageForScope(authScope)+'?next='+encodeURIComponent(location.pathname+location.search)));
     return null;
   }
 
   const params=new URLSearchParams(location.search);
   const workspaceFromUrl=params.get('workspace')||'';
-  const selectedMembership=workspaceFromUrl||sessionStorage.getItem('s4u_workspace_membership')||'';
+  const selectedMembership=workspaceFromUrl||sessionStorage.getItem(workspaceStorageKey)||'';
   const contextCacheKey=`s4u_portal_context_${currentPortal()||'portal'}_${selectedMembership||'default'}`;
   let cachedContext=null;
   if(!workspaceFromUrl){
@@ -72,7 +72,7 @@ export async function getContext(){
 
   if(error || !data){
     console.error('Session context unavailable',error);
-    location.replace(rootUrl('login.html?next='+encodeURIComponent(location.pathname+location.search)+'&reason=session'));
+    location.replace(rootUrl(loginPageForScope(authScope)+'?next='+encodeURIComponent(location.pathname+location.search)+'&reason=session'));
     return null;
   }
 
@@ -82,12 +82,12 @@ export async function getContext(){
   }
 
   if(data.requires_workspace_selection){
-    location.replace(rootUrl('workspace-select.html?next='+encodeURIComponent(location.pathname+location.search)));
+    location.replace(rootUrl('workspace-select.html?portal='+encodeURIComponent(authScope)+'&next='+encodeURIComponent(location.pathname+location.search)));
     return null;
   }
 
   if(data?.membership?.id){
-    sessionStorage.setItem('s4u_workspace_membership',data.membership.id);
+    sessionStorage.setItem(workspaceStorageKey,data.membership.id);
     if(workspaceFromUrl){
       params.delete('workspace');
       const clean=location.pathname+(params.toString()?`?${params.toString()}`:'')+location.hash;
@@ -96,8 +96,7 @@ export async function getContext(){
   }
 
   const expected=portalFor(data),actual=currentPortal();
-  const isPlatformAdmin=data?.membership?.role_code==='platform_admin';
-  if(actual && expected!==actual && !isPlatformAdmin){
+  if(actual && expected!==actual){
     location.replace(rootUrl(expected+'/dashboard.html'));
     return null;
   }
@@ -231,8 +230,8 @@ function wireFontSizer(){
 function wireLogout(){
   const button=document.querySelector('[data-logout]');
   bindOnce(button,'logoutBound',async()=>{
-    sessionStorage.removeItem('s4u_workspace_membership');
-    await supabase.auth.signOut();
+    sessionStorage.removeItem(workspaceStorageKey);
+    await supabase.auth.signOut({scope:'local'});
     location.replace(rootUrl('login.html'));
   });
 }

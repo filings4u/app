@@ -1,4 +1,4 @@
-import { supabase } from './supabase.js';
+import { supabase, authScope, workspaceStorageKey, workspaceStorageKeyFor, createScopedClient, authStorageKeyFor, loginPageForScope, clearPortalSessionState } from './supabase.js?v=20260916-auth-isolation-v4';
 
 const ROOT = new URL('../../', import.meta.url);
 const rootUrl = (path='') => new URL(path, ROOT).href;
@@ -64,13 +64,13 @@ function downloadBase64File(base64,name,type='application/pdf'){const bytes=Uint
 
 async function sessionContext(){
   const {data:{session}}=await supabase.auth.getSession();
-  if(!session){ location.replace(rootUrl(`login.html?next=${encodeURIComponent(location.pathname+location.search)}`)); return null; }
+  if(!session){ location.replace(rootUrl(`employer-login.html?next=${encodeURIComponent(location.pathname+location.search)}`)); return null; }
   const requested=new URLSearchParams(location.search).get('workspace')||'';
-  const selected=requested||sessionStorage.getItem('s4u_workspace_membership')||'';
+  const selected=requested||sessionStorage.getItem(workspaceStorageKey)||'';
   const data=await invoke('workforce-session-context',{requested_portal:'employer',membership_id:selected});
-  if(data.requires_workspace_selection){ location.replace(rootUrl(`workspace-select.html?next=${encodeURIComponent(location.pathname+location.search)}`)); return null; }
+  if(data.requires_workspace_selection){ location.replace(rootUrl(`workspace-select.html?portal=employer&next=${encodeURIComponent(location.pathname+location.search)}`)); return null; }
   if(!data.has_access){ location.replace(rootUrl('access-required.html?reason=subscription')); return null; }
-  if(data.membership?.id) sessionStorage.setItem('s4u_workspace_membership',data.membership.id);
+  if(data.membership?.id) sessionStorage.setItem(workspaceStorageKey,data.membership.id);
   if(data.portal!=='employer' && data.portal!=='admin'){
     const target=data.portal==='ctpa'?'ctpa/dashboard.html':data.portal==='owner_operator'?'owner-operator/dashboard.html':data.portal==='employee'?'employee/dashboard.html':'workspace-select.html';
     location.replace(rootUrl(target)); return null;
@@ -183,8 +183,8 @@ function bindFontSizer(){
 function bindShell(){
   const menu=$('#mobileMenu'), sidebar=$('#employerSidebar');
   menu?.addEventListener('click',()=>{ document.body.classList.toggle('nav-open'); sidebar?.classList.toggle('mobile-open'); });
-  $('#signOut')?.addEventListener('click',async()=>{ sessionStorage.removeItem('s4u_workspace_membership'); await supabase.auth.signOut(); location.replace(rootUrl('login.html')); });
-  $('#switchAccount')?.addEventListener('click',()=>sessionStorage.removeItem('s4u_workspace_membership'));
+  $('#signOut')?.addEventListener('click',async()=>{ sessionStorage.removeItem(workspaceStorageKey); await supabase.auth.signOut({scope:'local'}); location.replace(rootUrl('employer-login.html')); });
+  $('#switchAccount')?.addEventListener('click',()=>sessionStorage.removeItem(workspaceStorageKey));
   bindFontSizer();
 }
 async function enforcePageFeature(ctx){ const feature=document.body.dataset.pageFeature; if(!feature||ctx?.membership?.role_code==='platform_admin') return true; if(ctx?.entitlements?.[feature]===true) return true; const content=$('#pageContent'); if(content){ content.replaceChildren(); const box=document.createElement('section'); box.className='card'; const b=document.createElement('div'); b.className='card-body'; const h=document.createElement('h2'); h.textContent='Feature not included'; const p=document.createElement('p'); p.textContent='This feature is not enabled for the selected Employer subscription.'; const a=linkButton('Contact Support',`support.html?feature=${encodeURIComponent(feature)}`); b.append(h,p,a); box.append(b); content.append(box);} return false; }

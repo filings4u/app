@@ -1,5 +1,5 @@
-import {supabase} from './supabase.js';
-import {portalReady} from './portal.js';
+import {supabase} from './supabase.js?v=20260916-auth-isolation-v4';
+import {portalReady} from './portal.js?v=20260916-auth-isolation-v4';
 const $=s=>document.querySelector(s), esc=(v='')=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
 const fmt=d=>d?new Date(d).toLocaleDateString():'—';
 const money=v=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(Number(v||0));

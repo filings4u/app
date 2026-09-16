@@ -1,4 +1,4 @@
-import { portalReady } from './portal.js?v=20260916-admin-loadfix2';
+import { portalReady } from './portal.js?v=20260916-auth-isolation-v4';
 await portalReady;
 import{init,$,empty,status}from'./ctpa-admin-common.js';import{esc,money,ctpaId}from'./ctpa-management.js';import{op}from'./ctpa-ops.js';
 const d=await init('billing');

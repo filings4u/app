@@ -1,5 +1,5 @@
 
-import {supabase} from './supabase.js';
+import {supabase} from './supabase.js?v=20260916-auth-isolation-v4';
 export const esc=(v='')=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
 export const money=v=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(Number(v||0));
 export async function orgApi(body){const{data,error}=await supabase.functions.invoke('workforce-admin-organizations',{body});if(error){let m=error.message||'Customer request failed.';try{const x=await error.context.clone().json();m=x.error||m}catch(_){}throw new Error(m)}if(data?.error)throw new Error(data.error);return data}

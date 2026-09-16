@@ -1,3 +1,3 @@
-import { portalReady } from './portal.js?v=20260916-admin-loadfix2';
+import { portalReady } from './portal.js?v=20260916-auth-isolation-v4';
 await portalReady;
 import{loadOwnerList,loadOwnerContext,invokeOwner}from'./owner-management.js';const $=s=>document.querySelector(s);await loadOwnerList($('#ownerSelector'));const x=await loadOwnerContext('usdot');if(x.id){const d=x.detail,o=d.owner_operator;$('#ownerName').textContent=o.legal_name;$('#ownerMeta').textContent=`USDOT ${o.dot_number||'Not assigned'} • MC ${o.mc_number||'Not assigned'}`;const f=$('#dotForm');for(const e of f.elements)if(e.name&&o[e.name]!=null)e.value=o[e.name];f.onsubmit=async ev=>{ev.preventDefault();const st=$('#pageStatus');try{await invokeOwner({action:'update_profile',owner_operator_id:o.id,...Object.fromEntries(new FormData(f))});st.textContent='DOT information saved.';st.className='inline-status success'}catch(e){st.textContent=e.message;st.className='inline-status error'}}}

@@ -1,4 +1,4 @@
-import { supabase } from './supabase.js';
+import { supabase } from './supabase.js?v=20260916-auth-isolation-v4';
 
 const ROOT = new URL('../../', import.meta.url);
 const rootUrl = (file='') => new URL(file, ROOT).href;

@@ -1,4 +1,4 @@
-import {supabase} from './supabase.js';
+import {supabase,authScope,workspaceStorageKey,workspaceStorageKeyFor,createScopedClient,authStorageKeyFor,loginPageForScope,clearPortalSessionState} from './supabase.js?v=20260916-auth-isolation-v4';
 
 const ROOT=new URL('../../',import.meta.url), rootUrl=(f='')=>new URL(f,ROOT).href;
 const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
@@ -12,19 +12,19 @@ let ctx=null, live=null;
 
 async function sessionContext(){
  const {data:{session}}=await supabase.auth.getSession();
- if(!session){location.replace(rootUrl('login.html?next='+encodeURIComponent(location.pathname+location.search)));return null}
- const membership=sessionStorage.getItem('s4u_workspace_membership')||'';
+ if(!session){location.replace(rootUrl('employee-login.html?next='+encodeURIComponent(location.pathname+location.search)));return null}
+ const membership=sessionStorage.getItem(workspaceStorageKey)||'';
  let {data,error}=await supabase.functions.invoke('workforce-session-context',{body:{requested_portal:'employee',membership_id:membership}});
  if(error&&/jwt.*future|expired|invalid jwt/i.test(error.message||'')){const r=await supabase.auth.refreshSession();if(!r.error)({data,error}=await supabase.functions.invoke('workforce-session-context',{body:{requested_portal:'employee',membership_id:membership}}))}
  if(error||!data){console.error(error);location.replace(rootUrl('login.html?reason=session'));return null}
  if(!data.has_access){location.replace(rootUrl('access-required.html?reason=subscription'));return null}
- if(data.requires_workspace_selection){location.replace(rootUrl('workspace-select.html'));return null}
+ if(data.requires_workspace_selection){location.replace(rootUrl('workspace-select.html?portal=employee'));return null}
  if(data.portal!=='employee'){location.replace(rootUrl(`${data.portal==='owner_operator'?'owner-operator':data.portal}/dashboard.html`));return null}
- if(data.membership?.id)sessionStorage.setItem('s4u_workspace_membership',data.membership.id);
+ if(data.membership?.id)sessionStorage.setItem(workspaceStorageKey,data.membership.id);
  return data;
 }
 async function invoke(body={}){
- const membership=ctx?.membership?.id||sessionStorage.getItem('s4u_workspace_membership')||'';
+ const membership=ctx?.membership?.id||sessionStorage.getItem(workspaceStorageKey)||'';
  const {data,error}=await supabase.functions.invoke('workforce-employee-portal',{body:{membership_id:membership,...body}});
  if(error){let m=error.message;try{m=(await error.context?.clone?.().json())?.error||m}catch{}throw new Error(m||'Employee portal request failed.')}
  if(data?.error)throw new Error(data.error);return data;
@@ -51,7 +51,7 @@ function wireShell(){
  const applyCollapsed=v=>{document.body.classList.toggle('sidebar-collapsed',v);localStorage.setItem('s4u_employee_sidebar',v?'collapsed':'open');if(toggle){toggle.setAttribute('aria-expanded',v?'false':'true');const i=$('[data-sidebar-toggle-icon]',toggle);if(i)i.textContent=v?'›':'‹'}};
  if(toggle){applyCollapsed(localStorage.getItem('s4u_employee_sidebar')==='collapsed');toggle.onclick=()=>applyCollapsed(!document.body.classList.contains('sidebar-collapsed'))}
  const scaleKey='s4u_employee_font_scale', applyScale=v=>{const n=Math.min(120,Math.max(90,Number(v)||100));document.documentElement.style.setProperty('--portal-font-scale',String(n/100));document.documentElement.style.zoom=String(n/100);localStorage.setItem(scaleKey,String(n));const x=$('[data-font-scale-value]');if(x)x.textContent=n+'%'};applyScale(localStorage.getItem(scaleKey)||100);$('[data-font-decrease]')?.addEventListener('click',()=>applyScale(Number(localStorage.getItem(scaleKey)||100)-5));$('[data-font-increase]')?.addEventListener('click',()=>applyScale(Number(localStorage.getItem(scaleKey)||100)+5));
- $('[data-logout]')?.addEventListener('click',async()=>{await supabase.auth.signOut();sessionStorage.removeItem('s4u_workspace_membership');location.replace(rootUrl('login.html'))});
+ $('[data-logout]')?.addEventListener('click',async()=>{await supabase.auth.signOut({scope:'local'});sessionStorage.removeItem(workspaceStorageKey);location.replace(rootUrl('employee-login.html'))});
  const switcher=$('[data-workspace-switcher]');if(switcher&&(ctx?.workspaces||[]).length>1)switcher.hidden=false;
  const bell=$('.top-action[aria-label="Notifications"]');if(bell){if(ent('notifications'))bell.onclick=()=>location.href='notifications.html';else bell.hidden=true}
  const help=$('.top-action[aria-label="Help"]');if(help)help.onclick=()=>{const employer=live?.employer||{};modal(`${modalHead('Need Help?','Contact your employer or screenings4u for assistance with your Employee / Driver records.')}<div class="employee-modal-body"><div class="saas-notice"><strong>${esc(employer.legal_name||'Your Employer')}</strong><br>${employer.phone?`Phone: ${esc(employer.phone)}<br>`:''}For testing deadlines or collection instructions, contact your employer first. For portal access problems, contact screenings4u support.</div><div class="saas-actions" style="margin-top:14px"><button class="btn btn-outline" data-close>Close</button></div></div>`)};

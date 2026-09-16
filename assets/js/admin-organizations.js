@@ -1,6 +1,6 @@
-import { portalReady } from './portal.js?v=20260916-admin-loadfix2';
+import { portalReady } from './portal.js?v=20260916-auth-isolation-v4';
 await portalReady;
-import { supabase } from './supabase.js';
+import { supabase } from './supabase.js?v=20260916-auth-isolation-v4';
 let organizations=[];
 let plans=[];
 const $=s=>document.querySelector(s);

@@ -1,4 +1,4 @@
-import {supabase} from './supabase.js';
+import {supabase,authScope,workspaceStorageKey,workspaceStorageKeyFor,createScopedClient,authStorageKeyFor,loginPageForScope,clearPortalSessionState} from './supabase.js?v=20260916-auth-isolation-v4';
 const form=document.querySelector('#resetForm');
 const message=document.querySelector('#message');
 const passwordInput=document.querySelector('#password');
@@ -13,8 +13,8 @@ form?.addEventListener('submit',async event=>{
   const {error}=await supabase.auth.updateUser({password:passwordValue});
   if(error){message.textContent=error.message;return;}
   message.textContent='Password updated. Redirecting to sign in…';
-  await supabase.auth.signOut();
-  setTimeout(()=>location.replace('login.html'),900);
+  await supabase.auth.signOut({scope:'local'});
+  setTimeout(()=>location.replace(loginPageForScope(authScope)),900);
 });
 document.querySelectorAll('[data-eye]').forEach(button=>{
   button.addEventListener('click',()=>{

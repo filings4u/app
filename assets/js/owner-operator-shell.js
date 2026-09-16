@@ -1,5 +1,5 @@
 import { buildAdminNavigation } from './navigation.js';
-import { supabase } from './supabase.js';
+import { supabase, authScope, workspaceStorageKey, workspaceStorageKeyFor, createScopedClient, authStorageKeyFor, loginPageForScope, clearPortalSessionState } from './supabase.js?v=20260916-auth-isolation-v4';
 
 const ROOT = new URL('../../', import.meta.url);
 const rootUrl = (file='') => new URL(file, ROOT).href;
@@ -41,13 +41,13 @@ function allowed(ctx,key){
 export async function getContext(){
   const {data:{session}}=await supabase.auth.getSession();
   if(!session){
-    location.replace(rootUrl('login.html?next='+encodeURIComponent(location.pathname+location.search)));
+    location.replace(rootUrl('owner-operator-login.html?next='+encodeURIComponent(location.pathname+location.search)));
     return null;
   }
 
   const params=new URLSearchParams(location.search);
   const workspaceFromUrl=params.get('workspace')||'';
-  const selectedMembership=workspaceFromUrl||sessionStorage.getItem('s4u_workspace_membership')||'';
+  const selectedMembership=workspaceFromUrl||sessionStorage.getItem(workspaceStorageKey)||'';
   const contextCacheKey=`s4u_portal_context_${currentPortal()||'portal'}_${selectedMembership||'default'}`;
   let cachedContext=null;
   if(!workspaceFromUrl){
@@ -86,12 +86,12 @@ export async function getContext(){
   }
 
   if(data.requires_workspace_selection){
-    location.replace(rootUrl('workspace-select.html?next='+encodeURIComponent(location.pathname+location.search)));
+    location.replace(rootUrl('workspace-select.html?portal=owner_operator&next='+encodeURIComponent(location.pathname+location.search)));
     return null;
   }
 
   if(data?.membership?.id){
-    sessionStorage.setItem('s4u_workspace_membership',data.membership.id);
+    sessionStorage.setItem(workspaceStorageKey,data.membership.id);
     if(workspaceFromUrl){
       params.delete('workspace');
       const clean=location.pathname+(params.toString()?`?${params.toString()}`:'')+location.hash;
@@ -235,8 +235,8 @@ function wireFontSizer(){
 function wireLogout(){
   const button=document.querySelector('[data-logout]');
   bindOnce(button,'logoutBound',async()=>{
-    sessionStorage.removeItem('s4u_workspace_membership');
-    await supabase.auth.signOut();
+    sessionStorage.removeItem(workspaceStorageKey);
+    await supabase.auth.signOut({scope:'local'});
     location.replace(rootUrl('login.html'));
   });
 }
@@ -246,7 +246,7 @@ function configureWorkspaceLink(ctx){
   if(!link)return;
   const show=ctx?.membership?.role_code!=='platform_admin' && Array.isArray(ctx?.workspaces) && ctx.workspaces.length>1;
   link.hidden=!show;
-  if(show) link.href=rootUrl('workspace-select.html');
+  if(show) link.href=rootUrl('workspace-select.html?portal=owner_operator');
 }
 
 /* Platform Admin portal switching is intentionally kept separate from customer UI. */

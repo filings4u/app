@@ -1,4 +1,4 @@
-import{supabase}from'./supabase.js';
+import{supabase}from'./supabase.js?v=20260916-auth-isolation-v4';
 const q=new URLSearchParams(location.search),packet=q.get('packet'),owner=q.get('owner'),el=document.querySelector('#doc');
 const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=d=>{if(!d)return '—';const x=new Date(String(d).length===10?d+'T12:00:00':d);return Number.isNaN(x.valueOf())?esc(d):x.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})};
