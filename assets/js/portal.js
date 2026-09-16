@@ -1,4 +1,4 @@
-import { buildAdminNavigation } from './navigation.js';
+import { buildAdminNavigation } from './navigation.js?v=20260916-admin-final';
 import { supabase } from './supabase.js';
 
 const ROOT = new URL('../../', import.meta.url);
@@ -72,10 +72,6 @@ export async function getContext(){
 
   if(error || !data){
     console.error('Session context unavailable',error);
-    const here=currentPortal();
-    if(here==='admin'){
-      return {authenticated:true,has_access:true,portal:'admin',membership:{role_code:'platform_admin',role_name:'Platform Administrator'},subscription:null,entitlements:{},permissions:[]};
-    }
     location.replace(rootUrl('login.html?next='+encodeURIComponent(location.pathname+location.search)+'&reason=session'));
     return null;
   }

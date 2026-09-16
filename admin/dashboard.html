@@ -8,7 +8,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../assets/css/portal.css">
+<link rel="stylesheet" href="../assets/css/portal.css?v=20260916-admin-final">
+<link rel="stylesheet" href="../assets/css/admin-shell.css?v=20260916-admin-final">
 </head>
 <body class="portal-body">
 <div class="portal-shell">
@@ -50,10 +51,10 @@
 </section>
 <div class="grid grid-2">
   <section class="card"><div class="card-head"><div><h2>Platform Operations</h2><span>Current system activity</span></div></div><div class="card-body status-list">
-    <div class="status-row"><div><strong>Employer organizations</strong><small data-admin-op="employer_accounts">Loading live data…</small></div><span class="badge success">Healthy</span></div>
-    <div class="status-row"><div><strong>Owner-operator accounts</strong><small data-admin-op="owner_operator_accounts">Loading live data…</small></div><span class="badge success">Healthy</span></div>
-    <div class="status-row"><div><strong>C/TPA organizations</strong><small data-admin-op="ctpa_accounts">Loading live data…</small></div><span class="badge success">Healthy</span></div>
-    <div class="status-row"><div><strong>Failed billing events</strong><small data-admin-op="failed_billing_events">Loading live data…</small></div><span class="badge warning">Review</span></div>
+    <div class="status-row"><div><strong>Employer organizations</strong><small data-admin-op="employer_accounts">Loading live data…</small></div><span class="badge success" data-admin-health="employer">Active</span></div>
+    <div class="status-row"><div><strong>Owner-operator accounts</strong><small data-admin-op="owner_operator_accounts">Loading live data…</small></div><span class="badge success" data-admin-health="owner_operator">Active</span></div>
+    <div class="status-row"><div><strong>C/TPA organizations</strong><small data-admin-op="ctpa_accounts">Loading live data…</small></div><span class="badge success" data-admin-health="ctpa">Active</span></div>
+    <div class="status-row"><div><strong>Failed billing events</strong><small data-admin-op="failed_billing_events">Loading live data…</small></div><span class="badge" data-admin-health="billing">—</span></div>
   </div></section>
   <section class="card"><div class="card-head"><div><h2>Revenue Mix</h2><span>Software subscriptions</span></div></div><div class="card-body progress-block">
     <div class="progress-line"><div class="progress-meta"><strong>Employer Plans</strong><span data-admin-mix-label="employer">—</span></div><div class="progress-track"><div class="progress-fill" data-admin-mix="employer" style="width:0%"></div></div></div>
@@ -64,7 +65,7 @@
 </div>
 </main>
 </div>
-<script src="../assets/js/supabase-config.js"></script><script type="module" src="../assets/js/navigation.js?v=20260915-12"></script>
-  <script type="module" src="../assets/js/portal.js"></script>
-<script type="module" src="../assets/js/admin-dashboard.js"></script>
+<script src="../assets/js/supabase-config.js"></script><script type="module" src="../assets/js/admin-shell.js?v=20260916-admin-final"></script>
+<script type="module" src="../assets/js/portal.js?v=20260916-admin-final"></script>
+<script type="module" src="../assets/js/admin-dashboard.js?v=20260916-admin-final"></script>
 </body></html>

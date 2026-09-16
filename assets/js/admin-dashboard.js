@@ -19,7 +19,10 @@ async function loadAdminDashboard(){
     setText('[data-admin-op="employer_accounts"]',plural(o.employer_accounts??0,'active employer subscription'));
     setText('[data-admin-op="owner_operator_accounts"]',plural(o.owner_operator_accounts??0,'active owner-operator subscription'));
     setText('[data-admin-op="ctpa_accounts"]',plural(o.ctpa_accounts??0,'active C/TPA subscription'));
-    setText('[data-admin-op="failed_billing_events"]',`${o.failed_billing_events??0} require review`);
+    const failed=Number(o.failed_billing_events??0);
+    setText('[data-admin-op="failed_billing_events"]',failed?`${failed} require review`:'No failed billing events');
+    const billingBadge=document.querySelector('[data-admin-health="billing"]');
+    if(billingBadge){billingBadge.textContent=failed?'Review':'Clear';billingBadge.className='badge '+(failed?'warning':'success');}
 
     for(const key of ['employer','owner_operator','ctpa']){
       const pct=mix[key]?.percent??0;

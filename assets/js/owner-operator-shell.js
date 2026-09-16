@@ -19,7 +19,7 @@ function portalFor(ctx){
   const audience=ctx?.subscription?.audience || ctx?.subscription?.plan?.audience;
   const orgType=ctx?.membership?.organization_type;
   if(role==='platform_admin') return 'admin';
-  if(role==='owner_operator_admin' || audience==='owner_operator' || orgType==='owner_operator') return 'owner-operator';
+  if(role==='owner_operator_admin' || role==='owner_operator_staff' || audience==='owner_operator' || orgType==='owner_operator') return 'owner-operator';
   if(role==='ctpa_admin' || audience==='ctpa' || orgType==='ctpa') return 'ctpa';
   return 'owner-operator';
 }

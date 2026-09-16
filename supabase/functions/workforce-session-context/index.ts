@@ -17,7 +17,7 @@ const portalOf = (m: any) => {
   const type = String(m?.organizations?.organization_type || "");
   if (role === "platform_admin") return "admin";
   if (role === "employee") return "employee";
-  if (role === "owner_operator_admin" || type === "owner_operator") return "owner_operator";
+  if (role === "owner_operator_admin" || role === "owner_operator_staff" || type === "owner_operator") return "owner_operator";
   if (role === "ctpa_admin" || role === "ctpa_staff" || type === "ctpa") return "ctpa";
   if (["employer_admin", "der", "supervisor", "hr_admin"].includes(role) || type === "employer") return "employer";
   return null;

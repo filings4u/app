@@ -8,7 +8,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../assets/css/portal.css">
+<link rel="stylesheet" href="../assets/css/portal.css?v=20260916-admin-final">
+<link rel="stylesheet" href="../assets/css/admin-shell.css?v=20260916-admin-final">
 </head>
 <body class="portal-body">
 <div class="portal-shell">
@@ -43,6 +44,6 @@
 <section class="management-section" id="createCustomerSection" style="display:none"><div class="management-section-head"><div><h2>Create Owner-Operator</h2><p>Create the account and assign its initial SaaS plan. This records a subscription but does not fabricate a payment.</p></div></div><div class="management-section-body"><form id="createCustomerForm" class="saas-form"><input type="hidden" name="organization_type" value="owner_operator"><div class="saas-form-grid"><label><span>Legal Name *</span><input name="legal_name" required></label><label><span>DBA</span><input name="dba_name"></label><label><span>Email</span><input name="email" type="email"></label><label><span>Phone</span><input name="phone"></label><label><span>USDOT Number *</span><input name="dot_number" required></label><label><span>MC Number</span><input name="mc_number"></label><label><span>State</span><input name="state"></label><label><span>Timezone</span><input name="timezone" value="America/Chicago"></label><label><span>Plan *</span><select name="plan_id" id="customerPlan" required><option value="">Loading plans…</option></select></label><label><span>Subscription Status</span><select name="subscription_status"><option value="active">Active</option><option value="trial">Trial</option><option value="paused">Paused</option></select></label><label class="saas-wide"><span>Admin Notes</span><textarea name="order_notes" rows="3"></textarea></label></div><div class="saas-actions"><button type="button" class="btn btn-outline" id="cancelCustomerCreate">Cancel</button><button class="btn btn-orange">Create Owner-Operator</button></div><div id="createCustomerStatus" class="inline-status"></div></form></div></section>
 </div></main>
 </div>
-<script src="../assets/js/supabase-config.js"></script><script type="module" src="../assets/js/navigation.js?v=20260915-12"></script>
-  <script type="module" src="../assets/js/portal.js"></script>
-<script type="module" src="../assets/js/owner-directory-page.js"></script></body></html>
+<script src="../assets/js/supabase-config.js"></script><script type="module" src="../assets/js/admin-shell.js?v=20260916-admin-final"></script>
+<script type="module" src="../assets/js/portal.js?v=20260916-admin-final"></script>
+<script type="module" src="../assets/js/owner-directory-page.js?v=20260916-admin-final"></script></body></html>
